@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — SwordDock Bible branding
+
+- Adopt **SwordDock Bible** as the preferred product name and **SwordDock** as the short brand.
+- Update user-facing labels, product documentation, prototype design sources, and preview packaging name.
+- Preserve plugin ID `versedock` and installed data compatibility.
+- Keep the existing GitHub repository and published 0.1.0 release URLs unchanged until release migration is explicitly planned.
+- Preliminary exact-name screening found no obvious collision; comprehensive trademark clearance remains pending.
+
+
 ## 0.1.0 — Developer preview (2026-11-12)
 
 ### Added

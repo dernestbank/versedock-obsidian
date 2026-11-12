@@ -1,8 +1,8 @@
-# VerseDock for Obsidian
+# SwordDock Bible
 
 **An independent, offline-first Bible reader and Markdown study companion for desktop Obsidian.** This is an early development preview, not yet an Obsidian Community Plugins listing.
 
-VerseDock started as the *MySword+* project. It is **not affiliated with MySword, Obsidian, Logos, or other Bible software vendors.** Future MySword module compatibility is a planned feature, not part of the current release.
+SwordDock Bible was previously developed under the working titles *MySword+* and *VerseDock*. It is **not affiliated with MySword, Obsidian, Logos, or other Bible software vendors.** Future MySword module compatibility is a planned feature, not part of the current release.
 
 ## What works in 0.1.0
 
@@ -19,13 +19,13 @@ The plugin currently includes **only the WEB**. Commentaries, dictionaries, Stro
 
 ## Download and install this development preview
 
-This preview is **not yet eligible for one-click installation from Obsidian's directory**. Download the `VerseDock-0.1.0-offline-preview.zip` asset from [GitHub Releases](https://github.com/dernestbank/versedock-obsidian/releases).
+This preview is **not yet eligible for one-click installation from Obsidian's directory**. The original public 0.1.0 preview was released under the previous VerseDock name. Until a SwordDock Bible release is published, download the existing `VerseDock-0.1.0-offline-preview.zip` asset from [GitHub Releases](https://github.com/dernestbank/versedock-obsidian/releases). Its installed folder and manifest ID remain `versedock`. The locally staged rebranded package is named `SwordDock-Bible-0.1.0-offline-preview.zip`, but it is not yet a published release.
 
 1. In Obsidian, create a dedicated **test vault** before installing; do not trial experimental builds in irreplaceable notes.
 2. Extract the ZIP into `<vault>/.obsidian/plugins/versedock/`. The folder must contain `main.js`, `manifest.json`, `styles.css`, and `library/webp/manifest.json` plus per-book JSON files.
-3. Open the vault in Obsidian, go to **Settings → Community plugins**, enable community plugins, and enable **VerseDock (Preview)**.
-4. Open the command palette and run **VerseDock: Open Bible Reader**.
-5. For a study workflow, open **VerseDock: Open Bible Study Desk**. Other available commands include Quick Jump, Quick Verse Insert, offline Search, and Module Library.
+3. Open the vault in Obsidian, go to **Settings → Community plugins**, enable community plugins, and enable **SwordDock Bible** (older downloads still display **VerseDock (Preview)**).
+4. Open the command palette and run **SwordDock Bible: Open Bible Reader**.
+5. For a study workflow, open **SwordDock Bible: Open Bible Study Desk**. Other available commands include Quick Jump, Quick Verse Insert, offline Search, and Module Library.
 
 **Important:** Installing only `main.js`, `manifest.json`, and `styles.css` is *not enough* for this offline preview, because Bible text currently ships as separate files. The ZIP above contains the complete local library.
 
@@ -54,6 +54,10 @@ Open `test-vault` as a separate vault in Obsidian and enable the development plu
 ## Privacy and scope
 
 No account, telemetry, or Bible API traffic is required for reading/search. Markdown study notes remain in the user's own vault. Binary Bible resources are placed in the plugin's local folder; **do not assume Obsidian Sync, Git or iCloud ignores that folder**. This prerelease is explicitly desktop-only; mobile support and sync behavior need more testing.
+
+## Brand and design
+
+Our preferred product name is **SwordDock Bible**, short name **SwordDock**. See [BRAND-GUIDELINES.md](BRAND-GUIDELINES.md) for brand usage, visual direction and the preliminary trademark-screening status. Prior VerseDock releases and plugin IDs remain valid for backward compatibility.
 
 ## Project plans and issues
 

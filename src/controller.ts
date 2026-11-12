@@ -2,7 +2,7 @@ import type { App } from "obsidian";
 import type { PassageReference } from "./core/references";
 import type { OfflineBibleLibrary } from "./core/library";
 
-export interface MySwordSettings {
+export interface SwordDockSettings {
   reference: string;
   fontSize: number;
   lineHeight: number;
@@ -12,15 +12,15 @@ export interface MySwordSettings {
   bookmarks: string[];
   highlights: string[];
 }
-export const DEFAULT_SETTINGS: MySwordSettings = {
+export const DEFAULT_SETTINGS: SwordDockSettings = {
   reference: "John.3.16", fontSize: 17, lineHeight: 1.68,
   textWidth: 65, fontStyle: "serif", mode: "classic",
   bookmarks: [], highlights: []
 };
-export interface MySwordController {
+export interface SwordDockController {
   app: App;
   library: OfflineBibleLibrary;
-  settings: MySwordSettings;
+  settings: SwordDockSettings;
   currentRef: PassageReference;
   selectReference(ref: PassageReference): void;
   subscribe(callback: (ref: PassageReference) => void): () => void;

@@ -1,5 +1,5 @@
 import { ItemView, type WorkspaceLeaf } from "obsidian";
-import type { MySwordController } from "../controller";
+import type { SwordDockController } from "../controller";
 import { refLabel, parseOsis } from "../core/references";
 import { emptyState, iconButton, textButton } from "./components";
 
@@ -8,9 +8,9 @@ type InspectorTab = "commentary" | "lexicon" | "notes" | "references" | "bookmar
 export class InspectorView extends ItemView {
   private unsubscribe: (() => void) | null = null;
   private tab: InspectorTab = "commentary";
-  constructor(leaf: WorkspaceLeaf, private readonly plugin: MySwordController) { super(leaf); }
+  constructor(leaf: WorkspaceLeaf, private readonly plugin: SwordDockController) { super(leaf); }
   getViewType(): string { return INSPECTOR_VIEW; }
-  getDisplayText(): string { return "VerseDock Study Inspector"; }
+  getDisplayText(): string { return "SwordDock Bible Study Inspector"; }
   getIcon(): string { return "book-open-check"; }
   async onOpen(): Promise<void> { this.unsubscribe = this.plugin.subscribe(() => this.render()); this.render(); }
   async onClose(): Promise<void> { this.unsubscribe?.(); this.unsubscribe = null; this.contentEl.empty(); }

@@ -2,20 +2,20 @@ import { Plugin, PluginSettingTab, Setting, Notice, TFile, type WorkspaceLeaf } 
 import { BOOKS } from "./core/books";
 import { OfflineBibleLibrary } from "./core/library";
 import { parseOsis, parseReference, osisId, refLabel, type PassageReference } from "./core/references";
-import { DEFAULT_SETTINGS, type MySwordSettings, type MySwordController } from "./controller";
+import { DEFAULT_SETTINGS, type SwordDockSettings, type SwordDockController } from "./controller";
 import { ReaderView, READER_VIEW } from "./ui/reader-view";
 import { InspectorView, INSPECTOR_VIEW } from "./ui/inspector-view";
 import { SearchView, SEARCH_VIEW } from "./ui/search-view";
 import { LibraryView, LIBRARY_VIEW } from "./ui/library-view";
 import { ReferenceModal } from "./ui/reference-modal";
 
-export default class MySwordPlusPlugin extends Plugin implements MySwordController {
-  settings: MySwordSettings = { ...DEFAULT_SETTINGS };
+export default class SwordDockBiblePlugin extends Plugin implements SwordDockController {
+  settings: SwordDockSettings = { ...DEFAULT_SETTINGS };
   currentRef: PassageReference = parseReference("John 3:16");
   library!: OfflineBibleLibrary;
   private listeners = new Set<(ref: PassageReference) => void>();
   async onload(): Promise<void> {
-    const previous = await this.loadData() as Partial<MySwordSettings> | null;
+    const previous = await this.loadData() as Partial<SwordDockSettings> | null;
     this.settings = { ...DEFAULT_SETTINGS, ...(previous ?? {}),
       bookmarks: Array.isArray(previous?.bookmarks) ? previous.bookmarks : [],
       highlights: Array.isArray(previous?.highlights) ? previous.highlights : []
@@ -30,7 +30,7 @@ export default class MySwordPlusPlugin extends Plugin implements MySwordControll
     this.registerView(SEARCH_VIEW, (leaf: WorkspaceLeaf) => new SearchView(leaf, this));
     this.registerView(LIBRARY_VIEW, (leaf: WorkspaceLeaf) => new LibraryView(leaf, this));
 
-    this.addRibbonIcon("book-open", "VerseDock Bible Reader", () => { void this.openReader(); });
+    this.addRibbonIcon("book-open", "SwordDock Bible Bible Reader", () => { void this.openReader(); });
     this.addCommand({ id: "open-reader", name: "Open Bible Reader", callback: () => { void this.openReader(); } });
     this.addCommand({ id: "open-study-desk", name: "Open Bible Study Desk", callback: () => {
       void (async () => { await this.openReader(); await this.openInspector(); })();
@@ -45,9 +45,9 @@ export default class MySwordPlusPlugin extends Plugin implements MySwordControll
       void this.saveSettings();
       this.listeners.forEach(listener => listener(this.currentRef));
     } });
-    this.addSettingTab(new MySwordSettingsTab(this));
+    this.addSettingTab(new SwordDockSettingsTab(this));
 
-    if (!available) new Notice("VerseDock: Offline WEB library missing. Build and deploy the library to the plugin directory.");
+    if (!available) new Notice("SwordDock Bible: Offline WEB library missing. Build and deploy the library to the plugin directory.");
   }
   onunload(): void {
     this.listeners.clear();
@@ -141,12 +141,12 @@ export default class MySwordPlusPlugin extends Plugin implements MySwordControll
   }
 }
 
-class MySwordSettingsTab extends PluginSettingTab {
-  constructor(private readonly plugin: MySwordPlusPlugin) { super(plugin.app, plugin); }
+class SwordDockSettingsTab extends PluginSettingTab {
+  constructor(private readonly plugin: SwordDockBiblePlugin) { super(plugin.app, plugin); }
   display(): void {
     const { containerEl } = this;
     containerEl.empty();
-    containerEl.createEl("h2", { text: "VerseDock · Appearance" });
+    containerEl.createEl("h2", { text: "SwordDock Bible · Appearance" });
     containerEl.createEl("p", { text: "This development build follows your Obsidian theme. All Bible reading uses the installed public-domain WEB edition." });
     new Setting(containerEl).setName("Reading typeface").setDesc("Changes only Scripture, not Obsidian notes.")
       .addDropdown(dropdown => dropdown
@@ -154,14 +154,14 @@ class MySwordSettingsTab extends PluginSettingTab {
         .addOption("sans", "System sans")
         .addOption("obsidian", "Follow Obsidian")
         .setValue(this.plugin.settings.fontStyle)
-        .onChange(async value => { this.plugin.settings.fontStyle = value as MySwordSettings["fontStyle"]; await this.plugin.saveSettings(); this.plugin.selectReference(this.plugin.currentRef); }));
+        .onChange(async value => { this.plugin.settings.fontStyle = value as SwordDockSettings["fontStyle"]; await this.plugin.saveSettings(); this.plugin.selectReference(this.plugin.currentRef); }));
     new Setting(containerEl).setName("Font size").setDesc("Bible reader font size in pixels.")
       .addSlider(slider => slider.setLimits(14, 26, 1).setValue(this.plugin.settings.fontSize).setDynamicTooltip()
         .onChange(async value => { this.plugin.settings.fontSize = value; await this.plugin.saveSettings(); this.plugin.selectReference(this.plugin.currentRef); }));
     new Setting(containerEl).setName("Reading mode")
       .addDropdown(dropdown => dropdown.addOption("classic","Classic").addOption("compact","Compact").addOption("focus","Focus")
         .setValue(this.plugin.settings.mode)
-        .onChange(async value => { this.plugin.settings.mode = value as MySwordSettings["mode"]; await this.plugin.saveSettings(); this.plugin.selectReference(this.plugin.currentRef); }));
+        .onChange(async value => { this.plugin.settings.mode = value as SwordDockSettings["mode"]; await this.plugin.saveSettings(); this.plugin.selectReference(this.plugin.currentRef); }));
     new Setting(containerEl).setName("Offline Bible source")
       .setDesc("World English Bible (ENGWEBP) · Public Domain · 66-book edition. Source: https://ebible.org/details.php?id=engwebp");
   }

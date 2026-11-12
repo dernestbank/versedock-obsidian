@@ -1,13 +1,15 @@
-# VerseDock — Development QA Report
+# SwordDock Bible — Development QA Report
 
 Version: **0.1.0 (Developer Preview)** · Date: **2026-11-12** · Internal project directory: `mysword+`
 
-This independent project started under the internal name **MySword+**. Its public name is **VerseDock**, with no affiliation with the original MySword app.
+This independent project started under the internal name **MySword+**. Its original public name was **VerseDock**; its current preferred name is **SwordDock Bible**, with no affiliation with the original MySword app.
+
+> **Branding update (2026-11-12):** Visible branding changed to **SwordDock Bible** while keeping the installed plugin ID `versedock` and the existing GitHub repository URL stable. The historical GUI checks below were performed before the rename; rerun the GUI check for final verification. Official trademark clearance is pending.
 
 ## Verified on macOS / Obsidian 1.15.0
 
 - **Build:** strict TypeScript `tsc --noEmit` passed, esbuild `main.js` generated successfully.
-- **Automated tests:** 18/18 pass (book references, OSIS IDs, 66-book WEB dataset, local chapter reading and search).
+- **Original QA tests:** 18/18 passed (book references, OSIS IDs, 66-book WEB dataset, local chapter reading and search). **Branding verification:** current local checks pass 21/21, including three tests for the new name, preserved installed ID and retired UI copy.
 - **Data:** 66 public-domain ENGWEBP book files, 31,103 verses, exact text preserved; provenance and checksum documented.
 - **Actual GUI:** opened an isolated test vault in Obsidian; enabled the plugin; opened its Bible Reader from the native command palette.
 - **Reader:** John 3:16 appeared with styled passage text, contextual actions, book/chapter controls and theme-aware dark UI.
@@ -15,8 +17,10 @@ This independent project started under the internal name **MySword+**. Its publi
 - **Markdown study note:** clicked selected verse's note action and created/opened `Bible Study/John/John 3-16.md` with correct frontmatter.
 - **Quick Verse Insert:** inserted an attributed `Romans 8:28 (WEB)` callout into that note; verified the Markdown content on disk.
 - **Highlight and bookmark:** toggled both for John 3:16 in GUI; verified persistent IDs in `data.json`.
-- **New branding:** renamed manifest ID and product to VerseDock; reinstalled plugin in isolated vault and confirmed **VerseDock (Preview)** commands appear and Bible Reader opens.
+- **Original 0.1.0 test:** renamed manifest ID and product to VerseDock; reinstalled the plugin in an isolated vault and confirmed **VerseDock (Preview)** commands appeared and Bible Reader opened. That historical GUI test predates the SwordDock Bible rebrand.
 - **Manual preview ZIP:** the archive includes `main.js`, `manifest.json`, `styles.css`, license, README and every offline WEB book, and passed ZIP integrity check.
+
+**Current local package:** `SwordDock-Bible-0.1.0-offline-preview.zip` builds with 74 entries, including branded documentation and the original WEB data. It is a locally staged package, not a new GitHub release. Publishing a replacement after the existing 0.1.0 release requires a new version/tag and refreshed GUI smoke testing.
 
 ## Test boundaries / not yet verified
 
@@ -44,7 +48,7 @@ The public installation ZIP contains the source-independent offline WEB library 
 2. `npm run check`
 3. `npm run deploy:test`
 4. `npm run package:preview`
-5. Open the disposable `test-vault` in Obsidian and enable the VerseDock preview.
+5. Open the disposable `test-vault` in Obsidian and enable SwordDock Bible (legacy ID: `versedock`).
 6. Test Reader → Quick Jump → selected verse → Study Note → Quick Verse Insert → bookmark/highlight.
 
 ## Next release gates

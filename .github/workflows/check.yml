@@ -1,4 +1,4 @@
-name: Validate VerseDock
+name: Validate SwordDock Bible
 
 on:
   push:
@@ -18,4 +18,4 @@ jobs:
       - run: npm run check
       - run: npm run package:preview
       - name: Verify package contents
-        run: unzip -l dist/VerseDock-0.1.0-offline-preview.zip | grep -E 'main.js|library/webp/manifest.json'
+        run: unzip -l dist/SwordDock-Bible-0.1.0-offline-preview.zip | grep -E 'main.js|library/webp/manifest.json'

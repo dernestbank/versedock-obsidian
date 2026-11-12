@@ -1,7 +1,7 @@
 import { ItemView, Notice, setIcon, type WorkspaceLeaf } from "obsidian";
 import { BOOKS, type BookInfo } from "../core/books";
 import { refLabel, type PassageReference } from "../core/references";
-import type { MySwordController } from "../controller";
+import type { SwordDockController } from "../controller";
 import { iconButton, textButton, pill, emptyState } from "./components";
 import { BookPickerModal, ChapterPickerModal } from "./pickers";
 
@@ -11,9 +11,9 @@ export class ReaderView extends ItemView {
   private unsubscribe: (() => void) | null = null;
   private renderId = 0;
   private scroll: HTMLElement | null = null;
-  constructor(leaf: WorkspaceLeaf, private readonly plugin: MySwordController) { super(leaf); }
+  constructor(leaf: WorkspaceLeaf, private readonly plugin: SwordDockController) { super(leaf); }
   getViewType(): string { return READER_VIEW; }
-  getDisplayText(): string { return "VerseDock Bible Reader"; }
+  getDisplayText(): string { return "SwordDock Bible Bible Reader"; }
   getIcon(): string { return "book-open"; }
   async onOpen(): Promise<void> {
     this.unsubscribe = this.plugin.subscribe(() => { void this.render(); });

@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a problem with the VerseDock developer preview
+about: Report a problem with the SwordDock Bible developer preview
 title: "[bug] "
 labels: [bug]
 assignees: []
@@ -8,7 +8,7 @@ assignees: []
 
 **Obsidian version and platform:**
 
-**VerseDock version:**
+**SwordDock Bible version:**
 
 **Reproduction steps:**
 

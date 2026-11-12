@@ -1,7 +1,7 @@
 import { Modal, MarkdownView, Notice } from "obsidian";
 import { BOOKS } from "../core/books";
 import { parseReference, refLabel, type PassageReference } from "../core/references";
-import type { MySwordController } from "../controller";
+import type { SwordDockController } from "../controller";
 import { iconButton, textButton, emptyState } from "./components";
 
 export class ReferenceModal extends Modal {
@@ -13,7 +13,7 @@ export class ReferenceModal extends Modal {
   private readonly editorView: MarkdownView | null;
   private readonly editorPath: string | null;
 
-  constructor(private readonly plugin: MySwordController, private readonly mode: "jump" | "insert") {
+  constructor(private readonly plugin: SwordDockController, private readonly mode: "jump" | "insert") {
     super(plugin.app);
     this.editorView = plugin.app.workspace.getActiveViewOfType(MarkdownView);
     this.editorPath = this.editorView?.file?.path ?? null;

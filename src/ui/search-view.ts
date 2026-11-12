@@ -1,13 +1,13 @@
 import { ItemView, type WorkspaceLeaf } from "obsidian";
-import type { MySwordController } from "../controller";
+import type { SwordDockController } from "../controller";
 import { emptyState, textButton } from "./components";
 
 export const SEARCH_VIEW = "versedock-search";
 export class SearchView extends ItemView {
   private version = 0;
-  constructor(leaf: WorkspaceLeaf, private readonly plugin: MySwordController) { super(leaf); }
+  constructor(leaf: WorkspaceLeaf, private readonly plugin: SwordDockController) { super(leaf); }
   getViewType(): string { return SEARCH_VIEW; }
-  getDisplayText(): string { return "VerseDock Search"; }
+  getDisplayText(): string { return "SwordDock Bible Search"; }
   getIcon(): string { return "search"; }
   async onOpen(): Promise<void> {
     this.contentEl.empty(); this.contentEl.addClass("versedock","vd-search");

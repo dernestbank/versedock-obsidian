@@ -1,14 +1,14 @@
 import { ItemView, Notice, type WorkspaceLeaf } from "obsidian";
-import type { MySwordController } from "../controller";
+import type { SwordDockController } from "../controller";
 import { textButton, emptyState, pill } from "./components";
 
 export const LIBRARY_VIEW = "versedock-library";
 
 /** Read-only inventory baseline; downloading and MySword import are separate future milestones. */
 export class LibraryView extends ItemView {
-  constructor(leaf: WorkspaceLeaf, private readonly plugin: MySwordController) { super(leaf); }
+  constructor(leaf: WorkspaceLeaf, private readonly plugin: SwordDockController) { super(leaf); }
   getViewType(): string { return LIBRARY_VIEW; }
-  getDisplayText(): string { return "VerseDock Module Library"; }
+  getDisplayText(): string { return "SwordDock Bible Module Library"; }
   getIcon(): string { return "library"; }
   async onOpen(): Promise<void> { this.render(); }
   async onClose(): Promise<void> { this.contentEl.empty(); }
