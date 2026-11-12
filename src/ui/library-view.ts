@@ -2,20 +2,20 @@ import { ItemView, Notice, type WorkspaceLeaf } from "obsidian";
 import type { MySwordController } from "../controller";
 import { textButton, emptyState, pill } from "./components";
 
-export const LIBRARY_VIEW = "mysword-plus-library";
+export const LIBRARY_VIEW = "versedock-library";
 
 /** Read-only inventory baseline; downloading and MySword import are separate future milestones. */
 export class LibraryView extends ItemView {
   constructor(leaf: WorkspaceLeaf, private readonly plugin: MySwordController) { super(leaf); }
   getViewType(): string { return LIBRARY_VIEW; }
-  getDisplayText(): string { return "MySword+ Module Library"; }
+  getDisplayText(): string { return "VerseDock Module Library"; }
   getIcon(): string { return "library"; }
   async onOpen(): Promise<void> { this.render(); }
   async onClose(): Promise<void> { this.contentEl.empty(); }
   private render(): void {
     const root = this.contentEl;
     root.empty();
-    root.addClass("mysword-plus", "vd-library");
+    root.addClass("versedock", "vd-library");
     root.createSpan({ cls: "vd-overline", text: "YOUR OFFLINE RESOURCES" });
     root.createEl("h2", { text: "Module Library" });
     root.createEl("p", { cls: "vd-subtle", text: "See installed resources and their provenance. Future releases will support authorized MySword imports and additional offline versions." });
@@ -49,7 +49,7 @@ export class LibraryView extends ItemView {
     });
     root.createEl("h3", { cls: "vd-category-label", text: "Additional study modules" });
     emptyState(root, "No other modules installed", "Commentary, dictionaries, lexicons, devotionals, comparison translations and MySword imports are planned for later releases.", "layers");
-    root.createEl("p", { cls: "vd-library-path", text: "Local development library: .obsidian/plugins/mysword-plus/library/webp" });
+    root.createEl("p", { cls: "vd-library-path", text: "Local development library: .obsidian/plugins/versedock/library/webp" });
     root.createEl("p", { cls: "vd-subtle", text: "This is a development build. Offline content bundles and multi-device synchronization require explicit packaging and storage tests before public distribution." });
   }
 }

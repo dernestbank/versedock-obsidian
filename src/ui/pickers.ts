@@ -16,7 +16,7 @@ export class ChapterPickerModal extends Modal {
   }
   onOpen(): void {
     this.contentEl.empty();
-    this.contentEl.addClass("mysword-plus", "vd-picker-modal");
+    this.contentEl.addClass("versedock", "vd-picker-modal");
     this.contentEl.createEl("h2", { text: this.book.name });
     const grid = this.contentEl.createDiv({ cls: "vd-chapter-grid" });
     for (let c = 1; c <= this.count; c++) {

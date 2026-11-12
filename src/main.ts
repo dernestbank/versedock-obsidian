@@ -30,7 +30,7 @@ export default class MySwordPlusPlugin extends Plugin implements MySwordControll
     this.registerView(SEARCH_VIEW, (leaf: WorkspaceLeaf) => new SearchView(leaf, this));
     this.registerView(LIBRARY_VIEW, (leaf: WorkspaceLeaf) => new LibraryView(leaf, this));
 
-    this.addRibbonIcon("book-open", "MySword+ Bible Reader", () => { void this.openReader(); });
+    this.addRibbonIcon("book-open", "VerseDock Bible Reader", () => { void this.openReader(); });
     this.addCommand({ id: "open-reader", name: "Open Bible Reader", callback: () => { void this.openReader(); } });
     this.addCommand({ id: "open-study-desk", name: "Open Bible Study Desk", callback: () => {
       void (async () => { await this.openReader(); await this.openInspector(); })();
@@ -47,7 +47,7 @@ export default class MySwordPlusPlugin extends Plugin implements MySwordControll
     } });
     this.addSettingTab(new MySwordSettingsTab(this));
 
-    if (!available) new Notice("MySword+: Offline WEB library missing. Build and deploy the library to the plugin directory.");
+    if (!available) new Notice("VerseDock: Offline WEB library missing. Build and deploy the library to the plugin directory.");
   }
   onunload(): void {
     this.listeners.clear();
@@ -146,7 +146,7 @@ class MySwordSettingsTab extends PluginSettingTab {
   display(): void {
     const { containerEl } = this;
     containerEl.empty();
-    containerEl.createEl("h2", { text: "MySword+ · Appearance" });
+    containerEl.createEl("h2", { text: "VerseDock · Appearance" });
     containerEl.createEl("p", { text: "This development build follows your Obsidian theme. All Bible reading uses the installed public-domain WEB edition." });
     new Setting(containerEl).setName("Reading typeface").setDesc("Changes only Scripture, not Obsidian notes.")
       .addDropdown(dropdown => dropdown

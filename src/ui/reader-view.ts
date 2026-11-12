@@ -5,7 +5,7 @@ import type { MySwordController } from "../controller";
 import { iconButton, textButton, pill, emptyState } from "./components";
 import { BookPickerModal, ChapterPickerModal } from "./pickers";
 
-export const READER_VIEW = "mysword-plus-reader";
+export const READER_VIEW = "versedock-reader";
 
 export class ReaderView extends ItemView {
   private unsubscribe: (() => void) | null = null;
@@ -13,7 +13,7 @@ export class ReaderView extends ItemView {
   private scroll: HTMLElement | null = null;
   constructor(leaf: WorkspaceLeaf, private readonly plugin: MySwordController) { super(leaf); }
   getViewType(): string { return READER_VIEW; }
-  getDisplayText(): string { return "MySword+ Bible Reader"; }
+  getDisplayText(): string { return "VerseDock Bible Reader"; }
   getIcon(): string { return "book-open"; }
   async onOpen(): Promise<void> {
     this.unsubscribe = this.plugin.subscribe(() => { void this.render(); });
@@ -101,7 +101,7 @@ export class ReaderView extends ItemView {
     const previousScroll = this.scroll?.scrollTop ?? 0;
     const changedChapter = this.scroll?.dataset.chapter !== ref.book.vpl + "." + ref.chapter;
     const root = this.contentEl;
-    root.empty(); root.addClass("mysword-plus", "vd-reader");
+    root.empty(); root.addClass("versedock", "vd-reader");
     this.applyReaderVariables(root);
     const app = root.createDiv({ cls: "vd-view" });
 

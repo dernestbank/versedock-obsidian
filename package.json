@@ -1,5 +1,5 @@
 {
-  "name": "mysword-plus-obsidian",
+  "name": "versedock-obsidian",
   "version": "0.1.0",
   "private": true,
   "description": "Theme-adaptive offline-first Bible reader for Obsidian",
@@ -10,7 +10,8 @@
     "test": "vitest run",
     "library:build": "python3 scripts/build_web_library.py",
     "deploy:test": "node scripts/deploy-test.mjs",
-    "check": "npm run typecheck && npm test && npm run build"
+    "check": "npm run typecheck && npm test && npm run build",
+    "package:preview": "python3 scripts/build_preview.py"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

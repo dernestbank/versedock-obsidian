@@ -3,20 +3,20 @@ import type { MySwordController } from "../controller";
 import { refLabel, parseOsis } from "../core/references";
 import { emptyState, iconButton, textButton } from "./components";
 
-export const INSPECTOR_VIEW = "mysword-plus-inspector";
+export const INSPECTOR_VIEW = "versedock-inspector";
 type InspectorTab = "commentary" | "lexicon" | "notes" | "references" | "bookmarks";
 export class InspectorView extends ItemView {
   private unsubscribe: (() => void) | null = null;
   private tab: InspectorTab = "commentary";
   constructor(leaf: WorkspaceLeaf, private readonly plugin: MySwordController) { super(leaf); }
   getViewType(): string { return INSPECTOR_VIEW; }
-  getDisplayText(): string { return "MySword+ Study Inspector"; }
+  getDisplayText(): string { return "VerseDock Study Inspector"; }
   getIcon(): string { return "book-open-check"; }
   async onOpen(): Promise<void> { this.unsubscribe = this.plugin.subscribe(() => this.render()); this.render(); }
   async onClose(): Promise<void> { this.unsubscribe?.(); this.unsubscribe = null; this.contentEl.empty(); }
   private render(): void {
     const root = this.contentEl;
-    root.empty(); root.addClass("mysword-plus", "vd-inspector");
+    root.empty(); root.addClass("versedock", "vd-inspector");
     const top = root.createDiv({ cls: "vd-inspector-header" });
     top.createEl("strong", { text: "Study Inspector" });
     top.createSpan({ cls: "vd-pill", text: "Follow · " + refLabel(this.plugin.currentRef) });

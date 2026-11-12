@@ -2,15 +2,15 @@ import { ItemView, type WorkspaceLeaf } from "obsidian";
 import type { MySwordController } from "../controller";
 import { emptyState, textButton } from "./components";
 
-export const SEARCH_VIEW = "mysword-plus-search";
+export const SEARCH_VIEW = "versedock-search";
 export class SearchView extends ItemView {
   private version = 0;
   constructor(leaf: WorkspaceLeaf, private readonly plugin: MySwordController) { super(leaf); }
   getViewType(): string { return SEARCH_VIEW; }
-  getDisplayText(): string { return "MySword+ Search"; }
+  getDisplayText(): string { return "VerseDock Search"; }
   getIcon(): string { return "search"; }
   async onOpen(): Promise<void> {
-    this.contentEl.empty(); this.contentEl.addClass("mysword-plus","vd-search");
+    this.contentEl.empty(); this.contentEl.addClass("versedock","vd-search");
     this.contentEl.createEl("h2", { text: "Search Scripture" });
     this.contentEl.createEl("p", { cls: "vd-subtle", text: "Search the installed WEB edition entirely offline." });
     const inputRow = this.contentEl.createDiv({ cls: "vd-search-input-row" });

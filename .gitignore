@@ -7,3 +7,5 @@ test-vault/
 .research/
 library/private/
 library/imported/
+
+dist/

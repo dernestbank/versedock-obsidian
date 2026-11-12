@@ -28,7 +28,7 @@ describe("official WEB content", () => {
         read: async (name: string) => readFileSync(path.join(libraryPath, path.basename(name)), "utf-8")
       }
     }} as unknown as App;
-    const reader = new OfflineBibleLibrary(app, "mysword-plus");
+    const reader = new OfflineBibleLibrary(app, "versedock");
     expect(await reader.initialize()).toBe(true);
     const verses = await reader.getPassage(parseReference("John 3:16"));
     expect(verses).toHaveLength(1);

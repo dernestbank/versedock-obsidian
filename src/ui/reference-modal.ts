@@ -20,7 +20,7 @@ export class ReferenceModal extends Modal {
   }
   onOpen(): void {
     const root = this.contentEl;
-    root.empty(); root.addClass("mysword-plus", "vd-reference-modal");
+    root.empty(); root.addClass("versedock", "vd-reference-modal");
     const head = root.createDiv({ cls: "vd-modal-header" });
     head.createEl("h2", { text: this.mode === "jump" ? "Quick Jump" : "Quick Verse Insert" });
     head.createEl("p", { text: this.mode === "jump" ? "Go directly to a passage" : "Preview and insert Scripture in Markdown" });

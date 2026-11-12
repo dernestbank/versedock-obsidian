@@ -17,5 +17,5 @@ if (production) await esbuild.build(config);
 else {
   const context = await esbuild.context(config);
   await context.watch();
-  console.log("Watching MySword+ sources.");
+  console.log("Watching VerseDock sources.");
 }
