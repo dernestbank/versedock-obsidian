@@ -1,0 +1,9 @@
+{
+  "id": "mysword-plus",
+  "name": "MySword+ (Development)",
+  "version": "0.1.0",
+  "minAppVersion": "1.8.0",
+  "description": "Theme-adaptive offline Bible reading, verse actions, linked notes and search. Development preview.",
+  "author": "QuantGist",
+  "isDesktopOnly": false
+}

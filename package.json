@@ -1,0 +1,22 @@
+{
+  "name": "mysword-plus-obsidian",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Theme-adaptive offline-first Bible reader for Obsidian",
+  "scripts": {
+    "build": "node esbuild.config.mjs production",
+    "dev": "node esbuild.config.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "library:build": "python3 scripts/build_web_library.py",
+    "deploy:test": "node scripts/deploy-test.mjs",
+    "check": "npm run typecheck && npm test && npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.28.2",
+    "obsidian": "^1.14.4",
+    "typescript": "^5.9.3",
+    "vitest": "3.2.4"
+  }
+}

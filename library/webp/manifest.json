@@ -1,0 +1,477 @@
+{
+  "id": "webp",
+  "abbreviation": "WEB",
+  "title": "World English Bible",
+  "edition": "ENGWEBP (66 books); 2020 stable text edition",
+  "language": "en",
+  "license": "Public Domain",
+  "source": "https://ebible.org/Scriptures/engwebp_vpl.zip",
+  "sourcePage": "https://ebible.org/details.php?id=engwebp",
+  "licenseNotice": "World English Bible is a trademark of eBible.org; no altered text may be labeled World English Bible.",
+  "sourceSha256": "5a150b653d07369448a792ec2baaf9133ba6c582d7a0609cdcd72e185a06c45b",
+  "verseCount": 31103,
+  "books": [
+    {
+      "code": "GEN",
+      "chapters": 50,
+      "verses": 1533,
+      "bytes": 225174,
+      "sha256": "7b25ccbe483bd21d6d435dd52350bfa6978275158774cbe838b8ca5b33327a22"
+    },
+    {
+      "code": "EXO",
+      "chapters": 40,
+      "verses": 1213,
+      "bytes": 189995,
+      "sha256": "c7eca2313c4965fe2d41d8c1cc1908d40f5a73b00d6cdf9fdb376c41b2fe93de"
+    },
+    {
+      "code": "LEV",
+      "chapters": 27,
+      "verses": 859,
+      "bytes": 142005,
+      "sha256": "4aeb0739f2e9923ea7dc82f44113d610b54522bf17763d98f778c48edfbc9ca5"
+    },
+    {
+      "code": "NUM",
+      "chapters": 36,
+      "verses": 1288,
+      "bytes": 197381,
+      "sha256": "9ae5bac4f5685fbdbdb92e7bab6fa59c49aea949dc0907d2d63d2dcb51c21731"
+    },
+    {
+      "code": "DEU",
+      "chapters": 34,
+      "verses": 959,
+      "bytes": 163042,
+      "sha256": "6867148e4b1a18bc751d68c3fe917f5c5ad77c939a0d2e58df159b7455d5197e"
+    },
+    {
+      "code": "JOS",
+      "chapters": 24,
+      "verses": 658,
+      "bytes": 111032,
+      "sha256": "1908a330ca8a3f2135b21416a66d423fc676e065aef982a1631705b688f38fe8"
+    },
+    {
+      "code": "JDG",
+      "chapters": 21,
+      "verses": 618,
+      "bytes": 109463,
+      "sha256": "90317d6cf145421b97f1786eb44cf0260947028c5f5813daac4a53be070bedc3"
+    },
+    {
+      "code": "RUT",
+      "chapters": 4,
+      "verses": 85,
+      "bytes": 14805,
+      "sha256": "6048d8cbd6f8cc2513f69535be33920ac1cd7648ba015901202f2afacacfaf7e"
+    },
+    {
+      "code": "1SA",
+      "chapters": 31,
+      "verses": 810,
+      "bytes": 143697,
+      "sha256": "2b19cdfd47254a8ddd83630658fdf2fe96fe1663468584814a19e2d2558e4939"
+    },
+    {
+      "code": "2SA",
+      "chapters": 24,
+      "verses": 695,
+      "bytes": 118823,
+      "sha256": "3bd06effe3de838278e0c038294a4a61f8b182d57b0a393a861688640942411f"
+    },
+    {
+      "code": "1KI",
+      "chapters": 22,
+      "verses": 816,
+      "bytes": 140755,
+      "sha256": "c2a38b01cbc51a34bd7f56e5c2827890d071e462819ee871c33fb33ae4d0b767"
+    },
+    {
+      "code": "2KI",
+      "chapters": 25,
+      "verses": 719,
+      "bytes": 134041,
+      "sha256": "d796f49556664a364009ab40b443a9062a219b0f770511974bc5f1f61e937bed"
+    },
+    {
+      "code": "1CH",
+      "chapters": 29,
+      "verses": 942,
+      "bytes": 128407,
+      "sha256": "cc3cbf9bc222e6692fc5f7ad3f8a578a0df6a4b395c7a14877e7961c5e7cae50"
+    },
+    {
+      "code": "2CH",
+      "chapters": 36,
+      "verses": 822,
+      "bytes": 153717,
+      "sha256": "db28924a9f4da13ca5b1d3254e8775a21cd20c91f98716fe31bfa361ad49bb0a"
+    },
+    {
+      "code": "EZR",
+      "chapters": 10,
+      "verses": 280,
+      "bytes": 45519,
+      "sha256": "67455d7afd6356ed881300d06a072b5ad5eeb5b74941d67013d0da579d600935"
+    },
+    {
+      "code": "NEH",
+      "chapters": 13,
+      "verses": 406,
+      "bytes": 64675,
+      "sha256": "b69e4725adedc23a42c2ee05822b8b02a15338ddc77f3cb4db0173d2317aad3e"
+    },
+    {
+      "code": "EST",
+      "chapters": 10,
+      "verses": 167,
+      "bytes": 33339,
+      "sha256": "105aee4a7ced1448beeaeb0386aaa9582d5e0ce4b095556c4f1e88e1fb018659"
+    },
+    {
+      "code": "JOB",
+      "chapters": 42,
+      "verses": 1070,
+      "bytes": 116396,
+      "sha256": "fab0c31fb77dacdc9aa06538c649edc60f4de23934c0234d130379dbc635b81a"
+    },
+    {
+      "code": "PSA",
+      "chapters": 150,
+      "verses": 2461,
+      "bytes": 279187,
+      "sha256": "bd827748ba7114be1cca80d97e548c71880f4e42811b7e911cf1ee1a08f4512d"
+    },
+    {
+      "code": "PRO",
+      "chapters": 31,
+      "verses": 915,
+      "bytes": 98178,
+      "sha256": "e8c9c2868bbbbde7ad0f93d106564548f88c008f533c4f8e7af502b746e6491f"
+    },
+    {
+      "code": "ECC",
+      "chapters": 12,
+      "verses": 222,
+      "bytes": 32959,
+      "sha256": "03843cac97e5838d15ed8240f2d3780461716557263fd7739c23ffdb06ddb2ea"
+    },
+    {
+      "code": "SOL",
+      "chapters": 8,
+      "verses": 117,
+      "bytes": 16121,
+      "sha256": "058120395e69ae1e0a3e3b7c6e6d7b3520c650af71092bc36bf542bff4eb371d"
+    },
+    {
+      "code": "ISA",
+      "chapters": 66,
+      "verses": 1292,
+      "bytes": 218466,
+      "sha256": "b8256b46980ce3be685c7d78025a06cbd2233ee79893be0a45bfbba65a1f8fd9"
+    },
+    {
+      "code": "JER",
+      "chapters": 52,
+      "verses": 1364,
+      "bytes": 251437,
+      "sha256": "c738abff818b5c3da57309ecfded3c97490eb4812295b60e938ace5d8a88387e"
+    },
+    {
+      "code": "LAM",
+      "chapters": 5,
+      "verses": 154,
+      "bytes": 21513,
+      "sha256": "d7f91f1a698b45fdf707dfc29841349b59657491ac98fae0fc4321319c9a7cb8"
+    },
+    {
+      "code": "EZE",
+      "chapters": 48,
+      "verses": 1273,
+      "bytes": 228549,
+      "sha256": "25b7a630d0204e578a9329d864757ff70703863354926b87e37d3aeecb549c39"
+    },
+    {
+      "code": "DAN",
+      "chapters": 12,
+      "verses": 357,
+      "bytes": 68801,
+      "sha256": "c95dc7753c13b024d04f3ba38f44a95a46db8bbb938b89519dc13ba99c3730ff"
+    },
+    {
+      "code": "HOS",
+      "chapters": 14,
+      "verses": 197,
+      "bytes": 31641,
+      "sha256": "f0bbdf500d459ba445be84ff928e5847a9876e57c129a47cb4fa8f498f73277f"
+    },
+    {
+      "code": "JOE",
+      "chapters": 3,
+      "verses": 73,
+      "bytes": 12088,
+      "sha256": "a941145254e56841645933977e24a0db5c35433a6f74a4f595cf03d6764e5939"
+    },
+    {
+      "code": "AMO",
+      "chapters": 9,
+      "verses": 146,
+      "bytes": 24768,
+      "sha256": "1dbfa658c0840fad1bf39cb4e2bdbcb6ed58df7bfcd455ff3654898e2a60f79e"
+    },
+    {
+      "code": "OBA",
+      "chapters": 1,
+      "verses": 21,
+      "bytes": 3837,
+      "sha256": "7bbb9f4287403093b882bbba5ef2569f61c2142fc1730ee917f4b094df69e17c"
+    },
+    {
+      "code": "JON",
+      "chapters": 4,
+      "verses": 48,
+      "bytes": 7695,
+      "sha256": "12221b2d2ac5b9d74344982141b3f3b6d7dbbaee13dc60244a0cc2433583639f"
+    },
+    {
+      "code": "MIC",
+      "chapters": 7,
+      "verses": 105,
+      "bytes": 18105,
+      "sha256": "7eb3ec5bfbe737e8e9f8f0fa0115e18e3907d2ae1f0f0d3596ac47fbf987d0d0"
+    },
+    {
+      "code": "NAH",
+      "chapters": 3,
+      "verses": 47,
+      "bytes": 7641,
+      "sha256": "a50c6f74bf894bd23454088d1fa42e31e834f7d106d01e10f76278d4ab77a4e7"
+    },
+    {
+      "code": "HAB",
+      "chapters": 3,
+      "verses": 56,
+      "bytes": 8726,
+      "sha256": "bc0d0b2e64fd60b734f36085dce247b1057fa06dc0b1551bbe80630623dd1482"
+    },
+    {
+      "code": "ZEP",
+      "chapters": 3,
+      "verses": 53,
+      "bytes": 9558,
+      "sha256": "a41f8792252516f1adc95e3248cd5db0fce9a0c551b7e579bef3a8efbc3b2c71"
+    },
+    {
+      "code": "HAG",
+      "chapters": 2,
+      "verses": 38,
+      "bytes": 6572,
+      "sha256": "3008ede83118d80598431ca943133d330d1bcc385dd7f9c29964c0cdb3e37cc1"
+    },
+    {
+      "code": "ZEC",
+      "chapters": 14,
+      "verses": 211,
+      "bytes": 36777,
+      "sha256": "1b1fc25565193a3eee17b8811c1cfd24a4dbffd433a747ce2810e7901e66c336"
+    },
+    {
+      "code": "MAL",
+      "chapters": 4,
+      "verses": 55,
+      "bytes": 10504,
+      "sha256": "4998da40f407cb5a21218ed99d5b9b97452cba81e5371d614eb1b486c67e6bd6"
+    },
+    {
+      "code": "MAT",
+      "chapters": 28,
+      "verses": 1071,
+      "bytes": 147173,
+      "sha256": "399f9949199f34b7e2bbd39813003838aaafb4eafbd704c6fddb78046a250426"
+    },
+    {
+      "code": "MAR",
+      "chapters": 16,
+      "verses": 678,
+      "bytes": 92297,
+      "sha256": "0e0dcc6b6f3d2ce20f4d5bb374a3316cebf1d6cdc10bee347f165ad02574208f"
+    },
+    {
+      "code": "LUK",
+      "chapters": 24,
+      "verses": 1151,
+      "bytes": 156397,
+      "sha256": "6ad32f1c9737055ea63cf5aa91d332eaa02cdf8a3e1cc3e098715b29320abef8"
+    },
+    {
+      "code": "JOH",
+      "chapters": 21,
+      "verses": 879,
+      "bytes": 118632,
+      "sha256": "9ee16f17b9363d7e5d0336aef0f244d13d57e1dfeb4153f267ff6d9af7c42bcf"
+    },
+    {
+      "code": "ACT",
+      "chapters": 28,
+      "verses": 1007,
+      "bytes": 148803,
+      "sha256": "e901122594c9e7a69039bc7ab54cf6a1dcbc6e156cf0faf03b5ec400c75fa246"
+    },
+    {
+      "code": "ROM",
+      "chapters": 16,
+      "verses": 434,
+      "bytes": 60521,
+      "sha256": "957ccbea7c0f5ba1aa0abdc846b9863b82d5642f2cdb815deeb141045b76aab1"
+    },
+    {
+      "code": "1CO",
+      "chapters": 16,
+      "verses": 437,
+      "bytes": 59195,
+      "sha256": "0476b647f12e8fded0e1718790f27abc096e0005dbe0f22d5de52286a648b5fa"
+    },
+    {
+      "code": "2CO",
+      "chapters": 13,
+      "verses": 257,
+      "bytes": 38102,
+      "sha256": "0e54a8ac92df39271c314c5f0fad49e109a0bfdaa62571c407f3961807c66039"
+    },
+    {
+      "code": "GAL",
+      "chapters": 6,
+      "verses": 149,
+      "bytes": 19945,
+      "sha256": "383695bdae1545513ceab6d5dad6b0459f23b3eb8a1fac4a29364136cbea1c67"
+    },
+    {
+      "code": "EPH",
+      "chapters": 6,
+      "verses": 155,
+      "bytes": 20026,
+      "sha256": "430887e501f61cf7da08adcf3308a0801f127dae91ba96289207c45e5eff6acf"
+    },
+    {
+      "code": "PHI",
+      "chapters": 4,
+      "verses": 104,
+      "bytes": 14024,
+      "sha256": "b0f40f65e14d2a60b119ff05a2340101cd9e9bfe999c677160cf8bff0ace015a"
+    },
+    {
+      "code": "COL",
+      "chapters": 4,
+      "verses": 95,
+      "bytes": 12978,
+      "sha256": "fdce6db17079487394c2889ce0091ece940e9d409d7a48574b1606546f0ecb68"
+    },
+    {
+      "code": "1TH",
+      "chapters": 5,
+      "verses": 89,
+      "bytes": 11757,
+      "sha256": "3806b5f71687c508b06edacf3a4d80954b98214090ad42a6936890e05866a425"
+    },
+    {
+      "code": "2TH",
+      "chapters": 3,
+      "verses": 47,
+      "bytes": 6586,
+      "sha256": "72b4bb3cd011b8e42086ec650d9e73b21e3234dfb2985f06d63c6b5bfb0dfcee"
+    },
+    {
+      "code": "1TI",
+      "chapters": 6,
+      "verses": 113,
+      "bytes": 15404,
+      "sha256": "a95043c94574516144dc1982921213e0cf3181bf8342d90df3d21233332b7d15"
+    },
+    {
+      "code": "2TI",
+      "chapters": 4,
+      "verses": 83,
+      "bytes": 10857,
+      "sha256": "79dcbf5c79a6afd023cc2287d90f0b0330f1186a35ecfdedcee1d1a3283b2242"
+    },
+    {
+      "code": "TIT",
+      "chapters": 3,
+      "verses": 46,
+      "bytes": 6284,
+      "sha256": "17c2c79fc76706af38a41c1c2da41d3f13338603498abf7b3e01314a4e0ec849"
+    },
+    {
+      "code": "PHM",
+      "chapters": 1,
+      "verses": 25,
+      "bytes": 2888,
+      "sha256": "7d2edf85a263ce84ccab972b4251b4536259ce1428260eb7b3aed0401090a0dc"
+    },
+    {
+      "code": "HEB",
+      "chapters": 13,
+      "verses": 303,
+      "bytes": 44553,
+      "sha256": "3bd14152d3fd4bf1e525fdf25865bf7e9ca9af121cad9e8e2a106f4bf78fdc12"
+    },
+    {
+      "code": "JAM",
+      "chapters": 5,
+      "verses": 108,
+      "bytes": 14537,
+      "sha256": "f9aa78735540acc928ef489d5da7845de81913fee6c863e53530a6548c201978"
+    },
+    {
+      "code": "1PE",
+      "chapters": 5,
+      "verses": 105,
+      "bytes": 15742,
+      "sha256": "8b7da40ba2ad32f52c716cd1bf61464b285de78ab1ada9025ec88cdd5e57f175"
+    },
+    {
+      "code": "2PE",
+      "chapters": 3,
+      "verses": 61,
+      "bytes": 9952,
+      "sha256": "1aeca5d06f53cad4881c9526d3b95030399e0106c41f4abd5d6541f59c553cde"
+    },
+    {
+      "code": "1JO",
+      "chapters": 5,
+      "verses": 105,
+      "bytes": 14995,
+      "sha256": "40760cde2c2a86a33a94b4d2d703fb97bec2f98933afadacfb195fc884b536ff"
+    },
+    {
+      "code": "2JO",
+      "chapters": 1,
+      "verses": 13,
+      "bytes": 1896,
+      "sha256": "baf926b8af1cb7c6e2afb9337aaeb18040fbe0d5b4977ea09ac7c74c28e26523"
+    },
+    {
+      "code": "3JO",
+      "chapters": 1,
+      "verses": 14,
+      "bytes": 1898,
+      "sha256": "341b42481e2656ecdf98e0c0113eef2194f71efc457719bf585506df0a50e185"
+    },
+    {
+      "code": "JUD",
+      "chapters": 1,
+      "verses": 25,
+      "bytes": 4103,
+      "sha256": "c74b0ef32b6b61635433984d94c0eeab2c38153d24ff68c5b1557580dc705110"
+    },
+    {
+      "code": "REV",
+      "chapters": 22,
+      "verses": 404,
+      "bytes": 68949,
+      "sha256": "45f2846499258a39e3c64dfc5175d4808c5acbd00ab61029faafc84b1380d443"
+    }
+  ]
+}
