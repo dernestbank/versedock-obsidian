@@ -23,7 +23,7 @@ This preview is **not yet eligible for one-click installation from Obsidian's di
 
 1. In Obsidian, create a dedicated **test vault** before installing; do not trial experimental builds in irreplaceable notes.
 2. Extract the ZIP into `<vault>/.obsidian/plugins/versedock/`. The folder must contain `main.js`, `manifest.json`, `styles.css`, and `library/webp/manifest.json` plus per-book JSON files.
-3. Open the vault in Obsidian, go to **Settings → Community plugins**, enable community plugins, and enable **SwordDock Bible** (older downloads still display **VerseDock (Preview)**).
+3. Open the vault in Obsidian, go to **Settings → Community plugins**, enable community plugins, and enable **SwordDock Bible** (older downloads still display **VerseDock (Preview)**). When upgrading from the previous name, fully quit and reopen Obsidian **after safely saving other vaults**; the running application may cache the previous command prefix. Do not rename the installed `versedock` folder or delete its `data.json`.
 4. Open the command palette and run **SwordDock Bible: Open Bible Reader**.
 5. For a study workflow, open **SwordDock Bible: Open Bible Study Desk**. Other available commands include Quick Jump, Quick Verse Insert, offline Search, and Module Library.
 
@@ -40,6 +40,7 @@ npm ci --legacy-peer-deps
 npm run check
 npm run deploy:test
 npm run package:preview
+npm run smoke:preview
 ```
 
 Open `test-vault` as a separate vault in Obsidian and enable the development plugin. The committed `library/webp` contains validated public-domain data, so an additional data download is not necessary just to build. To regenerate the source precisely, download `https://ebible.org/Scriptures/engwebp_vpl.zip` to `.research/engwebp_vpl.zip` and run `npm run library:build`.

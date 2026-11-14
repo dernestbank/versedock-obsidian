@@ -11,6 +11,11 @@
 
 ### Development improvements (November 14, 2026)
 
+- Add a clean-vault ZIP extraction, integrity and simulated offline restart smoke test to CI, without touching a personal vault.
+- Restrict build contents to exactly 74 approved files and make ZIP metadata reproducible across consecutive builds.
+- Make responsive Reader styles follow the Obsidian pane width using container queries; preserve Quick Jump on narrow panes.
+- Preserve text selection when clicking Scripture and expose pressed state for bookmark/highlight actions.
+
 - Make Quick Verse Insert non-destructive if the Markdown document or selection changes while the modal is open; copy fallback and multiline quotation formatting.
 - Add accessible live reference preview announcements and repair Reader naming.
 - Preserve verse keyboard focus across Reader rerenders.

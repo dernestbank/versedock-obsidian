@@ -11,7 +11,8 @@
     "library:build": "python3 scripts/build_web_library.py",
     "deploy:test": "node scripts/deploy-test.mjs",
     "check": "npm run typecheck && npm test && npm run build",
-    "package:preview": "python3 scripts/build_preview.py"
+    "package:preview": "python3 scripts/build_preview.py",
+    "smoke:preview": "python3 scripts/smoke_preview.py"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

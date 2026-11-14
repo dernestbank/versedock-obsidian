@@ -17,5 +17,5 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - run: npm run check
       - run: npm run package:preview
-      - name: Verify package contents
-        run: unzip -l dist/SwordDock-Bible-0.1.0-offline-preview.zip | grep -E 'main.js|library/webp/manifest.json'
+      - name: Verify independent offline fresh installation
+        run: npm run smoke:preview

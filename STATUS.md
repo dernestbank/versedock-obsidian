@@ -7,6 +7,14 @@ This independent project started under the internal name **MySword+**. Its origi
 > **Branding update (2026-11-12):** Visible branding changed to **SwordDock Bible** while keeping the installed plugin ID `versedock` and the existing GitHub repository URL stable. The historical GUI checks below were performed before the rename; rerun the GUI check for final verification. Official trademark clearance is pending.
 
 
+## Additional QA continuation — 2026-11-14
+
+- Automated ZIP install into a disposable vault succeeded for the independent 0.1.1 package; all 74 entries and 66 books were extracted and checked. All 31,103 verses verified on initial and simulated offline restart reads. This is a filesystem/packaging smoke test, **not** an Obsidian fresh-GUI installation test.
+- Replaced viewport-dependent Reader breakpoints with pane-width container queries; narrowed controls retain Quick Jump. Verse text selection no longer triggers a rerender, and bookmark/highlight buttons announce their pressed state.
+- Existing live Obsidian test-vault window still showed the cached `VerseDock (Preview)` command prefix after replacing the plugin files, although installed `manifest.json` says SwordDock Bible 0.1.1. A complete Obsidian restart or deliberate plugin reload is required for honest GUI re-verification. Do **not** count this old in-memory command as a successful 0.1.1 UI test; other open vaults were left running.
+- GitHub Actions no longer hardcodes the old 0.1.0 ZIP name and calls the new offline package smoke command.
+- Preview ZIP builder now enforces an exact allowlist and deterministic timestamps/permissions; two consecutive builds produced matching SHA-256 checksums. This guards against accidentally distributing private data or stray files.
+
 ## Development continuation — 2026-11-14
 
 - Replaced modal insertion with captured-note and selection guards: a moved cursor, changed document or closed Markdown editor cannot be overwritten; clipboard fallback is attempted safely.

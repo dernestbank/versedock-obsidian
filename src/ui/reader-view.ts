@@ -160,6 +160,10 @@ export class ReaderView extends ItemView {
       row.createSpan({ cls: "vd-verse-text", text: verse.text });
       row.addEventListener("click", e => {
         if ((e.target as HTMLElement).closest("button")) return;
+        // Do not tear down the DOM while the user is selecting Scripture text to copy.
+        const selection = window.getSelection();
+        if (selection && !selection.isCollapsed &&
+            (row.contains(selection.anchorNode) || row.contains(selection.focusNode))) return;
         this.plugin.selectReference({ book: ref.book, chapter: ref.chapter, verse: verse.verse });
       });
       row.addEventListener("keydown", e => {
@@ -170,8 +174,11 @@ export class ReaderView extends ItemView {
       if (selected) {
         const actions = row.createDiv({ cls: "vd-verse-actions" });
         iconButton(actions, "copy", "Copy verse", () => { void this.plugin.copyPassage(ref); });
-        iconButton(actions, "highlighter", "Toggle highlight", () => this.plugin.toggleHighlight(verseRef));
-        iconButton(actions, this.plugin.settings.bookmarks.includes(ref.book.osis + "." + ref.chapter + "." + verse.verse) ? "bookmark-check" : "bookmark", "Toggle bookmark", () => this.plugin.toggleBookmark(verseRef));
+        const highlightAction = iconButton(actions, "highlighter", "Toggle highlight", () => this.plugin.toggleHighlight(verseRef));
+        highlightAction.setAttribute("aria-pressed", highlight ? "true" : "false");
+        const bookmarked = this.plugin.settings.bookmarks.includes(ref.book.osis + "." + ref.chapter + "." + verse.verse);
+        const bookmarkAction = iconButton(actions, bookmarked ? "bookmark-check" : "bookmark", "Toggle bookmark", () => this.plugin.toggleBookmark(verseRef));
+        bookmarkAction.setAttribute("aria-pressed", bookmarked ? "true" : "false");
         iconButton(actions, "notebook-pen", "Open linked note", () => { void this.plugin.openStudyNote(ref); });
         iconButton(actions, "book-open-check", "Open inspector", () => { void this.plugin.openInspector(); });
       }
