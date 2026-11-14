@@ -4,7 +4,7 @@
 
 SwordDock Bible was previously developed under the working titles *MySword+* and *VerseDock*. It is **not affiliated with MySword, Obsidian, Logos, or other Bible software vendors.** Future MySword module compatibility is a planned feature, not part of the current release.
 
-## What works in 0.1.0
+## What works in the 0.1.x developer previews
 
 - Read the **World English Bible (WEB, 66-book ENGWEBP edition)** offline, with an elegant theme-adaptive serif reader and adjustable typography.
 - Jump to books and chapters, or type references such as `John 3:16`, `Ps 23`, and `1co 13:4-7`.
@@ -19,7 +19,7 @@ The plugin currently includes **only the WEB**. Commentaries, dictionaries, Stro
 
 ## Download and install this development preview
 
-This preview is **not yet eligible for one-click installation from Obsidian's directory**. The original public 0.1.0 preview was released under the previous VerseDock name. Until a SwordDock Bible release is published, download the existing `VerseDock-0.1.0-offline-preview.zip` asset from [GitHub Releases](https://github.com/dernestbank/versedock-obsidian/releases). Its installed folder and manifest ID remain `versedock`. The locally staged rebranded package is named `SwordDock-Bible-0.1.0-offline-preview.zip`, but it is not yet a published release.
+This preview is **not yet eligible for one-click installation from Obsidian's directory**. The original public 0.1.0 preview was released under the previous VerseDock name. Until a SwordDock Bible release is published, download the existing `VerseDock-0.1.0-offline-preview.zip` asset from [GitHub Releases](https://github.com/dernestbank/versedock-obsidian/releases). Its installed folder and manifest ID remain `versedock`. The locally staged **0.1.1 development candidate** is named `SwordDock-Bible-0.1.1-offline-preview.zip`, but it is not yet a published release. It adds safe Quick Verse Insert, accessibility and local Bible integrity checking.
 
 1. In Obsidian, create a dedicated **test vault** before installing; do not trial experimental builds in irreplaceable notes.
 2. Extract the ZIP into `<vault>/.obsidian/plugins/versedock/`. The folder must contain `main.js`, `manifest.json`, `styles.css`, and `library/webp/manifest.json` plus per-book JSON files.

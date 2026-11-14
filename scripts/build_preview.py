@@ -10,7 +10,7 @@ manifest = json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))
 version = manifest["version"]
 plugin_id = manifest["id"]
 assert plugin_id == "versedock", plugin_id
-assert version == "0.1.0", version
+assert version in json.loads((ROOT / "versions.json").read_text()), version
 assets = ["main.js", "manifest.json", "styles.css", "README.md", "BRAND-GUIDELINES.md", "LICENSE"]
 books = sorted((ROOT / "library" / "webp").glob("*"))
 assert len([p for p in books if p.suffix == ".json"]) == 67, len(books)

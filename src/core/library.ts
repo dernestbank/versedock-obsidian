@@ -2,6 +2,7 @@ import type { App } from "obsidian";
 import { BOOKS, type BookInfo } from "./books";
 import type { PassageReference } from "./references";
 import { refLabel } from "./references";
+import { checkBookIntegrity, type IntegrityReport } from "./integrity";
 
 export interface VerseData { verse: number; text: string }
 export interface ChapterData { chapter: number; verses: VerseData[] }
@@ -38,6 +39,32 @@ export class OfflineBibleLibrary {
   }
   getChapterCount(book: BookInfo): number {
     return this.manifest?.books.find(b => b.code === book.vpl)?.chapters ?? 0;
+  }
+  /** Checks installed files against their recorded lengths, checksums and chapter counts. */
+  async verifyIntegrity(onProgress?: (checked: number, total: number) => void): Promise<IntegrityReport> {
+    if (!this.manifest) return {
+      checked: 0, total: 0, issues: [{ code: "manifest", problem: "No valid library manifest installed" }]
+    };
+    const books = this.manifest.books;
+    const issues: IntegrityReport["issues"] = [];
+    let checked = 0;
+    for (const book of books) {
+      try {
+        if (!BOOKS.some(known => known.vpl === book.code)) {
+          issues.push({ code: book.code, problem: "Unexpected book identifier in manifest" });
+        } else {
+          const raw = await this.app.vault.adapter.read(this.folder + "/" + book.code + ".json");
+          for (const problem of await checkBookIntegrity(book, raw))
+            issues.push({ code: book.code, problem });
+        }
+      } catch (error) {
+        issues.push({ code: book.code, problem: "Unable to read or verify: " +
+          (error instanceof Error ? error.message : String(error)) });
+      }
+      checked++;
+      onProgress?.(checked, books.length);
+    }
+    return { checked, total: books.length, issues };
   }
   private async loadBook(book: BookInfo): Promise<BookData> {
     const cached = this.cache.get(book.vpl);

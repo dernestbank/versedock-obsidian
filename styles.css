@@ -250,3 +250,16 @@
 .versedock .vd-category-label { font-size: 13px; margin: 14px 0; }
 .versedock .vd-library-path { overflow-wrap: anywhere; font-family: var(--font-monospace); font-size: 10px; color: var(--text-muted); }
 .versedock .vd-inspector-body > .vd-text-button { margin: 4px 6px 4px 0; border: 1px solid var(--background-modifier-border); }
+
+/* Verification feedback stays inside the plugin's scoped theme tokens. */
+.versedock .vd-integrity-status:not(:empty) {
+  margin: 12px 0 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m, 9px);
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.versedock .vd-integrity-status strong { display: block; color: var(--text-normal); margin-bottom: 7px; }
+.versedock .vd-integrity-status > div { overflow-wrap: anywhere; margin-top: 3px; }

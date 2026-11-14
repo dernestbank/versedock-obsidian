@@ -1,0 +1,35 @@
+/** Guard against inserting Scripture into a note that changed while the modal was open. */
+export type EditorPosition = { line: number; ch: number };
+export interface SafeInsertionEditor {
+  getValue(): string;
+  getCursor(which: "from" | "to"): EditorPosition;
+  replaceRange(text: string, from: EditorPosition, to: EditorPosition): void;
+}
+export interface InsertionSnapshot {
+  readonly content: string;
+  readonly from: EditorPosition;
+  readonly to: EditorPosition;
+}
+export type InsertFormat = "callout" | "quote";
+export type PassageLine = { verse: number; text: string };
+const pos = (p: EditorPosition): EditorPosition => ({ line: p.line, ch: p.ch });
+const equal = (a: EditorPosition, b: EditorPosition): boolean => a.line === b.line && a.ch === b.ch;
+export function captureInsertionSnapshot(editor: SafeInsertionEditor): InsertionSnapshot {
+  return { content: editor.getValue(), from: pos(editor.getCursor("from")), to: pos(editor.getCursor("to")) };
+}
+export function canInsertAtSnapshot(editor: SafeInsertionEditor, snapshot: InsertionSnapshot): boolean {
+  return editor.getValue() === snapshot.content &&
+    equal(editor.getCursor("from"), snapshot.from) && equal(editor.getCursor("to"), snapshot.to);
+}
+export function insertAtSnapshot(editor: SafeInsertionEditor, snapshot: InsertionSnapshot, markdown: string): boolean {
+  if (!canInsertAtSnapshot(editor, snapshot)) return false;
+  editor.replaceRange(markdown + "\n", snapshot.from, snapshot.to);
+  return true;
+}
+export function formatPassageMarkdown(format: InsertFormat, referenceLabel: string, verses: readonly PassageLine[]): string {
+  const lines = verses.flatMap(v => v.text.replace(/\r\n?/g, "\n").split("\n").map((line, i) =>
+    "> " + (i === 0 ? v.verse + " " : "") + line));
+  return format === "callout"
+    ? ["> [!bible] " + referenceLabel, ...lines].join("\n")
+    : [...lines, "> — " + referenceLabel].join("\n");
+}

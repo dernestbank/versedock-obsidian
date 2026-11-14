@@ -30,7 +30,7 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     this.registerView(SEARCH_VIEW, (leaf: WorkspaceLeaf) => new SearchView(leaf, this));
     this.registerView(LIBRARY_VIEW, (leaf: WorkspaceLeaf) => new LibraryView(leaf, this));
 
-    this.addRibbonIcon("book-open", "SwordDock Bible Bible Reader", () => { void this.openReader(); });
+    this.addRibbonIcon("book-open", "SwordDock Bible Reader", () => { void this.openReader(); });
     this.addCommand({ id: "open-reader", name: "Open Bible Reader", callback: () => { void this.openReader(); } });
     this.addCommand({ id: "open-study-desk", name: "Open Bible Study Desk", callback: () => {
       void (async () => { await this.openReader(); await this.openInspector(); })();

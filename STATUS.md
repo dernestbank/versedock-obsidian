@@ -1,15 +1,25 @@
 # SwordDock Bible — Development QA Report
 
-Version: **0.1.0 (Developer Preview)** · Date: **2026-11-12** · Internal project directory: `mysword+`
+Version: **0.1.1 (local developer candidate)** · Date: **2026-11-14** · Internal project directory: `mysword+`
 
 This independent project started under the internal name **MySword+**. Its original public name was **VerseDock**; its current preferred name is **SwordDock Bible**, with no affiliation with the original MySword app.
 
 > **Branding update (2026-11-12):** Visible branding changed to **SwordDock Bible** while keeping the installed plugin ID `versedock` and the existing GitHub repository URL stable. The historical GUI checks below were performed before the rename; rerun the GUI check for final verification. Official trademark clearance is pending.
 
+
+## Development continuation — 2026-11-14
+
+- Replaced modal insertion with captured-note and selection guards: a moved cursor, changed document or closed Markdown editor cannot be overwritten; clipboard fallback is attempted safely.
+- Normalized multiline Scripture Markdown with WEB attribution; added live preview announcement.
+- Corrected duplicate SwordDock Bible Reader label and preserved keyboard focus when navigating verses in a rerendered reader pane (GUI keyboard test still pending).
+- Added on-demand Module Library integrity verification of all 66 book files using recorded SHA-256 hashes, file lengths and structural counts. Hashes in the original manifest intentionally exclude a single trailing newline added when writing each JSON file.
+- Full integrity integration test checks the shipped data and a simulated missing book; other tests cover corruption and insertion selection drift.
+- Current local 0.1.1 candidate is **not released**; prior graphical smoke evidence applies to the historical 0.1.0 build, not these new controls.
+
 ## Verified on macOS / Obsidian 1.15.0
 
 - **Build:** strict TypeScript `tsc --noEmit` passed, esbuild `main.js` generated successfully.
-- **Original QA tests:** 18/18 passed (book references, OSIS IDs, 66-book WEB dataset, local chapter reading and search). **Branding verification:** current local checks pass 21/21, including three tests for the new name, preserved installed ID and retired UI copy.
+- **Original QA tests:** 18/18 passed (book references, OSIS IDs, 66-book WEB dataset, local chapter reading and search). **Current developer candidate:** 29 automated tests cover naming compatibility, offline reading, captured editor selection safety, content hashing and whole-library file verification.
 - **Data:** 66 public-domain ENGWEBP book files, 31,103 verses, exact text preserved; provenance and checksum documented.
 - **Actual GUI:** opened an isolated test vault in Obsidian; enabled the plugin; opened its Bible Reader from the native command palette.
 - **Reader:** John 3:16 appeared with styled passage text, contextual actions, book/chapter controls and theme-aware dark UI.
@@ -20,7 +30,7 @@ This independent project started under the internal name **MySword+**. Its origi
 - **Original 0.1.0 test:** renamed manifest ID and product to VerseDock; reinstalled the plugin in an isolated vault and confirmed **VerseDock (Preview)** commands appeared and Bible Reader opened. That historical GUI test predates the SwordDock Bible rebrand.
 - **Manual preview ZIP:** the archive includes `main.js`, `manifest.json`, `styles.css`, license, README and every offline WEB book, and passed ZIP integrity check.
 
-**Current local package:** `SwordDock-Bible-0.1.0-offline-preview.zip` builds with 74 entries, including branded documentation and the original WEB data. It is a locally staged package, not a new GitHub release. Publishing a replacement after the existing 0.1.0 release requires a new version/tag and refreshed GUI smoke testing.
+**Current local package:** `SwordDock-Bible-0.1.1-offline-preview.zip` contains the independent offline library and brand documentation. It is a local developer candidate, **not a published GitHub release**; new in-app GUI flows still need hands-on verification before release.
 
 ## Test boundaries / not yet verified
 

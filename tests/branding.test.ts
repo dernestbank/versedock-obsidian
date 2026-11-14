@@ -11,7 +11,8 @@ describe("SwordDock Bible branding and compatibility", () => {
     const manifest = json("manifest.json");
     expect(manifest.name).toBe("SwordDock Bible");
     expect(manifest.id).toBe("versedock");
-    expect(manifest.version).toBe("0.1.0");
+    expect(manifest.version).toBe(json("package.json").version);
+    expect(json("versions.json")).toHaveProperty(String(manifest.version));
   });
 
   it("uses the corresponding private development package name", () => {

@@ -37,4 +37,23 @@ describe("official WEB content", () => {
     const results = await reader.search("For God so loved the world", 5);
     expect(results.some(r => r.label === "John 3:16")).toBe(true);
   });
+  it("verifies all 66 locally installed books and reports missing ones", async () => {
+    const makeApp = (missing = "") => ({ vault: {
+      configDir: ".obsidian",
+      adapter: { read: async (name: string) => {
+        if (name.endsWith("/" + missing + ".json")) throw new Error("file missing");
+        return readFileSync(path.join(libraryPath, path.basename(name)), "utf8");
+      }}
+    }} as unknown as App);
+    const library = new OfflineBibleLibrary(makeApp(), "versedock");
+    expect(await library.initialize()).toBe(true);
+    const complete = await library.verifyIntegrity();
+    expect(complete.checked).toBe(66);
+    expect(complete.issues).toEqual([]);
+    const broken = new OfflineBibleLibrary(makeApp("GEN"), "versedock");
+    expect(await broken.initialize()).toBe(true);
+    const report = await broken.verifyIntegrity();
+    expect(report.checked).toBe(66);
+    expect(report.issues.some(issue => issue.code === "GEN" && issue.problem.includes("file missing"))).toBe(true);
+  });
 });

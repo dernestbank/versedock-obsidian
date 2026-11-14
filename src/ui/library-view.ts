@@ -47,6 +47,37 @@ export class LibraryView extends ItemView {
         this.render();
       })();
     });
+    const verify = textButton(actions, "Verify installed Bible", () => {
+      void (async () => {
+        verify.disabled = true;
+        const status = root.querySelector<HTMLElement>(".vd-integrity-status");
+        if (status) status.setText("Checking installed Bible files…");
+        try {
+          const report = await this.plugin.library.verifyIntegrity((checked, total) => {
+            if (status && (checked % 5 === 0 || checked === total))
+              status.setText("Checking installed Bible files: " + checked + " / " + total);
+          });
+          if (status) {
+            status.empty();
+            if (!report.issues.length) {
+              status.setText("Verified " + report.checked + " of " + report.total + " books. All installed files match their recorded SHA-256 checksums and structure.");
+            } else {
+              status.createEl("strong", { text: report.issues.length + " integrity issue(s) found across " + report.checked + " checked files." });
+              for (const issue of report.issues.slice(0, 6))
+                status.createDiv({ text: issue.code + ": " + issue.problem });
+              if (report.issues.length > 6) status.createDiv({ text: "…and " + (report.issues.length - 6) + " more. Reinstall the complete official offline package." });
+            }
+          }
+          new Notice(report.issues.length ? "Bible library verification detected problems." : "Bible library verified.");
+        } catch (error) {
+          if (status) status.setText("Verification failed: " + (error instanceof Error ? error.message : String(error)));
+        } finally {
+          verify.disabled = false;
+        }
+      })();
+    });
+    verify.disabled = !manifest;
+    root.createDiv({ cls: "vd-integrity-status", attr: { role: "status", "aria-live": "polite" } });
     root.createEl("h3", { cls: "vd-category-label", text: "Additional study modules" });
     emptyState(root, "No other modules installed", "Commentary, dictionaries, lexicons, devotionals, comparison translations and MySword imports are planned for later releases.", "layers");
     root.createEl("p", { cls: "vd-library-path", text: "Local development library: .obsidian/plugins/versedock/library/webp" });

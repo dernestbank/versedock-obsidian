@@ -13,7 +13,7 @@ export class ReaderView extends ItemView {
   private scroll: HTMLElement | null = null;
   constructor(leaf: WorkspaceLeaf, private readonly plugin: SwordDockController) { super(leaf); }
   getViewType(): string { return READER_VIEW; }
-  getDisplayText(): string { return "SwordDock Bible Bible Reader"; }
+  getDisplayText(): string { return "SwordDock Bible Reader"; }
   getIcon(): string { return "book-open"; }
   async onOpen(): Promise<void> {
     this.unsubscribe = this.plugin.subscribe(() => { void this.render(); });
@@ -99,6 +99,9 @@ export class ReaderView extends ItemView {
     const version = ++this.renderId;
     const ref = this.plugin.currentRef;
     const previousScroll = this.scroll?.scrollTop ?? 0;
+    const active = document.activeElement as HTMLElement | null;
+    const focusWithinReader = !!active && !!this.scroll?.contains(active);
+    const focusedVerse = focusWithinReader ? active?.closest<HTMLElement>(".vd-verse")?.dataset.verse : undefined;
     const changedChapter = this.scroll?.dataset.chapter !== ref.book.vpl + "." + ref.chapter;
     const root = this.contentEl;
     root.empty(); root.addClass("versedock", "vd-reader");
@@ -181,9 +184,11 @@ export class ReaderView extends ItemView {
     footer.createSpan({ text: "Offline • No account" });
 
     if (!changedChapter) this.scroll.scrollTop = previousScroll;
-    else if (ref.verse !== undefined) {
-      const selected = this.scroll.querySelector(".vd-verse.is-selected");
-      selected?.scrollIntoView({ block: "center", behavior: "auto" });
-    }
+    const selectedRow = this.scroll.querySelector<HTMLElement>(".vd-verse.is-selected");
+    if (ref.verse !== undefined && (changedChapter || focusedVerse !== undefined))
+      selectedRow?.scrollIntoView({ block: changedChapter ? "center" : "nearest", behavior: "auto" });
+    // Replacing the Reader DOM should never strand keyboard users on the document body.
+    if (focusWithinReader && document.activeElement === document.body)
+      (focusedVerse !== undefined ? selectedRow ?? this.scroll : this.scroll).focus({ preventScroll: true });
   }
 }

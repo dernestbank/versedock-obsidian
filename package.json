@@ -1,8 +1,8 @@
 {
   "name": "sworddock-bible",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
-  "description": "SwordDock Bible \u2014 theme-adaptive offline-first Bible study for Obsidian",
+  "description": "SwordDock Bible — theme-adaptive offline-first Bible study for Obsidian",
   "scripts": {
     "build": "node esbuild.config.mjs production",
     "dev": "node esbuild.config.mjs",
