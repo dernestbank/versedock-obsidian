@@ -10,7 +10,7 @@ manifest = json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))
 version = manifest["version"]
 assert manifest["id"] == "versedock", "Keep the existing installed plugin ID"
 assert version in json.loads((ROOT / "versions.json").read_text()), version
-assets = ["main.js", "manifest.json", "styles.css", "README.md", "BRAND-GUIDELINES.md", "LICENSE"]
+assets = ["main.js", "manifest.json", "styles.css", "README.md", "BRAND-GUIDELINES.md", "LICENSE", "assets/sql-wasm.wasm", "assets/LICENSE-sql.js.txt"]
 library_dir = ROOT / "library" / "webp"
 web = json.loads((library_dir / "manifest.json").read_text(encoding="utf-8"))
 assert web["id"] == "webp" and len(web["books"]) == 66 and web["verseCount"] == 31103

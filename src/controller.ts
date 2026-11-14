@@ -29,6 +29,7 @@ export interface SwordDockController {
   openInspector(): Promise<void>;
   openSearch(): Promise<void>;
   openReferenceModal(mode: "jump" | "insert"): void;
+  openMySwordInspector(): void;
   openStudyNote(ref: PassageReference): Promise<void>;
   copyPassage(ref: PassageReference): Promise<void>;
   toggleBookmark(ref: PassageReference): void;

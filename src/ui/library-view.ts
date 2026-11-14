@@ -76,6 +76,7 @@ export class LibraryView extends ItemView {
         }
       })();
     });
+    textButton(actions, "Inspect MySword Bible file", () => this.plugin.openMySwordInspector());
     verify.disabled = !manifest;
     root.createDiv({ cls: "vd-integrity-status", attr: { role: "status", "aria-live": "polite" } });
     root.createEl("h3", { cls: "vd-category-label", text: "Additional study modules" });

@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — 0.1.1 SwordDock Bible developer candidate
+## Unreleased — 0.1.2 SwordDock Bible developer candidate
 
 - Adopt **SwordDock Bible** as the preferred product name and **SwordDock** as the short brand.
 - Update user-facing labels, product documentation, prototype design sources, and preview packaging name.
@@ -9,10 +9,17 @@
 - Preliminary exact-name screening found no obvious collision; comprehensive trademark clearance remains pending.
 
 
+### MySword inspection foundation (November 14, 2026)
+
+- Add offline read-only inspection of user-selected `.bbl.mybible` Bible databases with SQLite header, schema, record, reference and integrity checks. No module import/installation, network access or unsafe HTML rendering.
+- Bundle sql.js MIT-licensed WebAssembly engine and license in the manual ZIP; verify in isolated packaging smoke tests.
+- Add seven synthetic SQLite tests, including a full 31,103-verse generated corpus and empty-verse compatibility checks; document untested real-file scenarios and permissions requirements.
+- Upgrade Vitest to a patched release and confirm zero known dependency-audit findings.
+
 ### Development improvements (November 14, 2026)
 
 - Add a clean-vault ZIP extraction, integrity and simulated offline restart smoke test to CI, without touching a personal vault.
-- Restrict build contents to exactly 74 approved files and make ZIP metadata reproducible across consecutive builds.
+- Restrict build contents to an exact allowlist (76 files in current preview) and make ZIP metadata reproducible across consecutive builds.
 - Make responsive Reader styles follow the Obsidian pane width using container queries; preserve Quick Jump on narrow panes.
 - Preserve text selection when clicking Scripture and expose pressed state for bookmark/highlight actions.
 
@@ -21,7 +28,7 @@
 - Preserve verse keyboard focus across Reader rerenders.
 - Provide on-demand SHA-256 and structural verification for installed WEB books.
 - Add automated tests for note insertion and file integrity (29 tests in the local candidate).
-- Advance package/manifest to 0.1.1; **no GitHub release or plugin directory submission yet**.
+- The earlier local candidate was 0.1.1; the current MySword preview candidate is **0.1.2**. No GitHub release or plugin directory submission yet.
 
 ## 0.1.0 — Developer preview (2026-11-12)
 

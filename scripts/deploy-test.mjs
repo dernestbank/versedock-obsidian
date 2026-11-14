@@ -8,6 +8,11 @@ fs.mkdirSync(pluginDir, { recursive: true });
 for (const file of ["main.js", "manifest.json", "styles.css"]) {
   fs.copyFileSync(path.join(root, file), path.join(pluginDir, file));
 }
+const wasmDir = path.join(pluginDir, "assets");
+fs.mkdirSync(wasmDir, { recursive: true });
+for (const asset of ["sql-wasm.wasm", "LICENSE-sql.js.txt"]) {
+  fs.copyFileSync(path.join(root, "assets", asset), path.join(wasmDir, asset));
+}
 const source = path.join(root, "library", "webp");
 if (!fs.existsSync(path.join(source, "manifest.json"))) {
   throw new Error("Missing WEB data; run npm run library:build");

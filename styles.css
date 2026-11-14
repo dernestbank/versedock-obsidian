@@ -264,3 +264,16 @@
 }
 .versedock .vd-integrity-status strong { display: block; color: var(--text-normal); margin-bottom: 7px; }
 .versedock .vd-integrity-status > div { overflow-wrap: anywhere; margin-top: 3px; }
+
+/* Read-only local MySword SQLite preview. Imported module strings are plain text. */
+.versedock.vd-mysword-inspect-modal { padding: 14px; max-height: 70vh; overflow-y: auto; }
+.versedock.vd-mysword-inspect-modal h2 { font-size: 21px; margin: 0 0 8px; }
+.versedock.vd-mysword-inspect-modal input[type="file"] { width: 100%; max-width: 100%; margin: 15px 0 10px; }
+.versedock .vd-import-status { font-size: 12px; color: var(--text-muted); padding: 10px 12px; border: 1px solid var(--background-modifier-border); border-radius: var(--radius-s, 6px); overflow-wrap: anywhere; }
+.versedock .vd-import-result h3 { margin: 18px 0 10px; overflow-wrap: anywhere; }
+.versedock .vd-import-result h4 { margin: 18px 0 10px; font-size: 13px; }
+.versedock .vd-import-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 9px; }
+.versedock .vd-import-meta > div { background: var(--background-secondary); border-radius: var(--radius-s, 6px); padding: 10px; font-size: 12px; overflow-wrap: anywhere; }
+.versedock .vd-import-sample { padding: 12px; border-inline-start: 2px solid var(--text-accent); background: var(--background-secondary); font-size: 12px; overflow-wrap: anywhere; }
+.versedock .vd-import-sample > div { margin-top: 5px; font-family: var(--font-text); white-space: pre-wrap; }
+.versedock .vd-import-result ul { padding-inline-start: 22px; font-size: 12px; line-height: 1.55; }

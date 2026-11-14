@@ -8,6 +8,7 @@ import { InspectorView, INSPECTOR_VIEW } from "./ui/inspector-view";
 import { SearchView, SEARCH_VIEW } from "./ui/search-view";
 import { LibraryView, LIBRARY_VIEW } from "./ui/library-view";
 import { ReferenceModal } from "./ui/reference-modal";
+import { MySwordInspectModal } from "./ui/mysword-inspect-modal";
 
 export default class SwordDockBiblePlugin extends Plugin implements SwordDockController {
   settings: SwordDockSettings = { ...DEFAULT_SETTINGS };
@@ -38,6 +39,7 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     this.addCommand({ id: "open-inspector", name: "Open Study Inspector", callback: () => { void this.openInspector(); } });
     this.addCommand({ id: "search-scripture", name: "Search installed Bible", callback: () => { void this.openSearch(); } });
     this.addCommand({ id: "open-library", name: "Open Module Library", callback: () => { void this.openView(LIBRARY_VIEW, "right"); } });
+    this.addCommand({ id: "inspect-mysword-bible", name: "Inspect local MySword Bible module (preview)", callback: () => this.openMySwordInspector() });
     this.addCommand({ id: "quick-jump", name: "Quick Jump to Scripture reference", callback: () => this.openReferenceModal("jump") });
     this.addCommand({ id: "quick-insert", name: "Quick Verse Insert into Markdown", callback: () => this.openReferenceModal("insert") });
     this.addCommand({ id: "focus-toggle", name: "Toggle Reader Focus Mode", callback: () => {
@@ -82,6 +84,7 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
   async openInspector(): Promise<void> { await this.openView(INSPECTOR_VIEW, "right"); }
   async openSearch(): Promise<void> { await this.openView(SEARCH_VIEW, "right"); }
   openReferenceModal(mode: "jump" | "insert"): void { new ReferenceModal(this, mode).open(); }
+  openMySwordInspector(): void { new MySwordInspectModal(this).open(); }
 
   private studyFilePath(ref: PassageReference): string {
     const book = ref.book.name.replace(/[\/:*?"<>|]/g, "");

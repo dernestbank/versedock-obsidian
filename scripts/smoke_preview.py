@@ -18,14 +18,15 @@ ROOT = Path(__file__).resolve().parent.parent
 def validate_package(archive: Path) -> None:
     with ZipFile(archive) as zf:
         names = zf.namelist()
-        assert len(names) == len(set(names)) == 74, "Unexpected or duplicate ZIP entries"
+        assert len(names) == len(set(names)) == 76, "Unexpected or duplicate ZIP entries"
         assert zf.testzip() is None, "Corrupt ZIP entry"
         for entry in zf.infolist():
             name = PurePosixPath(entry.filename)
             assert not name.is_absolute() and ".." not in name.parts
             assert not stat.S_ISLNK(entry.external_attr >> 16)
 
-        assert {"main.js", "styles.css", "manifest.json",
+        assert {"assets/sql-wasm.wasm", "assets/LICENSE-sql.js.txt",
+                "main.js", "styles.css", "manifest.json",
                 "library/webp/manifest.json"}.issubset(names)
         with TemporaryDirectory(prefix="sworddock-fresh-install-") as tmp:
             vault = Path(tmp) / "SwordDock Fresh Test"
@@ -44,6 +45,10 @@ def validate_package(archive: Path) -> None:
             assert plugin["version"] == archive.name.split("SwordDock-Bible-")[1].split("-offline")[0]
             assert (plugin_dir / "main.js").is_file()
             assert (plugin_dir / "styles.css").is_file()
+            wasm = (plugin_dir / "assets" / "sql-wasm.wasm").read_bytes()
+            assert wasm[:4] == bytes([0, 97, 115, 109]) and len(wasm) > 500000
+            license_text = (plugin_dir / "assets" / "LICENSE-sql.js.txt").read_text()
+            assert "MIT" in license_text or "Permission is hereby granted" in license_text
             assert inspect_offline_books(plugin_dir / "library" / "webp") == 31103
 
             # A restart can only use files already extracted into this new vault.

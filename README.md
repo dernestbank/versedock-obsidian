@@ -2,7 +2,7 @@
 
 **An independent, offline-first Bible reader and Markdown study companion for desktop Obsidian.** This is an early development preview, not yet an Obsidian Community Plugins listing.
 
-SwordDock Bible was previously developed under the working titles *MySword+* and *VerseDock*. It is **not affiliated with MySword, Obsidian, Logos, or other Bible software vendors.** Future MySword module compatibility is a planned feature, not part of the current release.
+SwordDock Bible was previously developed under the working titles *MySword+* and *VerseDock*. It is **not affiliated with MySword, Obsidian, Logos, or other Bible software vendors.** Preview-only MySword Bible inspection is now being developed; full import and compatibility are not yet supported.
 
 ## What works in the 0.1.x developer previews
 
@@ -15,14 +15,20 @@ SwordDock Bible was previously developed under the working titles *MySword+* and
 - Open native Obsidian Reader, Study Inspector, Search, and Module Library views.
 - Work without an account or analytics.
 
-The plugin currently includes **only the WEB**. Commentaries, dictionaries, Strong's, interlinear support, parallel Bible views, MySword SQLite imports, download catalogs, and mobile validation are **not yet implemented**. The Inspector honestly displays uninstalled-resource states.
+### Local MySword Bible inspection (0.1.2 developer candidate)
+
+The command **Inspect local MySword Bible module (preview)** and the Module Library button open a private, local file picker for a user-owned `.bbl.mybible` SQLite database (maximum 24 MiB). SwordDock checks the SQLite signature, schema, integrity, numeric references, duplicate verses and row counts, and shows read-only metadata and **literal-text** sample verses. No module is installed, modified or uploaded. Embedded MySword HTML, CustomCSS and Bible tags are **never executed or formatted**. Copyright, source quality and versification are not validated by the preview, and other module types or encrypted/ZIP modules are not supported.
+
+The preview uses bundled [sql.js](https://github.com/sql-js/sql.js) (MIT licensed), including its local WebAssembly engine, so it works without a remote SQLite service. SQL.js is packaged with its license in `assets/LICENSE-sql.js.txt`. **Real authorized MySword module testing, memory/performance QA and full conversion are still required.**
+
+The plugin currently includes **only the WEB**. Commentaries, dictionaries, Strong's, interlinear support, parallel Bible views, MySword SQLite **installation/conversion**, download catalogs, and mobile validation are **not yet implemented**. The Inspector honestly displays uninstalled-resource states.
 
 ## Download and install this development preview
 
-This preview is **not yet eligible for one-click installation from Obsidian's directory**. The original public 0.1.0 preview was released under the previous VerseDock name. Until a SwordDock Bible release is published, download the existing `VerseDock-0.1.0-offline-preview.zip` asset from [GitHub Releases](https://github.com/dernestbank/versedock-obsidian/releases). Its installed folder and manifest ID remain `versedock`. The locally staged **0.1.1 development candidate** is named `SwordDock-Bible-0.1.1-offline-preview.zip`, but it is not yet a published release. It adds safe Quick Verse Insert, accessibility and local Bible integrity checking.
+This preview is **not yet eligible for one-click installation from Obsidian's directory**. The original public 0.1.0 preview was released under the previous VerseDock name. Until a SwordDock Bible release is published, download the existing `VerseDock-0.1.0-offline-preview.zip` asset from [GitHub Releases](https://github.com/dernestbank/versedock-obsidian/releases). Its installed folder and manifest ID remain `versedock`. The locally staged **0.1.2 development candidate** is named `SwordDock-Bible-0.1.2-offline-preview.zip`, but it is not yet a published release. It adds safe Quick Verse Insert, library integrity checks, and the MySword read-only inspection preview.
 
 1. In Obsidian, create a dedicated **test vault** before installing; do not trial experimental builds in irreplaceable notes.
-2. Extract the ZIP into `<vault>/.obsidian/plugins/versedock/`. The folder must contain `main.js`, `manifest.json`, `styles.css`, and `library/webp/manifest.json` plus per-book JSON files.
+2. Extract the ZIP into `<vault>/.obsidian/plugins/versedock/`. The folder must contain `main.js`, `manifest.json`, `styles.css`, `assets/sql-wasm.wasm`, and `library/webp/manifest.json` plus per-book JSON files.
 3. Open the vault in Obsidian, go to **Settings → Community plugins**, enable community plugins, and enable **SwordDock Bible** (older downloads still display **VerseDock (Preview)**). When upgrading from the previous name, fully quit and reopen Obsidian **after safely saving other vaults**; the running application may cache the previous command prefix. Do not rename the installed `versedock` folder or delete its `data.json`.
 4. Open the command palette and run **SwordDock Bible: Open Bible Reader**.
 5. For a study workflow, open **SwordDock Bible: Open Bible Study Desk**. Other available commands include Quick Jump, Quick Verse Insert, offline Search, and Module Library.
