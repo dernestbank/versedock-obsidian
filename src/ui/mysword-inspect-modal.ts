@@ -79,7 +79,7 @@ export class MySwordInspectModal extends Modal {
       // Never parse imported SQLite verse strings as HTML or Markdown.
       el.createDiv({ text: row.scripture });
     }
-    root.createEl("h4", { text: "Review before importing" });
+    root.createEl("h4", { text: "Review before any future import" });
     const warnings = root.createEl("ul");
     for (const warning of preview.warnings) warnings.createEl("li", { text: warning });
     root.createEl("p", { cls: "vd-subtle", text:

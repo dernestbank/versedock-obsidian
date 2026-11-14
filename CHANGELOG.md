@@ -15,6 +15,9 @@
 - Bundle sql.js MIT-licensed WebAssembly engine and license in the manual ZIP; verify in isolated packaging smoke tests.
 - Add seven synthetic SQLite tests, including a full 31,103-verse generated corpus and empty-verse compatibility checks; document untested real-file scenarios and permissions requirements.
 - Upgrade Vitest to a patched release and confirm zero known dependency-audit findings.
+- Validate a publisher-hosted WEB MySword module using the production inspector locally: 66 books, 31,103 verses; module remains outside Git/distribution.
+- Validate the GUI command, chooser and literal-text rendering in the isolated Obsidian test vault; add `qa:mysword` read-only developer inspection command.
+- Add a publisher-style metadata and source-buffer preservation regression test (37/37 tests passing).
 
 ### Development improvements (November 14, 2026)
 

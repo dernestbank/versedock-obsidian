@@ -11,9 +11,11 @@ This independent project started under the internal name **MySword+**. Its origi
 
 - Implemented a read-only desktop file picker that inspects user-selected `.bbl.mybible` Bible SQLite databases in memory using an offline, MIT-licensed sql.js WebAssembly engine (bundled with its license). **No Bible conversion or installation is claimed.**
 - Validates file signature and 24 MiB limit, actual `Details`/`Bible` tables, required columns, SQLite quick-check, verse count, reference numeric bounds, duplicate rows and metadata record count. Imported HTML/CSS/versification is not interpreted, stored or rendered; sample verses use safe text nodes.
-- Seven synthetic SQLite tests validate the happy path, malformed or mismatched modules, duplicate verses, invalid references, invalid metadata, and a full 31,103-verse generated corpus. The full-size test found five valid empty WEB verse entries; these are accepted and flagged for review. **36 total automated tests pass** (6 test files).
+- Eight synthetic SQLite tests validate the happy path, malformed or mismatched modules, duplicate verses, invalid references, invalid metadata, and a full 31,103-verse generated corpus. The full-size test found five valid empty WEB verse entries; these are accepted and flagged for review. **37 total automated tests pass** (6 test files).
 - Updated Vitest to 4.1.12 and re-ran dependency auditing: zero known npm audit findings on this development checkout (as of this date).
-- Preview was **not yet smoke-tested inside a freshly restarted Obsidian GUI** and has not been validated against an authorized real-world MySword file. Large-file performance and WASM memory behavior remain release gates.
+- The inspector has now been **GUI smoke-tested inside the existing isolated Obsidian test vault** after disabling and reenabling only that plugin (no full Obsidian restart or personal-vault changes). Command palette branding and the read-only file chooser work; an intentionally hostile HTML snippet remained plain text inside the resulting verse preview. A fully clean **GUI** vault installation has not been tested.
+- Downloaded the publisher-hosted public-domain World English Bible MySword module for **local read-only QA only** (August 4, 2025 source, 5,414,912 bytes uncompressed, SHA-256 `d0605fb28dbb0aee37f078931fdc54925295f846b068b954da2d1923011b2bb5`). The same production inspector recognized 66 books and 31,103 verses in roughly 80–110 ms on this Mac. The file remains in ignored `.research/qa/` only, **not in Git or the release ZIP**; no rights for other modules are inferred. GUI test with this real-world file and wider memory/performance profiling remain future acceptance criteria.
+- Added a reproducible developer command `npm run qa:mysword -- /absolute/path/module.bbl.mybible`; it prints SHA-256, metadata and sample reference coordinates without printing the verse text or writing data to disk. One more synthetic test verifies publisher-style metadata and byte-for-byte input preservation.
 
 ## Additional QA continuation — 2026-11-14
 
@@ -35,7 +37,7 @@ This independent project started under the internal name **MySword+**. Its origi
 ## Verified on macOS / Obsidian 1.15.0
 
 - **Build:** strict TypeScript `tsc --noEmit` passed, esbuild `main.js` generated successfully.
-- **Original QA tests:** 18/18 passed (book references, OSIS IDs, 66-book WEB dataset, local chapter reading and search). **Current developer candidate:** 36 automated tests cover naming compatibility, offline reading, captured editor selection safety, content hashing and whole-library file verification.
+- **Original QA tests:** 18/18 passed (book references, OSIS IDs, 66-book WEB dataset, local chapter reading and search). **Current developer candidate:** 37 automated tests cover naming compatibility, offline reading, captured editor selection safety, content hashing and whole-library file verification.
 - **Data:** 66 public-domain ENGWEBP book files, 31,103 verses, exact text preserved; provenance and checksum documented.
 - **Actual GUI:** opened an isolated test vault in Obsidian; enabled the plugin; opened its Bible Reader from the native command palette.
 - **Reader:** John 3:16 appeared with styled passage text, contextual actions, book/chapter controls and theme-aware dark UI.
@@ -83,8 +85,9 @@ The public installation ZIP contains the source-independent offline WEB library 
 - [ ] Fresh **GUI** install, interactive restart and plugin command reload validation from an eventual published ZIP.
 - [ ] Community theme and narrow pane testing; light/dark desktop theme rendering passed.
 - [ ] Robust note insertion when editor selection has changed, keyboard focus and accessibility tests.
-- [x] Preview-only MySword SQLite schema validation with synthetic fixtures and literal-text rendering (36 tests).
-- [ ] Validate an authorized real MySword module, profile memory limits, then implement opt-in conversion/import with rights review.
+- [x] Preview-only MySword SQLite schema validation with synthetic fixtures and literal-text rendering (37 tests); isolated live GUI and publisher-WEB local CLI checks now pass.
+- [x] Validate read-only inspection of the publisher-hosted WEB MySword module locally without redistributing it.
+- [ ] Profile large modules and slower devices; validate more licensed/authorized editions and book mappings before implementing opt-in import/conversion.
 - [ ] Decouple Bible module library storage from plugin folder, implement integrity checks and optional downloads.
 - [ ] Second permitted translation and chapter-level linked comparison.
 - [ ] iOS/Android test; adapt any incompatible UI APIs.

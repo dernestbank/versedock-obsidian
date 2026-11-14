@@ -57,6 +57,23 @@ describe("MySword SQLite preview", () => {
   it("rejects multiple Details records", () => {
     expect(() => inspectMySwordBible(sql, filename, makeDb({ multipleDetails: true }))).toThrow(/multiple records/);
   });
+  it("accepts publisher-style Details metadata without Language and leaves the input unchanged", () => {
+    const db = new sql.Database();
+    try {
+      db.run("CREATE TABLE Details (Description TEXT, Abbreviation TEXT, Comments TEXT, Version TEXT, VersionDate DATETIME, PublishDate DATETIME, RightToLeft BOOL, OT BOOL, NT BOOL, Strong BOOL)");
+      db.run("INSERT INTO Details VALUES ('World English Bible','WEB','','Public Domain','2025-08-04','','0',1,1,0)");
+      db.run("CREATE TABLE Bible (Book INT, Chapter INT, Verse INT, Scripture TEXT)");
+      db.run("INSERT INTO Bible VALUES (1,1,1,'In the beginning God created the heavens and the earth.')");
+      const input = db.export();
+      const pristine = Uint8Array.from(input);
+      const result = inspectMySwordBible(sql, "publisher-web.bbl.mybible", input);
+      expect(result.abbreviation).toBe("WEB");
+      expect(result.language).toBe("Unspecified");
+      expect(result.version).toBe("2025-08-04");
+      expect(result.books).toBe(1);
+      expect(input).toEqual(pristine);
+    } finally { db.close(); }
+  });
   it("can inspect an entire synthetic 31,103-verse WEB-sized SQLite Bible", () => {
     const db = new sql.Database();
     try {
