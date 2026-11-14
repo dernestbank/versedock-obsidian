@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — 0.1.3 SwordDock Bible developer candidate
+## Unreleased — 0.1.4 SwordDock Bible developer candidate
 
 - Adopt **SwordDock Bible** as the preferred product name and **SwordDock** as the short brand.
 - Update user-facing labels, product documentation, prototype design sources, and preview packaging name.
@@ -8,6 +8,14 @@
 - Keep the existing GitHub repository and published 0.1.0 release URLs unchanged until release migration is explicitly planned.
 - Preliminary exact-name screening found no obvious collision; comprehensive trademark clearance remains pending.
 
+
+### GBF source-preservation foundation (November 14, 2026)
+
+- Implement read-only General Bible Format (GBF) tokenizer that preserves every source character and UTF-16 offset and distinguishes documented poetry, reference, Strong's, note, red-letter, and title markers from inert HTML/unknown syntax.
+- Scan all 31,103 verses in the publisher-hosted WEB MySword module with zero failed round-trips; preserve one unsupported cross-chapter citation rather than incorrectly rewriting it.
+- Enhance module preflight reporting with recognized GBF markers, HTML markers, unknown tokens and per-verse tag issues; block module-defined VerseRules/CustomCSS from unreviewed interpretation.
+- Add eleven GBF and safety regression tests (55 tests total). No conversion writer, public module ingestion, licensing inference or release.
+- Confirm 0.1.4 GBF marker counts and blocked conversion in the isolated live Obsidian GUI; add documented tag family inventory and remaining semantic release blockers.
 
 ### Conversion safety and new-vault GUI verification (November 14, 2026)
 

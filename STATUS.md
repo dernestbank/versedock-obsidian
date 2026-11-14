@@ -1,11 +1,18 @@
 # SwordDock Bible — Development QA Report
 
-Version: **0.1.3 (local developer candidate)** · Date: **2026-11-14** · Internal project directory: `mysword+`
+Version: **0.1.4 (local developer candidate)** · Date: **2026-11-14** · Internal project directory: `mysword+`
 
 This independent project started under the internal name **MySword+**. Its original public name was **VerseDock**; its current preferred name is **SwordDock Bible**, with no affiliation with the original MySword app.
 
 > **Branding update (2026-11-12):** Visible branding changed to **SwordDock Bible** while keeping the installed plugin ID `versedock` and the existing GitHub repository URL stable. The historical GUI checks below were performed before the rename; rerun the GUI check for final verification. Official trademark clearance is pending.
 
+
+## GBF tokenizer and full-corpus validation — 2026-11-14
+
+- Implemented pure, non-rendering GBF lexer at `src/core/mysword-gbf.ts`: preserves original token bytes-as-text and precise UTF-16 source offsets. Recognizes documented inline/pair markers, paragraph and poetry directives, notes, cross-reference coordinates, Strong's and morphology markers; distinguishes inert HTML and unrecognized tokens. **No Scripture conversion, mutation, installation or publication.**
+- Scanned all **31,103 verses** from the publisher-hosted WEB MySword SQLite QA fixture: **31,103 source round-trips succeeded and 0 failed**. Found **71,820 known GBF markers**, **7 HTML markers**, and **1 unsupported citation** in Hebrews 11:34 (MySword reference pattern `<RX 12.6.31—7:20>`); the original reference is preserved verbatim for later chapter-spanning interpretation, not discarded or falsely auto-translated.
+- The conservative conversion preflight still blocks all **15,870 markup-bearing verses** and now reports the lexical diagnostics without rendering or executing markup. Nonempty module-defined `VerseRules` and `CustomCSS` also explicitly block conversion until safe, documented rendering rules exist.
+- Automated unit tests expanded to **55 passing tests** across eight test files; updated package remains an **unpublished development candidate**. The new lexical diagnostics were verified live in Obsidian 1.15.0 in the disposable `clean-gui-012` vault after upgrading it to 0.1.4: the intentionally hostile HTML fixture appeared literally, the report showed one inert HTML marker, zero recognized GBF markers, and conversion was blocked. Live full-sized QA in the GUI, performance on slow devices, note/cross-reference fidelity, and legal content permissions are pending.
 
 ## New fresh-vault GUI and conversion-preflight QA — 2026-11-14
 
@@ -40,12 +47,12 @@ This independent project started under the internal name **MySword+**. Its origi
 - Corrected duplicate SwordDock Bible Reader label and preserved keyboard focus when navigating verses in a rerendered reader pane (GUI keyboard test still pending).
 - Added on-demand Module Library integrity verification of all 66 book files using recorded SHA-256 hashes, file lengths and structural counts. Hashes in the original manifest intentionally exclude a single trailing newline added when writing each JSON file.
 - Full integrity integration test checks the shipped data and a simulated missing book; other tests cover corruption and insertion selection drift.
-- Current local 0.1.3 candidate is **not released**; prior graphical smoke evidence applies to the historical 0.1.0 build, not these new controls.
+- Current local 0.1.4 candidate is **not released**. The GBF lexical-diagnostics UI has passed a live test in a disposable Obsidian vault; full import, fresh 0.1.4 installation and restart, broader theme/mobile QA, and public naming clearance remain pending.
 
 ## Verified on macOS / Obsidian 1.15.0
 
 - **Build:** strict TypeScript `tsc --noEmit` passed, esbuild `main.js` generated successfully.
-- **Original QA tests:** 18/18 passed (book references, OSIS IDs, 66-book WEB dataset, local chapter reading and search). **Current developer candidate:** 44 automated tests cover naming compatibility, offline reading, captured editor selection safety, content hashing and whole-library file verification.
+- **Original QA tests:** 18/18 passed (book references, OSIS IDs, 66-book WEB dataset, local chapter reading and search). **Current developer candidate:** 55 automated tests cover naming compatibility, offline reading, captured editor selection safety, content hashing and whole-library file verification.
 - **Data:** 66 public-domain ENGWEBP book files, 31,103 verses, exact text preserved; provenance and checksum documented.
 - **Actual GUI:** opened an isolated test vault in Obsidian; enabled the plugin; opened its Bible Reader from the native command palette.
 - **Reader:** John 3:16 appeared with styled passage text, contextual actions, book/chapter controls and theme-aware dark UI.
@@ -56,7 +63,7 @@ This independent project started under the internal name **MySword+**. Its origi
 - **Original 0.1.0 test:** renamed manifest ID and product to VerseDock; reinstalled the plugin in an isolated vault and confirmed **VerseDock (Preview)** commands appeared and Bible Reader opened. That historical GUI test predates the SwordDock Bible rebrand.
 - **Manual preview ZIP:** the archive includes `main.js`, `manifest.json`, `styles.css`, license, README and every offline WEB book, and passed ZIP integrity check.
 
-**Current local package:** `SwordDock-Bible-0.1.3-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation; clean-vault ZIP smoke tests pass. It is a local developer candidate, **not a published GitHub release**; The conversion-preflight GUI has been tested with synthetic invalid markup, but full release validation (mobile, themes, resource failures, restart and accessibility) remains pending.
+**Current local package:** `SwordDock-Bible-0.1.4-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation; clean-vault ZIP smoke tests pass. It is a local developer candidate, **not a published GitHub release**; the conversion-preflight GUI has been tested with synthetic invalid markup, but full release validation (mobile, themes, resource failures, restart and accessibility) remains pending.
 
 ## Test boundaries / not yet verified
 
@@ -98,7 +105,8 @@ The public installation ZIP contains the source-independent offline WEB library 
 - [x] Preview-only MySword SQLite schema validation with synthetic fixtures and literal-text rendering (37 tests); isolated live GUI and publisher-WEB local CLI checks now pass.
 - [x] Validate read-only inspection of the publisher-hosted WEB MySword module locally without redistributing it.
 - [x] Conservative conversion-readiness preflight rejects markup/unsupported structures without writing data (44 tests).
-- [ ] Profile large modules and slower devices; implement a verified lossless MySword markup parser and additional book-mapping tests before opt-in import/conversion.
+- [x] Implement lossless **GBF lexical scanner** and report unknown references without discarding any source text; scan the full publisher WEB fixture.
+- [ ] Validate GBF **formatting semantics**, cross-chapter reference mapping, translator notes, HTML sanitization, provenance and slower-device performance before any opt-in import/conversion.
 - [ ] Decouple Bible module library storage from plugin folder, implement integrity checks and optional downloads.
 - [ ] Second permitted translation and chapter-level linked comparison.
 - [ ] iOS/Android test; adapt any incompatible UI APIs.

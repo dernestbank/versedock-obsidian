@@ -100,6 +100,11 @@ export class MySwordInspectModal extends Modal {
           });
           summary.createDiv({ text: report.books + " book(s), " + report.verses.toLocaleString() +
             " verses; " + report.markupVerses.toLocaleString() + " markup-bearing verses." });
+          summary.createDiv({ text: "Source-preserving GBF scan: " +
+            report.gbfMarkers.toLocaleString() + " recognized markers, " +
+            report.htmlMarkers.toLocaleString() + " HTML markers, " +
+            report.unknownMarkers.toLocaleString() + " unsupported markers; " +
+            report.tagIssueVerses.toLocaleString() + " verses require syntax review." });
           for (const line of [...report.blockers, ...report.notes]) summary.createDiv({ text: line });
         } catch (error) {
           summary.setText("Conversion preflight failed: " +

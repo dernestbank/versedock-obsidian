@@ -11,12 +11,15 @@ beforeAll(async () => {
     wasmBinary: Uint8Array.from(readFileSync(path.resolve("assets/sql-wasm.wasm"))).buffer
   });
 });
-function fixture({text = "In the beginning.", book = 1, chapter = 1, rtl = false, strong = false}:
-  {text?: string; book?: number; chapter?: number; rtl?: boolean; strong?: boolean} = {}) {
+function fixture({text = "In the beginning.", book = 1, chapter = 1, rtl = false, strong = false,
+  verseRules = "", customCss = ""}:
+  {text?: string; book?: number; chapter?: number; rtl?: boolean; strong?: boolean;
+   verseRules?: string; customCss?: string} = {}) {
   const db = new sql.Database();
   try {
-    db.run("CREATE TABLE Details (Abbreviation TEXT, RightToLeft BOOL, Strong BOOL)");
-    db.run("INSERT INTO Details VALUES ('TEST', ?, ?)", [rtl ? 1 : 0, strong ? 1 : 0]);
+    db.run("CREATE TABLE Details (Abbreviation TEXT, RightToLeft BOOL, Strong BOOL, VerseRules TEXT, CustomCSS TEXT)");
+    db.run("INSERT INTO Details VALUES ('TEST', ?, ?, ?, ?)",
+      [rtl ? 1 : 0, strong ? 1 : 0, verseRules ?? "", customCss ?? ""]);
     db.run("CREATE TABLE Bible (Book INT, Chapter INT, Verse INT, Scripture TEXT)");
     db.run("INSERT INTO Bible VALUES (?, ?, 1, ?)", [book, chapter, text]);
     return db.export();
@@ -58,6 +61,24 @@ describe("private MySword text-conversion preflight", () => {
       fixture({rtl: true}));
     expect(report.status).toBe("blocked");
     expect(report.blockers.join(" ")).toContain("Right-to-left");
+  });
+  it("blocks untrusted module-defined regex and CSS without executing either", () => {
+    const report = preflightMySwordPlainText(sql, "test.bbl.mybible",
+      fixture({verseRules: "(.+)\t$1", customCss: "body{display:none}"}));
+    expect(report.status).toBe("blocked");
+    expect(report.blockers.join(" ")).toContain("VerseRules");
+    expect(report.blockers.join(" ")).toContain("CustomCSS");
+    expect(report.installsModule).toBe(false);
+  });
+  it("returns exact GBF/HTML/unknown counts without converting a verse", () => {
+    const report = preflightMySwordPlainText(sql, "test.bbl.mybible",
+      fixture({text: "<FR>Jesus<Fr><br/><UNKNOWN>"}));
+    expect(report.markupVerses).toBe(1);
+    expect(report.gbfMarkers).toBe(2);
+    expect(report.htmlMarkers).toBe(1);
+    expect(report.unknownMarkers).toBe(1);
+    expect(report.tagIssueVerses).toBe(1);
+    expect(report.status).toBe("blocked");
   });
   it("accepts valid empty verses but flags them for manual review", () => {
     const report = preflightMySwordPlainText(sql, "test.bbl.mybible",
