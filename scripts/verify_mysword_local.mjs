@@ -37,8 +37,18 @@ try {
     Buffer.from(bundled).toString("base64"));
   const wasm = readFileSync(path.join(root, "assets/sql-wasm.wasm"));
   const sql = await initSqlJs({ wasmBinary: Uint8Array.from(wasm).buffer });
+  const preflightBundle = await build({
+    entryPoints: [path.join(root, "src/core/mysword-conversion-preflight.ts")],
+    platform: "neutral", format: "esm", bundle: true, write: false,
+    logLevel: "silent"
+  });
+  const preflightCode = preflightBundle.outputFiles?.[0]?.text;
+  if (!preflightCode) throw new Error("Unable to compile conversion preflight.");
+  const conversionHelpers = await import("data:text/javascript;base64," +
+    Buffer.from(preflightCode).toString("base64"));
   const t0 = performance.now();
   const preview = helpers.inspectMySwordBible(sql, path.basename(modulePath), bytes);
+  const conversion = conversionHelpers.preflightMySwordPlainText(sql, path.basename(modulePath), bytes);
   const report = {
     filename: path.basename(modulePath),
     fileBytes: bytes.length,
@@ -52,7 +62,8 @@ try {
     verses: preview.verses,
     sampleReferences: preview.samples.map(({book, chapter, verse}) =>
       ({ book, chapter, verse })),
-    warnings: preview.warnings
+    warnings: preview.warnings,
+    textConversionPreflight: conversion
   };
   process.stdout.write(JSON.stringify(report, null, 2) + "\n");
 } catch (error) {

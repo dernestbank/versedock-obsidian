@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — 0.1.2 SwordDock Bible developer candidate
+## Unreleased — 0.1.3 SwordDock Bible developer candidate
 
 - Adopt **SwordDock Bible** as the preferred product name and **SwordDock** as the short brand.
 - Update user-facing labels, product documentation, prototype design sources, and preview packaging name.
@@ -8,6 +8,15 @@
 - Keep the existing GitHub repository and published 0.1.0 release URLs unchanged until release migration is explicitly planned.
 - Preliminary exact-name screening found no obvious collision; comprehensive trademark clearance remains pending.
 
+
+### Conversion safety and new-vault GUI verification (November 14, 2026)
+
+- Verify an untouched 0.1.2 ZIP can be trusted and run in an entirely new isolated Obsidian vault, including offline Reader launch and correct SwordDock branding.
+- Add non-destructive local conversion preflight to the MySword inspector and QA CLI. Block markup, unsupported Strong's tagging, right-to-left editions and out-of-canon chapter values rather than silently changing Bible wording.
+- Confirm publisher-hosted WEB module is *not* eligible for plain-text conversion (15,870 markup-bearing verses); avoid any conversion or redistribution.
+- Add seven conversion-preflight regression tests (44 total), preserving public-domain text and input bytes.
+- Verify the 0.1.3 GUI preflight in a disposable Obsidian vault, correctly rejecting synthetic HTML-like verse content without installation.
+- Record frequent MySword tags in the publisher-hosted WEB fixture (`pi3`, `ci`, `pf2`, `pf1`, `cm`, `fr`), to guide a future preservation-safe parser.
 
 ### MySword inspection foundation (November 14, 2026)
 
@@ -31,7 +40,7 @@
 - Preserve verse keyboard focus across Reader rerenders.
 - Provide on-demand SHA-256 and structural verification for installed WEB books.
 - Add automated tests for note insertion and file integrity (29 tests in the local candidate).
-- The earlier local candidate was 0.1.1; the current MySword preview candidate is **0.1.2**. No GitHub release or plugin directory submission yet.
+- The earlier local candidate was 0.1.1; the current unpublished candidate is **0.1.3**. No GitHub release or plugin directory submission yet.
 
 ## 0.1.0 — Developer preview (2026-11-12)
 

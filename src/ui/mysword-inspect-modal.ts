@@ -2,6 +2,7 @@ import { Modal } from "obsidian";
 import initSqlJs from "sql.js";
 import type { SqlJsStatic } from "sql.js";
 import { inspectMySwordBible, MAX_MY_SWORD_BYTES, type MySwordBiblePreview } from "../core/mysword-preview";
+import { preflightMySwordPlainText, type ConversionPreflight } from "../core/mysword-conversion-preflight";
 import type { SwordDockController } from "../controller";
 
 export class MySwordInspectModal extends Modal {
@@ -50,7 +51,7 @@ export class MySwordInspectModal extends Modal {
           const preview = inspectMySwordBible(sql, file.name, bytes);
           if (version !== this.revision) return;
           status.setText("Preview ready. No content installed or saved.");
-          this.renderPreview(result, preview);
+          this.renderPreview(result, preview, () => preflightMySwordPlainText(sql, file.name, bytes), version);
         } catch (error) {
           if (version !== this.revision) return;
           status.setText(error instanceof Error ? error.message : String(error));
@@ -58,7 +59,8 @@ export class MySwordInspectModal extends Modal {
       })();
     });
   }
-  private renderPreview(root: HTMLElement, preview: MySwordBiblePreview): void {
+  private renderPreview(root: HTMLElement, preview: MySwordBiblePreview,
+    checkPlainText: () => ConversionPreflight, version: number): void {
     root.createEl("h3", { text: preview.description });
     const meta = root.createDiv({ cls: "vd-import-meta" });
     for (const [label, value] of [
@@ -79,6 +81,34 @@ export class MySwordInspectModal extends Modal {
       // Never parse imported SQLite verse strings as HTML or Markdown.
       el.createDiv({ text: row.scripture });
     }
+    const safety = root.createDiv({ cls: "vd-conversion-check" });
+    const button = safety.createEl("button", { cls: "vd-text-button",
+      text: "Check text-conversion readiness (no installation)" });
+    const summary = safety.createDiv({ cls: "vd-conversion-results",
+      attr: { role: "status", "aria-live": "polite" } });
+    button.addEventListener("click", () => {
+      button.disabled = true;
+      summary.setText("Analyzing Scripture markup and canonical chapter boundaries locally…");
+      window.setTimeout(() => {
+        if (this.revision !== version) return;
+        try {
+          const report = checkPlainText();
+          summary.empty();
+          summary.createEl("strong", {
+            text: report.status === "blocked" ? "Automatic plain-text conversion blocked" :
+              "Text structure passed preliminary checks — installation is still unavailable"
+          });
+          summary.createDiv({ text: report.books + " book(s), " + report.verses.toLocaleString() +
+            " verses; " + report.markupVerses.toLocaleString() + " markup-bearing verses." });
+          for (const line of [...report.blockers, ...report.notes]) summary.createDiv({ text: line });
+        } catch (error) {
+          summary.setText("Conversion preflight failed: " +
+            (error instanceof Error ? error.message : String(error)));
+        } finally {
+          button.disabled = false;
+        }
+      }, 0);
+    });
     root.createEl("h4", { text: "Review before any future import" });
     const warnings = root.createEl("ul");
     for (const warning of preview.warnings) warnings.createEl("li", { text: warning });
