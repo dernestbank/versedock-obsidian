@@ -1,8 +1,9 @@
 import type { App } from "obsidian";
 import type { PassageReference } from "./core/references";
 import type { OfflineBibleLibrary } from "./core/library";
+import type { ScriptureNoteDiscovery } from "./core/scripture-notes";
 
-export interface MySwordSettings {
+export interface SwordDockSettings {
   reference: string;
   fontSize: number;
   lineHeight: number;
@@ -11,16 +12,18 @@ export interface MySwordSettings {
   mode: "classic" | "compact" | "focus";
   bookmarks: string[];
   highlights: string[];
+  /** Canonical OSIS references, most recent first. */
+  history: string[];
 }
-export const DEFAULT_SETTINGS: MySwordSettings = {
+export const DEFAULT_SETTINGS: SwordDockSettings = {
   reference: "John.3.16", fontSize: 17, lineHeight: 1.68,
   textWidth: 65, fontStyle: "serif", mode: "classic",
-  bookmarks: [], highlights: []
+  bookmarks: [], highlights: [], history: []
 };
-export interface MySwordController {
+export interface SwordDockController {
   app: App;
   library: OfflineBibleLibrary;
-  settings: MySwordSettings;
+  settings: SwordDockSettings;
   currentRef: PassageReference;
   selectReference(ref: PassageReference): void;
   subscribe(callback: (ref: PassageReference) => void): () => void;
@@ -29,7 +32,10 @@ export interface MySwordController {
   openInspector(): Promise<void>;
   openSearch(): Promise<void>;
   openReferenceModal(mode: "jump" | "insert"): void;
+  openMySwordInspector(): void;
+  findScriptureNotes(ref: PassageReference): ScriptureNoteDiscovery;
   openStudyNote(ref: PassageReference): Promise<void>;
+  openLinkedNote(path: string): Promise<void>;
   copyPassage(ref: PassageReference): Promise<void>;
   toggleBookmark(ref: PassageReference): void;
   toggleHighlight(ref: PassageReference): void;

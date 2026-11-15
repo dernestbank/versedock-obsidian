@@ -1,8 +1,8 @@
 {
-  "name": "versedock-obsidian",
-  "version": "0.1.0",
+  "name": "sworddock-bible",
+  "version": "0.1.11",
   "private": true,
-  "description": "Theme-adaptive offline-first Bible reader for Obsidian",
+  "description": "SwordDock Bible — theme-adaptive offline-first Bible study for Obsidian",
   "scripts": {
     "build": "node esbuild.config.mjs production",
     "dev": "node esbuild.config.mjs",
@@ -11,13 +11,20 @@
     "library:build": "python3 scripts/build_web_library.py",
     "deploy:test": "node scripts/deploy-test.mjs",
     "check": "npm run typecheck && npm test && npm run build",
-    "package:preview": "python3 scripts/build_preview.py"
+    "package:preview": "python3 scripts/build_preview.py",
+    "smoke:preview": "python3 scripts/smoke_preview.py",
+    "qa:mysword": "node scripts/verify_mysword_local.mjs",
+    "qa:mysword:benchmark": "node --expose-gc scripts/benchmark_mysword_local.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "@types/sql.js": "^1.4.11",
     "esbuild": "^0.28.2",
     "obsidian": "^1.14.4",
     "typescript": "^5.9.3",
-    "vitest": "3.2.4"
+    "vitest": "4.1.12"
+  },
+  "dependencies": {
+    "sql.js": "^1.16.0"
   }
 }

@@ -1,4 +1,4 @@
-/* VerseDock — theme-adaptive Obsidian design baseline. No global editor overrides. */
+/* SwordDock Bible — theme-adaptive Obsidian design baseline. No global editor overrides. */
 .versedock {
   --vd-surface: var(--background-primary);
   --vd-subtle: var(--background-secondary);
@@ -23,7 +23,7 @@
   outline-offset: 2px;
 }
 .versedock .vd-view { min-height: 0; height: 100%; display: flex; flex-direction: column; background: var(--vd-surface); }
-.versedock.vd-reader { overflow: hidden; padding: 0; }
+.versedock.vd-reader { overflow: hidden; padding: 0; container: sworddock-reader / inline-size; }
 .versedock .vd-toolbar {
   flex: none; display: flex; align-items: center; justify-content: space-between;
   padding: 6px 12px; gap: 8px; min-height: 46px; position: relative;
@@ -141,14 +141,20 @@
 .versedock .vd-inspector-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 14px 12px; gap: 8px; }
 .versedock .vd-inspector-header strong { font-size: 13px; }
 .versedock .vd-inspector-tabs { display: flex; overflow-x: auto; border-bottom: 1px solid var(--vd-border); gap: 1px; padding-inline: 9px; }
-.versedock .vd-inspector-tabs button {
+.versedock .vd-inspector-tabs [role="tab"] {
   border-radius: 0; font-size: 12px; color: var(--vd-muted);
-  padding: 7px 10px 10px; border-bottom: 2px solid transparent;
+  padding: 7px 10px 10px; border-bottom: 2px solid transparent; cursor: pointer;
 }
-.versedock .vd-inspector-tabs button.is-active { color: var(--vd-accent); border-bottom-color: var(--vd-accent); font-weight: 660; }
+.versedock .vd-inspector-tabs [role="tab"].is-active { color: var(--vd-accent); border-bottom-color: var(--vd-accent); font-weight: 660; }
 .versedock .vd-inspector-body { flex: 1; min-height: 0; overflow-y: auto; padding: 20px 15px; }
 .versedock .vd-resource-heading { font-family: "Iowan Old Style", Georgia, serif; font-size: 24px; margin-bottom: 24px; }
 .versedock .vd-inspector-help { color: var(--vd-muted); line-height: 1.6; }
+.versedock .vd-note-list-heading { margin: 18px 0 8px; font-size: var(--font-ui-small); color: var(--vd-muted); }
+.versedock .vd-note-list { display: grid; gap: 8px; }
+.versedock .vd-note-item { min-width: 0; padding: 9px 10px; border: 1px solid var(--vd-border); border-radius: var(--radius-s, 6px); background: var(--background-secondary); }
+.versedock .vd-note-link { max-width: 100%; padding: 2px 0; overflow: hidden; color: var(--vd-accent); font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.versedock .vd-note-path { margin-top: 3px; overflow: hidden; color: var(--vd-muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.versedock .vd-inspector-warning { color: var(--text-warning); font-size: var(--font-ui-smaller); line-height: 1.5; }
 .versedock .vd-action-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
 .versedock .vd-inspector-footer { border-top: 1px solid var(--vd-border); padding: 13px 15px; background: var(--background-secondary); }
 .versedock .vd-inspector-footer strong { font-size: 12px; }
@@ -186,12 +192,19 @@
 .versedock.vd-search { height: 100%; overflow: auto; padding: 20px; }
 .versedock.vd-search h2 { font-size: 18px; margin: 0 0 10px; }
 .versedock .vd-subtle { color: var(--vd-muted); font-size: 12px; line-height: 1.5; }
-.versedock .vd-search-input-row { display: flex; gap: 8px; margin: 18px 0 16px; }
-.versedock .vd-search-input-row input { flex: 1; min-width: 0; }
+.versedock .vd-search-filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 18px 0 0; }
+.versedock .vd-search-filter-row label { display: flex; align-items: center; gap: 8px; color: var(--vd-muted); font-size: var(--font-ui-small); }
+.versedock .vd-search-filter-row label[hidden] { display: none; }
+.versedock .vd-search-filter-row select { min-width: 170px; padding: 7px 28px 7px 9px; border: 1px solid var(--vd-border); border-radius: var(--radius-s, 6px); background: var(--background-primary); color: var(--vd-ink); }
+.versedock .vd-search-input-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 12px; }
+.versedock .vd-search-input-row input { flex: 1 1 220px; min-width: 0; }
+.versedock .vd-search-status { min-height: 18px; margin-bottom: 4px; }
 .versedock .vd-search-result { padding: 11px 2px; border-bottom: 1px solid var(--vd-border); }
 .versedock .vd-search-result p { font-family: Georgia,serif; line-height: 1.5; font-size: 13px; margin: 5px 0 0; }
+.versedock .vd-search-highlight { padding: 0 0.04em; border-radius: 2px; background: var(--text-highlight-bg); color: inherit; }
 .versedock .vd-result-ref { color: var(--vd-accent); font-size: 12px; font-weight: 600; padding: 4px 0; }
-@media (max-width: 650px) {
+/* Reader adapts to the width of its Obsidian pane, not the whole desktop viewport. */
+@container sworddock-reader (max-width: 650px) {
   .versedock .vd-toolbar { padding: 6px; gap: 4px; }
   .versedock .vd-toolbar-actions { gap: 0; }
   .versedock .vd-toolbar-actions .vd-version-chip { display: none; }
@@ -200,11 +213,11 @@
   .versedock .vd-scroll { padding: 22px 20px 60px; }
   .versedock .vd-verse { margin-inline: -8px; }
 }
-@media (max-width: 420px) {
+@container sworddock-reader (max-width: 420px) {
   .versedock .vd-toolbar-nav { gap: 1px; }
   .versedock .vd-toolbar-nav .vd-icon-button { min-width: 26px; padding-inline: 3px; }
   .versedock .vd-toolbar-nav .vd-text-button { padding: 4px; max-width: 86px; overflow: hidden; text-overflow: ellipsis; }
-  .versedock .vd-toolbar-actions .vd-icon-button:nth-child(2) { display: none; }
+  /* Keep Quick Jump visible in compact panes; insertion remains in the command palette. */
   .versedock .vd-scroll { padding: 20px 14px 60px; }
   .versedock .vd-reading-column { max-width: 100%; }
   .versedock .vd-chapter-head { margin-bottom: 25px; }
@@ -250,3 +263,36 @@
 .versedock .vd-category-label { font-size: 13px; margin: 14px 0; }
 .versedock .vd-library-path { overflow-wrap: anywhere; font-family: var(--font-monospace); font-size: 10px; color: var(--text-muted); }
 .versedock .vd-inspector-body > .vd-text-button { margin: 4px 6px 4px 0; border: 1px solid var(--background-modifier-border); }
+
+/* Verification feedback stays inside the plugin's scoped theme tokens. */
+.versedock .vd-integrity-status:not(:empty) {
+  margin: 12px 0 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: var(--radius-m, 9px);
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.55;
+}
+.versedock .vd-integrity-status strong { display: block; color: var(--text-normal); margin-bottom: 7px; }
+.versedock .vd-integrity-status > div { overflow-wrap: anywhere; margin-top: 3px; }
+
+/* Read-only local MySword SQLite preview. Imported module strings are plain text. */
+.versedock.vd-mysword-inspect-modal { padding: 14px; max-height: 70vh; overflow-y: auto; }
+.versedock.vd-mysword-inspect-modal h2 { font-size: 21px; margin: 0 0 8px; }
+.versedock.vd-mysword-inspect-modal input[type="file"] { width: 100%; max-width: 100%; margin: 15px 0 10px; }
+.versedock .vd-import-status { font-size: 12px; color: var(--text-muted); padding: 10px 12px; border: 1px solid var(--background-modifier-border); border-radius: var(--radius-s, 6px); overflow-wrap: anywhere; }
+.versedock .vd-import-result h3 { margin: 18px 0 10px; overflow-wrap: anywhere; }
+.versedock .vd-import-result h4 { margin: 18px 0 10px; font-size: 13px; }
+.versedock .vd-import-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 9px; }
+.versedock .vd-import-meta > div { background: var(--background-secondary); border-radius: var(--radius-s, 6px); padding: 10px; font-size: 12px; overflow-wrap: anywhere; }
+.versedock .vd-import-sample { padding: 12px; border-inline-start: 2px solid var(--text-accent); background: var(--background-secondary); font-size: 12px; overflow-wrap: anywhere; }
+.versedock .vd-import-sample > div { margin-top: 5px; font-family: var(--font-text); white-space: pre-wrap; }
+.versedock .vd-import-result ul { padding-inline-start: 22px; font-size: 12px; line-height: 1.55; }
+
+/* Deliberately neutral: conversion checks never imply an import or license grant. */
+.versedock .vd-conversion-check { margin: 16px 0; border-block: 1px solid var(--background-modifier-border); padding-block: 12px; }
+.versedock .vd-conversion-check > button { max-width: 100%; white-space: normal; line-height: 1.4; padding: 8px 12px; }
+.versedock .vd-conversion-results:not(:empty) { margin-top: 10px; line-height: 1.55; font-size: 12px; color: var(--text-muted); overflow-wrap: anywhere; }
+.versedock .vd-conversion-results strong { display: block; margin-block: 7px; color: var(--text-normal); }
+.versedock .vd-conversion-results > div { margin-top: 5px; }

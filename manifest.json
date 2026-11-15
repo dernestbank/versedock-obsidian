@@ -1,9 +1,9 @@
 {
   "id": "versedock",
-  "name": "VerseDock (Preview)",
-  "version": "0.1.0",
+  "name": "SwordDock Bible",
+  "version": "0.1.11",
   "minAppVersion": "1.8.0",
-  "description": "Read, search, and annotate the public-domain World English Bible offline in Obsidian. Development preview.",
+  "description": "Read, search, and annotate the public-domain World English Bible offline. Desktop developer preview.",
   "author": "QuantGist",
   "isDesktopOnly": true
 }

@@ -1,8 +1,9 @@
 import { ItemView, Notice, setIcon, type WorkspaceLeaf } from "obsidian";
 import { BOOKS, type BookInfo } from "../core/books";
 import { refLabel, type PassageReference } from "../core/references";
-import type { MySwordController } from "../controller";
+import type { SwordDockController } from "../controller";
 import { iconButton, textButton, pill, emptyState } from "./components";
+import { OFFLINE_LIBRARY_RECOVERY, recheckOfflineLibrary } from "./library-recovery";
 import { BookPickerModal, ChapterPickerModal } from "./pickers";
 
 export const READER_VIEW = "versedock-reader";
@@ -11,9 +12,9 @@ export class ReaderView extends ItemView {
   private unsubscribe: (() => void) | null = null;
   private renderId = 0;
   private scroll: HTMLElement | null = null;
-  constructor(leaf: WorkspaceLeaf, private readonly plugin: MySwordController) { super(leaf); }
+  constructor(leaf: WorkspaceLeaf, private readonly plugin: SwordDockController) { super(leaf); }
   getViewType(): string { return READER_VIEW; }
-  getDisplayText(): string { return "VerseDock Bible Reader"; }
+  getDisplayText(): string { return "SwordDock Bible Reader"; }
   getIcon(): string { return "book-open"; }
   async onOpen(): Promise<void> {
     this.unsubscribe = this.plugin.subscribe(() => { void this.render(); });
@@ -99,6 +100,9 @@ export class ReaderView extends ItemView {
     const version = ++this.renderId;
     const ref = this.plugin.currentRef;
     const previousScroll = this.scroll?.scrollTop ?? 0;
+    const active = document.activeElement as HTMLElement | null;
+    const focusWithinReader = !!active && !!this.scroll?.contains(active);
+    const focusedVerse = focusWithinReader ? active?.closest<HTMLElement>(".vd-verse")?.dataset.verse : undefined;
     const changedChapter = this.scroll?.dataset.chapter !== ref.book.vpl + "." + ref.chapter;
     const root = this.contentEl;
     root.empty(); root.addClass("versedock", "vd-reader");
@@ -113,7 +117,7 @@ export class ReaderView extends ItemView {
     if (ref.verse !== undefined) textButton(navigate, ":" + ref.verse, () => this.plugin.openReferenceModal("jump"), "vd-breadcrumb-verse");
     iconButton(navigate, "chevron-right", "Next chapter", () => this.navigateChapter(1));
     const tools = top.createDiv({ cls: "vd-toolbar-actions" });
-    pill(tools, "WEB · Offline", "vd-version-chip");
+    pill(tools, this.plugin.library.metadata ? "WEB · Offline" : OFFLINE_LIBRARY_RECOVERY.unavailableChip, "vd-version-chip");
     iconButton(tools, "search", "Quick Jump", () => this.plugin.openReferenceModal("jump"));
     iconButton(tools, "notebook-pen", "Insert Scripture", () => this.plugin.openReferenceModal("insert"));
     iconButton(tools, "book-open-check", "Study Inspector", () => { void this.plugin.openInspector(); });
@@ -128,7 +132,14 @@ export class ReaderView extends ItemView {
     this.scroll.addEventListener("keydown", event => this.onReaderKey(event));
     const article = this.scroll.createEl("article", { cls: "vd-reading-column" });
     if (!this.plugin.library.metadata) {
-      emptyState(article, "No offline Bible found", "The WEB library is missing from this development installation. Run the library builder and deploy to your test vault.", "book-open");
+      const recovery = emptyState(article, OFFLINE_LIBRARY_RECOVERY.title, OFFLINE_LIBRARY_RECOVERY.description, "book-open");
+      textButton(recovery, OFFLINE_LIBRARY_RECOVERY.action, () => {
+        void (async () => {
+          const result = await recheckOfflineLibrary(this.plugin.library);
+          new Notice(result.notice);
+          if (result.available) await this.render();
+        })();
+      }, "mod-cta");
       return;
     }
     const chapterHead = article.createDiv({ cls: "vd-chapter-head" });
@@ -157,6 +168,10 @@ export class ReaderView extends ItemView {
       row.createSpan({ cls: "vd-verse-text", text: verse.text });
       row.addEventListener("click", e => {
         if ((e.target as HTMLElement).closest("button")) return;
+        // Do not tear down the DOM while the user is selecting Scripture text to copy.
+        const selection = window.getSelection();
+        if (selection && !selection.isCollapsed &&
+            (row.contains(selection.anchorNode) || row.contains(selection.focusNode))) return;
         this.plugin.selectReference({ book: ref.book, chapter: ref.chapter, verse: verse.verse });
       });
       row.addEventListener("keydown", e => {
@@ -167,8 +182,11 @@ export class ReaderView extends ItemView {
       if (selected) {
         const actions = row.createDiv({ cls: "vd-verse-actions" });
         iconButton(actions, "copy", "Copy verse", () => { void this.plugin.copyPassage(ref); });
-        iconButton(actions, "highlighter", "Toggle highlight", () => this.plugin.toggleHighlight(verseRef));
-        iconButton(actions, this.plugin.settings.bookmarks.includes(ref.book.osis + "." + ref.chapter + "." + verse.verse) ? "bookmark-check" : "bookmark", "Toggle bookmark", () => this.plugin.toggleBookmark(verseRef));
+        const highlightAction = iconButton(actions, "highlighter", "Toggle highlight", () => this.plugin.toggleHighlight(verseRef));
+        highlightAction.setAttribute("aria-pressed", highlight ? "true" : "false");
+        const bookmarked = this.plugin.settings.bookmarks.includes(ref.book.osis + "." + ref.chapter + "." + verse.verse);
+        const bookmarkAction = iconButton(actions, bookmarked ? "bookmark-check" : "bookmark", "Toggle bookmark", () => this.plugin.toggleBookmark(verseRef));
+        bookmarkAction.setAttribute("aria-pressed", bookmarked ? "true" : "false");
         iconButton(actions, "notebook-pen", "Open linked note", () => { void this.plugin.openStudyNote(ref); });
         iconButton(actions, "book-open-check", "Open inspector", () => { void this.plugin.openInspector(); });
       }
@@ -181,9 +199,11 @@ export class ReaderView extends ItemView {
     footer.createSpan({ text: "Offline • No account" });
 
     if (!changedChapter) this.scroll.scrollTop = previousScroll;
-    else if (ref.verse !== undefined) {
-      const selected = this.scroll.querySelector(".vd-verse.is-selected");
-      selected?.scrollIntoView({ block: "center", behavior: "auto" });
-    }
+    const selectedRow = this.scroll.querySelector<HTMLElement>(".vd-verse.is-selected");
+    if (ref.verse !== undefined && (changedChapter || focusedVerse !== undefined))
+      selectedRow?.scrollIntoView({ block: changedChapter ? "center" : "nearest", behavior: "auto" });
+    // Replacing the Reader DOM should never strand keyboard users on the document body.
+    if (focusWithinReader && document.activeElement === document.body)
+      (focusedVerse !== undefined ? selectedRow ?? this.scroll : this.scroll).focus({ preventScroll: true });
   }
 }
