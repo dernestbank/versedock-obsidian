@@ -12,6 +12,7 @@
 - Re-run the cooperative read-only preflight in Obsidian 1.15.1 against the ignored 31,103-verse publisher WEB fixture. The live report matches the established semantic totals, blocks conversion/installation, and leaves the 5,414,912-byte source at SHA-256 `d0605fb28dbb0aee37f078931fdc54925295f846b068b954da2d1923011b2bb5`.
 - Refresh the provisional name-risk checkpoint against the live USPTO exact-wordmark search, official Obsidian community list, GitHub, npm and public-web results. No exact `SwordDock` collision was found, but similar/common-law/international and professional legal review remain required before a stable launch.
 - Update the validation workflow to the official Node 24-based `actions/checkout@v7` and `actions/setup-node@v7`, and pin Ubuntu 24.04 instead of the migrating `ubuntu-latest` label. The resulting PR run passes check, packaging and clean-install smoke tests with zero annotations.
+- Re-verify the 0.1.11 Reader and Study Inspector visually in Obsidian 1.15.1's native Light and Dark schemes. Editorial text, selection/accent treatment, contextual actions, narrow Inspector tabs and truthful empty states remain readable; the isolated vault is restored to its original Light setting with plugin data unchanged.
 
 ## 0.1.10 — Local developer candidate (2026-11-15; unpublished)
 

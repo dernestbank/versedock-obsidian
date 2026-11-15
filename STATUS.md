@@ -115,12 +115,12 @@ This independent project started under the internal name **MySword+**. Its origi
 - **Original 0.1.0 test:** renamed manifest ID and product to VerseDock; reinstalled the plugin in an isolated vault and confirmed **VerseDock (Preview)** commands appeared and Bible Reader opened. That historical GUI test predates the SwordDock Bible rebrand.
 - **Manual preview ZIP:** the archive includes `main.js`, `manifest.json`, `styles.css`, license, README and every offline WEB book, and passed ZIP integrity check.
 
-**Current local package:** `SwordDock-Bible-0.1.11-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced identical 1,754,504-byte archives with SHA-256 `5105747cb28578de79f6a62e5dd0307a8cf0eac81903717a35c7a918b504e493`; clean-vault extraction and simulated offline restart pass for all 66 books and 31,103 verses. Redeployment preserved stable ID `versedock`, `reference: "Rom.8.28"`, history `['Rom.8.28', 'Rom.8.27']`, bookmarks, highlights and appearance settings. It remains a local developer candidate, **not a published GitHub release**. Full release validation (mobile, themes, resource failures, destructive history clearing and actual VoiceOver) remains pending.
+**Current local package:** `SwordDock-Bible-0.1.11-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced identical 1,754,504-byte archives with SHA-256 `5105747cb28578de79f6a62e5dd0307a8cf0eac81903717a35c7a918b504e493`; clean-vault extraction and simulated offline restart pass for all 66 books and 31,103 verses. Redeployment preserved stable ID `versedock`, `reference: "Rom.8.28"`, history `['Rom.8.28', 'Rom.8.27']`, bookmarks, highlights and appearance settings. It remains a local developer candidate, **not a published GitHub release**. Full release validation (mobile, community themes, resource failures, destructive history clearing and actual VoiceOver) remains pending.
 
 ## Test boundaries / not yet verified
 
 - No GUI testing on Windows/Linux or mobile; this preview is marked desktop-only until mobile compatibility is validated.
-- The native dark and light Moonstone schemes were visually verified in Obsidian; community themes remain untested.
+- The 0.1.11 Reader and Study Inspector were visually re-verified in Obsidian 1.15.1's native Light and Dark schemes. Editorial text, selected-passage/accent treatment, contextual actions, narrow Inspector tabs and truthful empty states remain readable. The isolated vault was restored to its original Light setting; community themes remain untested.
 - Fresh 0.1.2 ZIP installation was visually verified in a newly registered GUI vault. A separate fresh first-run and restart check for the updated 0.1.3 ZIP remains to be completed; the 0.1.3 conversion button was verified in the disposable vault after updating it.
 - No automated end-to-end UI harness or visual regression snapshots yet; focused unit coverage and a manual keyboard/accessibility-tree checkpoint now pass, while actual VoiceOver remains pending.
 - No public-domain commentary/lexicon installed; Inspector shows honest unavailable states.
@@ -152,7 +152,8 @@ The public installation ZIP contains the source-independent offline WEB library 
 - [x] Fresh **0.1.2 package GUI** install, author trust, command palette and offline Reader launch in disposable new vault.
 - [x] Verify the 0.1.3 conversion-preflight GUI in an updated disposable vault: markup blocked with explanatory diagnostics.
 - [ ] Repeat a fresh first-run and restart test specifically with 0.1.3; verify upgrade and failure recovery before eventual publication.
-- [ ] Community theme and narrow pane testing; light/dark desktop theme rendering passed.
+- [x] Native Light/Dark desktop and narrow-pane rendering pass in 0.1.11/Obsidian 1.15.1.
+- [ ] Community-theme rendering is tested separately.
 - [x] Robust note insertion guards and inspector keyboard-focus regression tests; manual Tab/Return and accessibility-tree verification pass.
 - [ ] Actual VoiceOver announcement/navigation verification after user-approved assistive-setting change.
 - [x] Preview-only MySword SQLite schema validation with synthetic fixtures and literal-text rendering (37 tests); isolated live GUI and publisher-WEB local CLI checks now pass.
