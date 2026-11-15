@@ -7,6 +7,8 @@
  *
  * Tag definitions: https://mysword.info/modules-format
  */
+import { CANON_CHAPTERS } from "./canon";
+
 export type GbfTokenKind =
   "text" | "paired-open" | "paired-close" | "structural" |
   "cross-reference" | "lexical" | "html" | "unknown" | "malformed";
@@ -19,6 +21,20 @@ export interface GbfToken {
   end: number;
   /** Canonical tag family for recognized tokens, never rendered as HTML */
   family?: string;
+  /** Validated, non-rendering metadata for a recognized RX token. */
+  reference?: MySwordCrossReference;
+}
+
+export interface MySwordReferencePoint {
+  /** MySword's 1-based Protestant-canon book number. */
+  book: number;
+  chapter: number;
+  verse: number;
+}
+
+export interface MySwordCrossReference {
+  start: MySwordReferencePoint;
+  end?: MySwordReferencePoint;
 }
 
 export interface GbfScan {
@@ -36,7 +52,35 @@ const PAIRS: ReadonlyMap<string, string> = new Map([
 ]);
 const CLOSING = new Map([...PAIRS].map(([start, end]) => [end, start]));
 
-function describe(raw: string): {kind: GbfTokenKind; family?: string} {
+function validPoint(point: MySwordReferencePoint): boolean {
+  return Number.isSafeInteger(point.book) && point.book >= 1 && point.book <= CANON_CHAPTERS.length &&
+    Number.isSafeInteger(point.chapter) && point.chapter >= 1 &&
+    point.chapter <= CANON_CHAPTERS[point.book - 1] &&
+    Number.isSafeInteger(point.verse) && point.verse >= 1 && point.verse <= 200;
+}
+
+/**
+ * Parses the documented b.c.v / b.c.v-tv forms and the observed b.c.v—c:v
+ * publisher extension. It never resolves links or changes the source token.
+ */
+export function parseMySwordGbfReference(raw: string): MySwordCrossReference | null {
+  const match = /^<RX\s*([0-9]{1,2})\.([0-9]{1,3})\.([0-9]{1,3})(?:(?:-([0-9]{1,3}))|(?:[-–—]([0-9]{1,3}):([0-9]{1,3})))?>$/.exec(raw);
+  if (!match) return null;
+  const start = {book: Number(match[1]), chapter: Number(match[2]), verse: Number(match[3])};
+  if (!validPoint(start)) return null;
+  let end: MySwordReferencePoint | undefined;
+  if (match[4]) {
+    end = {...start, verse: Number(match[4])};
+    if (!validPoint(end) || end.verse < start.verse || end.verse - start.verse > 100) return null;
+  } else if (match[5] && match[6]) {
+    end = {book: start.book, chapter: Number(match[5]), verse: Number(match[6])};
+    if (!validPoint(end) || end.chapter < start.chapter ||
+        (end.chapter === start.chapter && end.verse < start.verse)) return null;
+  }
+  return end ? {start, end} : {start};
+}
+
+function describe(raw: string): {kind: GbfTokenKind; family?: string; reference?: MySwordCrossReference} {
   const inner = raw.slice(1, -1);
   if (PAIRS.has(inner)) return {kind: "paired-open", family: inner};
   if (CLOSING.has(inner)) return {kind: "paired-close", family: CLOSING.get(inner)};
@@ -52,8 +96,8 @@ function describe(raw: string): {kind: GbfTokenKind; family?: string} {
     return {kind: "lexical", family: inner.slice(0, 2)};
   if (/^WT[A-Za-z0-9_-]+$/.test(inner))
     return {kind: "lexical", family: "WT"};
-  if (/^RX\s*[0-9]{1,2}\.[0-9]{1,3}\.[0-9]{1,3}(?:-[0-9]{1,3})?$/.test(inner))
-    return {kind: "cross-reference", family: "RX"};
+  const reference = parseMySwordGbfReference(raw);
+  if (reference) return {kind: "cross-reference", family: "RX", reference};
   // HTML occurs in MySword content. Never treat it as executable markup.
   if (/^\/?[a-z][a-z0-9]*(?:\s+[^<>]*)?\/?$/.test(inner))
     return {kind: "html", family: "HTML"};
@@ -65,8 +109,11 @@ export function tokenizeMySwordGbf(source: string): GbfScan {
   const tokens: GbfToken[] = [], issues: string[] = [];
   const stack: {family: string; start: number}[] = [];
   let knownMarkers = 0, htmlMarkers = 0, unknownMarkers = 0;
-  const add = (start: number, end: number, kind: GbfTokenKind, family?: string) =>
-    tokens.push({kind, raw: source.slice(start, end), start, end, ...(family ? {family} : {})});
+  const add = (start: number, end: number, kind: GbfTokenKind, family?: string,
+    reference?: MySwordCrossReference) => tokens.push({
+      kind, raw: source.slice(start, end), start, end,
+      ...(family ? {family} : {}), ...(reference ? {reference} : {})
+    });
   let i = 0;
   while (i < source.length) {
     const open = source.indexOf("<", i);
@@ -83,8 +130,8 @@ export function tokenizeMySwordGbf(source: string): GbfScan {
       continue;
     }
     const raw = source.slice(open, close + 1);
-    const {kind, family} = describe(raw);
-    add(open, close + 1, kind, family);
+    const {kind, family, reference} = describe(raw);
+    add(open, close + 1, kind, family, reference);
     if (kind === "unknown") {
       unknownMarkers++;
       issues.push("Unsupported tag-like token at offset " + open);

@@ -1,6 +1,17 @@
 # Changelog
 
-## Unreleased — 0.1.4 SwordDock Bible developer candidate
+## Unreleased — 0.1.5 SwordDock Bible developer candidate
+
+### Safe cross-reference semantics (November 15, 2026)
+
+- Parse documented MySword `RX` single-verse and same-chapter ranges into validated, non-rendering metadata while preserving exact source text and UTF-16 offsets.
+- Support the publisher-observed cross-chapter form `<RX 12.6.31—7:20>` as 2 Kings 6:31–7:20 without following the link or claiming edition versification fidelity.
+- Reject invalid, descending, out-of-canon and oversized ranges as unresolved tokens instead of guessing.
+- Report validated and unresolved RX counts in conversion preflight and the inspection UI; keep conversion blocked for markup-bearing modules.
+- Re-scan the publisher-hosted WEB fixture: 31,103 verses, 71,821 recognized GBF markers, 424 validated RX markers, zero unresolved markers and zero tag-issue verses. The module remains outside the repository and package.
+- Add a durable recovery plan/status checkpoint and expand automated coverage to 64 tests.
+
+## 0.1.4 — Local developer candidate (2026-11-14; unpublished)
 
 - Adopt **SwordDock Bible** as the preferred product name and **SwordDock** as the short brand.
 - Update user-facing labels, product documentation, prototype design sources, and preview packaging name.

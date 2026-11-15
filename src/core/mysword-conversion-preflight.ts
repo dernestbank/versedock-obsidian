@@ -1,7 +1,10 @@
 import type { SqlJsStatic, Database } from "sql.js";
 import { BOOKS } from "./books";
+import { CANON_CHAPTERS } from "./canon";
 import { inspectMySwordBible } from "./mysword-preview";
 import { tokenizeMySwordGbf } from "./mysword-gbf";
+
+export { CANON_CHAPTERS } from "./canon";
 
 /**
  * Text-only conversion preflight, NOT an importer or license check.
@@ -17,6 +20,8 @@ export interface ConversionPreflight {
   gbfMarkers: number;
   htmlMarkers: number;
   unknownMarkers: number;
+  crossReferences: number;
+  unresolvedCrossReferences: number;
   tagIssueVerses: number;
   invalidChapterVerses: number;
   emptyVerses: number;
@@ -26,13 +31,6 @@ export interface ConversionPreflight {
   /** Explicitly false until a separate license-aware, opt-in writer exists. */
   installsModule: false;
 }
-
-/** Canonical chapter counts for the 66-book Protestant ordering used by MySword. */
-export const CANON_CHAPTERS: readonly number[] = [
-  50,40,27,36,34,24,21,4,31,24,22,25,29,36,10,13,10,42,150,31,12,8,66,52,5,48,12,14,3,9,1,4,7,
-  3,3,3,2,14,4,28,16,24,21,28,16,16,13,6,6,4,4,5,3,6,4,3,1,13,5,5,3,5,1,1,1,22
-];
-if (CANON_CHAPTERS.length !== BOOKS.length) throw new Error("Canonical book mapping is incomplete.");
 
 const MARKUP = /<[^>]*>|\\[a-zA-Z]|&(?:#[0-9]+|#x[0-9a-f]+|[a-z]{2,12});/i;
 function countRows(db: Database): number {
@@ -48,6 +46,7 @@ export function preflightMySwordPlainText(sql: SqlJsStatic, name: string, bytes:
     db.run("PRAGMA query_only=ON");
     let markupVerses = 0, invalidChapterVerses = 0, emptyVerses = 0;
     let gbfMarkers = 0, htmlMarkers = 0, unknownMarkers = 0, tagIssueVerses = 0;
+    let crossReferences = 0, unresolvedCrossReferences = 0;
     let count = 0;
     const stmt = db.prepare("SELECT Book, Chapter, Scripture FROM Bible");
     try {
@@ -64,6 +63,11 @@ export function preflightMySwordPlainText(sql: SqlJsStatic, name: string, bytes:
           gbfMarkers += scan.knownMarkers;
           htmlMarkers += scan.htmlMarkers;
           unknownMarkers += scan.unknownMarkers;
+          for (const token of scan.tokens) {
+            if (token.kind === "cross-reference") crossReferences++;
+            else if ((token.kind === "unknown" || token.kind === "malformed") &&
+                token.raw.startsWith("<RX")) unresolvedCrossReferences++;
+          }
           if (scan.issues.length) tagIssueVerses++;
         }
         if (text.length === 0) emptyVerses++;
@@ -108,7 +112,8 @@ export function preflightMySwordPlainText(sql: SqlJsStatic, name: string, bytes:
     return {
       status: blockers.length ? "blocked" : "text-candidate",
       verses: count, books: preview.books, markupVerses, gbfMarkers, htmlMarkers,
-      unknownMarkers, tagIssueVerses, invalidChapterVerses, emptyVerses,
+      unknownMarkers, crossReferences, unresolvedCrossReferences, tagIssueVerses,
+      invalidChapterVerses, emptyVerses,
       partialBooks: preview.books < 66,
       blockers, notes, installsModule: false
     };

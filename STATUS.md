@@ -1,10 +1,17 @@
 # SwordDock Bible — Development QA Report
 
-Version: **0.1.4 (local developer candidate)** · Date: **2026-11-14** · Internal project directory: `mysword+`
+Version: **0.1.5 (local developer candidate)** · Date: **2026-11-15** · Internal project directory: `mysword+`
 
 This independent project started under the internal name **MySword+**. Its original public name was **VerseDock**; its current preferred name is **SwordDock Bible**, with no affiliation with the original MySword app.
 
 > **Branding update (2026-11-12):** Visible branding changed to **SwordDock Bible** while keeping the installed plugin ID `versedock` and the existing GitHub repository URL stable. The historical GUI checks below were performed before the rename; rerun the GUI check for final verification. Official trademark clearance is pending.
+
+## Safe RX cross-reference semantics — 2026-11-15
+
+- Added strict, non-rendering parsing for documented MySword `RX` single-verse/range forms and the publisher-observed cross-chapter form. Parsed endpoints are bounded to the existing 66-book scope; invalid, descending and oversized targets remain exact unresolved source tokens.
+- Re-scanned the ignored publisher WEB module: 31,103 verses, 71,821 recognized GBF markers, seven inert HTML markers, 424 validated RX markers, zero unresolved markers and zero tag-issue verses. Conversion remains blocked for all 15,870 markup-bearing verses.
+- Conversion preflight and the inspector UI now distinguish validated from unresolved RX markers and state that coordinates are not followed and do not verify edition versification.
+- Automated coverage is 64 tests across eight files. The deterministic 0.1.5 package and clean-install/restart smoke test passed; live Obsidian 1.15.0 inspection in the isolated `test-vault` kept hostile HTML literal, blocked conversion and displayed the new RX diagnostics. No importer, writer, HTML renderer or public release was added.
 
 
 ## GBF tokenizer and full-corpus validation — 2026-11-14
@@ -63,7 +70,7 @@ This independent project started under the internal name **MySword+**. Its origi
 - **Original 0.1.0 test:** renamed manifest ID and product to VerseDock; reinstalled the plugin in an isolated vault and confirmed **VerseDock (Preview)** commands appeared and Bible Reader opened. That historical GUI test predates the SwordDock Bible rebrand.
 - **Manual preview ZIP:** the archive includes `main.js`, `manifest.json`, `styles.css`, license, README and every offline WEB book, and passed ZIP integrity check.
 
-**Current local package:** `SwordDock-Bible-0.1.4-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation; clean-vault ZIP smoke tests pass. It is a local developer candidate, **not a published GitHub release**; the conversion-preflight GUI has been tested with synthetic invalid markup, but full release validation (mobile, themes, resource failures, restart and accessibility) remains pending.
+**Current local package:** `SwordDock-Bible-0.1.5-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced SHA-256 `7504f4225d5ae6da83d07df2975a7e50b75c5654c9a3c5e71b9d254debec5978`; clean-vault ZIP extraction and simulated offline restart reads pass. It is a local developer candidate, **not a published GitHub release**; the conversion-preflight GUI and new RX diagnostic were tested with synthetic invalid markup, but full release validation (mobile, themes, resource failures, restart and accessibility) remains pending.
 
 ## Test boundaries / not yet verified
 
@@ -106,6 +113,7 @@ The public installation ZIP contains the source-independent offline WEB library 
 - [x] Validate read-only inspection of the publisher-hosted WEB MySword module locally without redistributing it.
 - [x] Conservative conversion-readiness preflight rejects markup/unsupported structures without writing data (44 tests).
 - [x] Implement lossless **GBF lexical scanner** and report unknown references without discarding any source text; scan the full publisher WEB fixture.
+- [x] Parse bounded documented and observed cross-chapter `RX` references as inert metadata; report 424 validated and zero unresolved markers in the publisher WEB fixture.
 - [ ] Validate GBF **formatting semantics**, cross-chapter reference mapping, translator notes, HTML sanitization, provenance and slower-device performance before any opt-in import/conversion.
 - [ ] Decouple Bible module library storage from plugin folder, implement integrity checks and optional downloads.
 - [ ] Second permitted translation and chapter-level linked comparison.

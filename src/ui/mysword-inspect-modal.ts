@@ -105,6 +105,10 @@ export class MySwordInspectModal extends Modal {
             report.htmlMarkers.toLocaleString() + " HTML markers, " +
             report.unknownMarkers.toLocaleString() + " unsupported markers; " +
             report.tagIssueVerses.toLocaleString() + " verses require syntax review." });
+          summary.createDiv({ text: "Cross-reference inspection: " +
+            report.crossReferences.toLocaleString() + " validated RX marker(s), " +
+            report.unresolvedCrossReferences.toLocaleString() +
+            " unresolved. Parsed coordinates are not followed and do not verify edition versification." });
           for (const line of [...report.blockers, ...report.notes]) summary.createDiv({ text: line });
         } catch (error) {
           summary.setText("Conversion preflight failed: " +

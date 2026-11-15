@@ -78,7 +78,20 @@ describe("private MySword text-conversion preflight", () => {
     expect(report.htmlMarkers).toBe(1);
     expect(report.unknownMarkers).toBe(1);
     expect(report.tagIssueVerses).toBe(1);
+    expect(report.crossReferences).toBe(0);
+    expect(report.unresolvedCrossReferences).toBe(0);
     expect(report.status).toBe("blocked");
+  });
+  it("distinguishes validated and unresolved RX markers without following links", () => {
+    const report = preflightMySwordPlainText(sql, "test.bbl.mybible", fixture({
+      text: "<RX43.3.16><RX 12.6.31—7:20><RX 43.22.1>"
+    }));
+    expect(report.crossReferences).toBe(2);
+    expect(report.unresolvedCrossReferences).toBe(1);
+    expect(report.unknownMarkers).toBe(1);
+    expect(report.tagIssueVerses).toBe(1);
+    expect(report.status).toBe("blocked");
+    expect(report.installsModule).toBe(false);
   });
   it("accepts valid empty verses but flags them for manual review", () => {
     const report = preflightMySwordPlainText(sql, "test.bbl.mybible",

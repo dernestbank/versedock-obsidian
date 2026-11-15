@@ -18,6 +18,21 @@ describe("MySword GBF source-preserving lexical scanner", () => {
     expect(parsed.issues).toEqual([]);
     expect(parsed.knownMarkers).toBe(5);
     expect(parsed.tokens.map(t => t.family)).toEqual(["RX","RX","WG","WH","WT"]);
+    expect(parsed.tokens[0].reference).toEqual({
+      start: {book: 43, chapter: 3, verse: 16}
+    });
+    expect(parsed.tokens[1].reference).toEqual({
+      start: {book: 43, chapter: 3, verse: 16},
+      end: {book: 43, chapter: 3, verse: 18}
+    });
+  });
+  it("accepts an inclusive same-chapter range of at most 101 verses", () => {
+    const parsed = tokenizeMySwordGbf("<RX19.119.76-176>");
+    expect(parsed.issues).toEqual([]);
+    expect(parsed.tokens[0].reference).toEqual({
+      start: {book: 19, chapter: 119, verse: 76},
+      end: {book: 19, chapter: 119, verse: 176}
+    });
   });
   it("recognizes title levels, translators note labels, interlinear paired markers", () => {
     const raw = "<TS2>Title<Ts><RF q=a>Note<Rf><Q><E>word<e><q>";
@@ -61,13 +76,38 @@ describe("MySword GBF source-preserving lexical scanner", () => {
     }
     expect(parsed.tokens.map(t => t.raw).join("")).toBe(raw);
   });
-  it("preserves and flags the uncommon publisher cross-chapter reference", () => {
+  it("preserves and parses the observed publisher cross-chapter reference", () => {
     const raw = "<RX 12.6.31—7:20>";
     const parsed = tokenizeMySwordGbf(raw);
     expect(parsed.lossless).toBe(true);
+    expect(parsed.unknownMarkers).toBe(0);
+    expect(parsed.issues).toEqual([]);
+    expect(parsed.tokens[0]).toMatchObject({
+      kind: "cross-reference",
+      family: "RX",
+      reference: {
+        start: {book: 12, chapter: 6, verse: 31},
+        end: {book: 12, chapter: 7, verse: 20}
+      }
+    });
+    expect(parsed.tokens[0].raw).toBe(raw);
+  });
+  it.each([
+    "<RX 0.1.1>",
+    "<RX 67.1.1>",
+    "<RX 43.22.1>",
+    "<RX 43.3.0>",
+    "<RX 43.3.18-16>",
+    "<RX 43.4.1—3:20>",
+    "<RX 43.3.16-200>"
+  ])("keeps invalid or descending RX target %s unresolved and lossless", raw => {
+    const parsed = tokenizeMySwordGbf(raw);
+    expect(parsed.lossless).toBe(true);
+    expect(parsed.knownMarkers).toBe(0);
     expect(parsed.unknownMarkers).toBe(1);
     expect(parsed.issues).toHaveLength(1);
-    expect(parsed.tokens[0].raw).toBe(raw);
+    expect(parsed.tokens[0]).toMatchObject({kind: "unknown", raw});
+    expect(parsed.tokens[0].reference).toBeUndefined();
   });
   it("returns an empty but lossless scan for empty Scripture", () => {
     expect(tokenizeMySwordGbf("")).toMatchObject({
