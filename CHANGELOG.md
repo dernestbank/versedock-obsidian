@@ -2,6 +2,14 @@
 
 ## Unreleased — 0.1.11 SwordDock Bible developer candidate
 
+### Direct book search filter (November 15, 2026)
+
+- Add a Selected book scope with an accessible 66-book selector so users can search another book without first navigating the Reader.
+- Canonicalize the selected OSIS key through SwordDock's bundled inventory before loading; forged file identifiers, missing selections and unsupported books fail closed.
+- Read only the selected canonical book while retaining phrase/all-word matching, cancellation, truncation and safe literal highlighting.
+- Expand automated coverage to 131 tests across nineteen files. A caller-path mutation is caught by the focused corpus suite; TypeScript, production build and dependency audit pass.
+- Rebuild the 76-file offline preview twice with identical 1,757,827-byte output and SHA-256 `c86a04bdff9be790fbb70f9b1976ea323f4324a943b8c34dcbbb34c1555bdb2e`; clean extraction and simulated offline restart pass for all 66 books and 31,103 verses.
+
 ### Obsidian study-note backlinks (November 15, 2026)
 
 - Discover ordinary Markdown notes that Obsidian's resolved-link index identifies as linking to the passage's existing primary study note, without reading note bodies.

@@ -259,7 +259,8 @@
 **Description:** Deliver the first advanced-search filter slice without adding an index, network dependency, or caller-controlled resource path.
 
 **Acceptance criteria:**
-- [x] Whole Bible, Current chapter, Current book, Old Testament and New Testament scopes resolve only to the canonical bundled 66-book inventory; chapter context is required, bounded and checked against the selected book.
+- [x] Whole Bible, Current chapter, Current book, Selected book, Old Testament and New Testament scopes resolve only to the canonical bundled 66-book inventory; chapter context is required, bounded and checked against the selected book.
+- [x] Selected book exposes an accessible 66-book control, canonicalizes by OSIS and never trusts a caller-supplied resource identifier.
 - [x] Exact phrase preserves literal substring behavior; All words is case-insensitive, order-independent, duplicate-free and requires every entered term.
 - [x] All-word input is capped at 16 whitespace-delimited words and invalid runtime match modes fail closed.
 - [x] Every literal match is highlighted without `innerHTML`; hostile-looking text remains text, regex punctuation is escaped, overlaps merge and rendering commits atomically.
@@ -269,10 +270,11 @@
 
 **Verification:**
 - [x] Focused RED/GREEN tests cover canonical scopes, invalid scope/match values, current-chapter isolation/context errors, phrase/all-word behavior, empty queries, term/phrase/result bounds, exact-limit/truncated results and pre-read cancellation.
-- [x] A reversed current-chapter predicate is caught by the focused corpus suite; full `npm run check` passes at 128 tests across nineteen files.
+- [x] Reversed current-chapter and caller-path selected-book mutations are caught by the focused corpus suite; full `npm run check` passes at 131 tests across nineteen files.
 - [x] Deliberate exact-limit, all-to-any match and literal-escaping mutations are caught by the focused suites; full `npm run check` passes at 114 tests across seventeen files.
 - [x] Obsidian 1.15.1 live checks in the disposable final vault cover all four scopes, automatic reruns and the truthful 80+ state.
 - [ ] The new Current chapter scope is verified live in the disposable Obsidian vault.
+- [ ] The new Selected book control and single-book result isolation are verified live in the disposable Obsidian vault.
 
 **Dependencies:** Bundled WEB library and current Reader reference.
 
