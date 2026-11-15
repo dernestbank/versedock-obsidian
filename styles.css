@@ -149,6 +149,12 @@
 .versedock .vd-inspector-body { flex: 1; min-height: 0; overflow-y: auto; padding: 20px 15px; }
 .versedock .vd-resource-heading { font-family: "Iowan Old Style", Georgia, serif; font-size: 24px; margin-bottom: 24px; }
 .versedock .vd-inspector-help { color: var(--vd-muted); line-height: 1.6; }
+.versedock .vd-note-list-heading { margin: 18px 0 8px; font-size: var(--font-ui-small); color: var(--vd-muted); }
+.versedock .vd-note-list { display: grid; gap: 8px; }
+.versedock .vd-note-item { min-width: 0; padding: 9px 10px; border: 1px solid var(--vd-border); border-radius: var(--radius-s, 6px); background: var(--background-secondary); }
+.versedock .vd-note-link { max-width: 100%; padding: 2px 0; overflow: hidden; color: var(--vd-accent); font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+.versedock .vd-note-path { margin-top: 3px; overflow: hidden; color: var(--vd-muted); font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }
+.versedock .vd-inspector-warning { color: var(--text-warning); font-size: var(--font-ui-smaller); line-height: 1.5; }
 .versedock .vd-action-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
 .versedock .vd-inspector-footer { border-top: 1px solid var(--vd-border); padding: 13px 15px; background: var(--background-secondary); }
 .versedock .vd-inspector-footer strong { font-size: 12px; }

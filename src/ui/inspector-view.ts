@@ -106,10 +106,33 @@ export class InspectorView extends ItemView {
     }
     if (this.tab === "notes") {
       body.createEl("h3", { text: "Your Scripture notes" });
-      body.createEl("p", { cls: "vd-inspector-help", text: "Each passage gets a normal Markdown file in your vault, complete with reference metadata." });
+      body.createEl("p", { cls: "vd-inspector-help", text:
+        "Linked notes are normal Markdown files discovered from Obsidian's metadata cache. SwordDock does not read their note contents for this list." });
+      const discovery = this.plugin.findScriptureNotes(ref);
+      if (!discovery.notes.length) {
+        emptyState(body, "No linked notes", "Create the primary note or add this passage's canonical OSIS value to a note's scripture frontmatter.", "notebook-pen");
+      } else {
+        const heading = discovery.resultsTruncated
+          ? "Linked notes · " + discovery.notes.length + "+ shown"
+          : "Linked notes · " + discovery.notes.length;
+        body.createEl("h4", { cls: "vd-note-list-heading", text: heading });
+        const list = body.createDiv({ cls: "vd-note-list" });
+        for (const note of discovery.notes) {
+          const item = list.createDiv({ cls: "vd-note-item" });
+          textButton(item, note.basename, () => { void this.plugin.openLinkedNote(note.path); }, "vd-note-link");
+          item.createDiv({ cls: "vd-note-path", text: note.path });
+        }
+      }
+      if (discovery.scanTruncated) body.createEl("p", { cls: "vd-inspector-warning", text:
+        "Partial index: checked 5,000 Markdown files, prioritizing this passage's primary SwordDock note." });
+      if (discovery.resultsTruncated) body.createEl("p", { cls: "vd-inspector-warning", text:
+        "More linked notes exist; the fifty most recently modified are shown." });
       const row = body.createDiv({ cls: "vd-action-row" });
-      textButton(row, "Create or open note", () => { void this.plugin.openStudyNote(ref); }, "mod-cta");
+      textButton(row, "Create or open primary note", () => {
+        void this.plugin.openStudyNote(ref).then(() => this.render());
+      }, "mod-cta");
       iconButton(row, "copy", "Copy passage", () => { void this.plugin.copyPassage(ref); });
+      iconButton(row, "refresh-cw", "Refresh linked notes", () => this.render());
       return;
     }
     if (this.tab === "commentary") {

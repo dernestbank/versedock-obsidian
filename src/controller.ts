@@ -1,6 +1,7 @@
 import type { App } from "obsidian";
 import type { PassageReference } from "./core/references";
 import type { OfflineBibleLibrary } from "./core/library";
+import type { ScriptureNoteDiscovery } from "./core/scripture-notes";
 
 export interface SwordDockSettings {
   reference: string;
@@ -32,7 +33,9 @@ export interface SwordDockController {
   openSearch(): Promise<void>;
   openReferenceModal(mode: "jump" | "insert"): void;
   openMySwordInspector(): void;
+  findScriptureNotes(ref: PassageReference): ScriptureNoteDiscovery;
   openStudyNote(ref: PassageReference): Promise<void>;
+  openLinkedNote(path: string): Promise<void>;
   copyPassage(ref: PassageReference): Promise<void>;
   toggleBookmark(ref: PassageReference): void;
   toggleHighlight(ref: PassageReference): void;

@@ -3,7 +3,9 @@ import { BOOKS } from "./core/books";
 import { OfflineBibleLibrary } from "./core/library";
 import { parseOsis, parseReference, osisId, refLabel, type PassageReference } from "./core/references";
 import { normalizeReadingHistory, recordReadingHistory } from "./core/reading-history";
+import { studyNotePath, type ScriptureNoteDiscovery } from "./core/scripture-notes";
 import { DEFAULT_SETTINGS, type SwordDockSettings, type SwordDockController } from "./controller";
+import { discoverVaultScriptureNotes } from "./obsidian/scripture-note-index";
 import { ReaderView, READER_VIEW } from "./ui/reader-view";
 import { InspectorView, INSPECTOR_VIEW } from "./ui/inspector-view";
 import { SearchView, SEARCH_VIEW } from "./ui/search-view";
@@ -90,12 +92,11 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
   openReferenceModal(mode: "jump" | "insert"): void { new ReferenceModal(this, mode).open(); }
   openMySwordInspector(): void { new MySwordInspectModal(this).open(); }
 
-  private studyFilePath(ref: PassageReference): string {
-    const book = ref.book.name.replace(/[\/:*?"<>|]/g, "");
-    return "Bible Study/" + book + "/" + book + " " + ref.chapter + (ref.verse ? "-" + ref.verse : "") + ".md";
+  findScriptureNotes(ref: PassageReference): ScriptureNoteDiscovery {
+    return discoverVaultScriptureNotes(this.app, ref);
   }
   async openStudyNote(ref: PassageReference): Promise<void> {
-    const path = this.studyFilePath(ref);
+    const path = studyNotePath(ref);
     const folder = path.slice(0, path.lastIndexOf("/"));
     const parent = this.app.vault.getAbstractFileByPath(folder);
     if (!parent) {
@@ -120,6 +121,14 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     const leaf = this.app.workspace.getLeaf(true);
     await leaf.openFile(file);
     new Notice("Study note: " + refLabel(ref));
+  }
+  async openLinkedNote(path: string): Promise<void> {
+    const file = this.app.vault.getAbstractFileByPath(path);
+    if (!(file instanceof TFile) || file.extension !== "md") {
+      new Notice("Linked Scripture note is no longer available.");
+      return;
+    }
+    await this.app.workspace.getLeaf(true).openFile(file);
   }
   toggleBookmark(ref: PassageReference): void {
     const id = osisId(ref);
