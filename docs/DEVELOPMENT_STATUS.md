@@ -22,6 +22,7 @@ Updated: 2026-11-15
 - Verified package-recovery checkpoint commit: `fd83d7d` (`fix: redact offline resource paths`)
 - Verified offline-library recovery checkpoint commit: `c90cd67` (`fix: add offline library recovery flow`)
 - Verified scoped-search implementation commit: `8bf46b4` (`feat: add scoped offline Bible search`)
+- Verified search-match implementation commit: `018c656` (`feat: add offline search match modes`)
 - Plugin ID: `versedock` (compatibility contract; unchanged)
 - GitHub: public repository `dernestbank/versedock-obsidian`; branch `branding/sworddock-bible` is pushed and pull request [#1](https://github.com/dernestbank/versedock-obsidian/pull/1) targets `main`. The historical prerelease/tag `0.1.0` remains the only published release.
 - Current accessibility checkpoint: keyboard and accessibility-tree verification complete; actual VoiceOver verification pending
@@ -32,13 +33,13 @@ Updated: 2026-11-15
 - Current brand checkpoint: 2026-11-15 exact-name screening found no `SwordDock` record in the live USPTO wordmark search, Obsidian community name/ID, npm registry or exact public-web results; comprehensive similar/common-law/international and professional review remain outstanding
 - Current theme checkpoint: 0.1.11 Reader and Inspector rendering are visually verified in Obsidian 1.15.1 native Light/Dark and official-catalog Minimal 9.1.4 Light/Dark; the test vault is restored to Default/Light and broader community-theme coverage remains open
 - Current package checkpoint: the complete 0.1.11 ZIP passes a new-vault trust/enable/Reader/reload cycle; missing and malformed-book errors are privacy-safe, and missing or malformed WEB manifests show install/recheck guidance and recover in-app after restoration
-- Current search checkpoint: Whole Bible, Current book, Old Testament and New Testament scopes are bounded, cancellable, truthful about truncation and verified live in the narrow Obsidian search pane
+- Current search checkpoint: Whole Bible, Current book, Old Testament and New Testament scopes support bounded Exact phrase / All words matching, remain cancellable and truthful about truncation, and the scope foundation is verified live in the narrow Obsidian search pane
 
 ## Verified baseline
 
-- `npm run check`: passed on 2026-11-15 for 0.1.11 (109 tests in 16 files, TypeScript, production build). Deliberate history-cap, Inspector ArrowRight, offline-library availability and search-truncation mutations were caught by their focused suites; focused resource-failure coverage rejects absolute-path disclosure and verifies package-level recovery guidance.
+- `npm run check`: passed on 2026-11-15 for 0.1.11 (110 tests in 16 files, TypeScript, production build). Deliberate history-cap, Inspector ArrowRight, offline-library availability, search-truncation and all-to-any match mutations were caught by their focused suites; focused resource-failure coverage rejects absolute-path disclosure and verifies package-level recovery guidance.
 - `npm audit --json`: 0 known vulnerabilities across 113 dependencies.
-- Package: `dist/SwordDock-Bible-0.1.11-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,755,409 bytes, SHA-256 `f5ff8568bdfce0750565cb7cea2f162779fd784078cd6dab4dfc6c20491eb407`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed for all 66 books and 31,103 verses. Redeployment preserved stable ID `versedock`, `reference: "Rom.8.28"`, history `['Rom.8.28', 'Rom.8.27']`, bookmarks, highlights and appearance settings.
+- Package: `dist/SwordDock-Bible-0.1.11-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,755,659 bytes, SHA-256 `d47efd418b869b948f928f30e3b273587985d0d855ea92b0db273882213d04d1`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed for all 66 books and 31,103 verses. Redeployment preserved stable ID `versedock`, `reference: "Rom.8.28"`, history `['Rom.8.28', 'Rom.8.27']`, bookmarks, highlights and appearance settings.
 - Updated full-corpus evidence: 31,103 WEB verses pass source round-trip enforcement; 71,821 recognized markers, seven inert HTML markers, 424 validated RX markers, zero unresolved markers, 15,866 semantic-ready markup verses, seven opaque events, 1,126 translator notes and 169 titles. Conversion remains blocked.
 - Live GUI: Obsidian 1.15.1 loaded 0.1.11 in the isolated repository `test-vault`. Live 0.1.10 first exposed that Obsidian still tabbed through inactive native buttons despite `tabindex="-1"`; 0.1.11 keeps only the selected tab native. End reached and revealed History, Right wrapped to Commentary, and Tab exited the tab list. Selecting the older Romans 8:28 history entry promoted it ahead of Romans 8:27; the Reader reference and reordered history survived reload. The clear action and actual VoiceOver remain pending because both require explicit approval at action time.
 - Native themes: the same 0.1.11 Reader and Inspector are visually readable in Obsidian 1.15.1 Light and Dark schemes, including editorial Scripture, selected-passage/accent treatment, contextual actions, narrow tabs and unavailable-resource states. The isolated vault was restored to `moonstone` Light with reference, history, bookmarks, highlights and appearance settings unchanged.
@@ -52,7 +53,7 @@ Updated: 2026-11-15
 
 ## Completed capabilities
 
-- Offline 66-book/31,103-verse WEB reader, navigation, bounded canonical-scope search, Markdown insertion, notes, bookmarks, and highlights.
+- Offline 66-book/31,103-verse WEB reader, navigation, bounded canonical-scope phrase/all-word search, Markdown insertion, notes, bookmarks, and highlights.
 - Theme-adaptive responsive desktop UI foundations and study/library views.
 - Read-only `.bbl.mybible` SQLite inspection with strict schema/content bounds.
 - Non-writing conversion preflight that blocks unsafe/unsupported content.

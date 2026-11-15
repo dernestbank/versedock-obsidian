@@ -5,10 +5,11 @@
 ### Scoped offline Bible search (November 15, 2026)
 
 - Add canonical Whole Bible, Current book, Old Testament and New Testament search scopes without accepting caller-supplied file paths.
+- Add an explicit Exact phrase / All words match filter. All-word searches are case-insensitive, order-independent, duplicate-free and bounded to 16 entered words without changing returned Scripture text.
 - Bound search phrases to 200 characters and result requests to 1–200 entries; scan only the selected canonical books and cancel superseded or closed searches between books and chapters.
 - Report truncation only when an additional match actually exists, so exactly 80 matches display as `80 results` rather than `80+`.
 - Keep the narrow-pane controls wrapped and keyboard accessible, focus the search field on open, and announce concise progress/result counts through a dedicated polite status region.
-- Verify all four scopes live in the disposable Obsidian 1.15.1 vault, including John 3:16 scope inclusion/exclusion and a truthful 80+ Whole Bible result state. Expand automated coverage to 109 tests across sixteen files; a deliberate truncation mutation is caught by the focused suite.
+- Verify all four scopes live in the disposable Obsidian 1.15.1 vault, including John 3:16 scope inclusion/exclusion and a truthful 80+ Whole Bible result state. Expand automated coverage to 110 tests across sixteen files; deliberate truncation and all-to-any matching mutations are caught by the focused suite.
 
 ### Obsidian focus-manager repair (November 15, 2026)
 
@@ -16,7 +17,7 @@
 - Keep the selected tab as the only native button and expose inactive choices as pointer-operable ARIA tabs. Arrow/Home/End selection rebuilds the destination as the selected button, focuses it, and scrolls it into view.
 - Verify the repair in the isolated Obsidian 1.15.1 `test-vault`: End reaches the visible History edge, Right wraps to Commentary, Tab exits the tab list, and an older Romans 8:28 history entry reopens and moves ahead of Romans 8:27. The reference and reordered history survive an app reload.
 - Expand automated coverage to 105 tests across fifteen files. The destructive clear-history action and actual VoiceOver remain separate approval-gated checks.
-- Build the 76-file offline preview twice with identical 1,755,409-byte output and SHA-256 `f5ff8568bdfce0750565cb7cea2f162779fd784078cd6dab4dfc6c20491eb407`; clean extraction and simulated offline restart pass for all 66 books and 31,103 verses.
+- Build the 76-file offline preview twice with identical 1,755,659-byte output and SHA-256 `d47efd418b869b948f928f30e3b273587985d0d855ea92b0db273882213d04d1`; clean extraction and simulated offline restart pass for all 66 books and 31,103 verses.
 - Re-run the cooperative read-only preflight in Obsidian 1.15.1 against the ignored 31,103-verse publisher WEB fixture. The live report matches the established semantic totals, blocks conversion/installation, and leaves the 5,414,912-byte source at SHA-256 `d0605fb28dbb0aee37f078931fdc54925295f846b068b954da2d1923011b2bb5`.
 - Refresh the provisional name-risk checkpoint against the live USPTO exact-wordmark search, official Obsidian community list, GitHub, npm and public-web results. No exact `SwordDock` collision was found, but similar/common-law/international and professional legal review remain required before a stable launch.
 - Update the validation workflow to the official Node 24-based `actions/checkout@v7` and `actions/setup-node@v7`, and pin Ubuntu 24.04 instead of the migrating `ubuntu-latest` label. The resulting PR run passes check, packaging and clean-install smoke tests with zero annotations.

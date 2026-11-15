@@ -8,7 +8,7 @@ SwordDock Bible was previously developed under the working titles *MySword+* and
 
 - Read the **World English Bible (WEB, 66-book ENGWEBP edition)** offline, with an elegant theme-adaptive serif reader and adjustable typography.
 - Jump to books and chapters, or type references such as `John 3:16`, `Ps 23`, and `1co 13:4-7`.
-- Search local Bible text across the whole Bible, the current book, or either testament; preview and copy passages.
+- Search exact phrases or all entered words across the whole Bible, the current book, or either testament; preview and copy passages.
 - Insert an attributed Bible callout or quotation directly into a Markdown note.
 - Create and open linked study notes as **ordinary Markdown files**, not proprietary records.
 - Save passage bookmarks and highlights.
