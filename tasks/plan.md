@@ -7,7 +7,7 @@ Continue the existing SwordDock Bible developer preview from the verified GBF le
 ## Observed baseline
 
 - Local branch `branding/sworddock-bible` entered Phase 2 at verified checkpoint `01f35b8`.
-- `npm run check` passes for 0.1.11: 17 test files and 114 tests, strict TypeScript, and the production bundle.
+- `npm run check` passes for 0.1.11: 19 test files and 122 tests, strict TypeScript, and the production bundle.
 - `npm audit --json` reports zero known vulnerabilities.
 - GitHub `dernestbank/versedock-obsidian` is public; PR #1 tracks this pushed branch. Only prerelease/tag `0.1.0` is published.
 - Phase 2 now provides an inert semantic IR and an isolated safe-DOM rendering primitive; neither enables module conversion or installation.
@@ -65,6 +65,7 @@ Continue the existing SwordDock Bible developer preview from the verified GBF le
 - [x] Install the complete 0.1.11 ZIP in a new disposable vault, verify first run and reload, and exercise a missing-book failure/recovery without leaking its absolute path.
 - [x] Replace developer-only missing-library instructions and verify missing/malformed WEB manifest recovery through the in-app recheck without restarting Obsidian.
 - [x] Add bounded, cancellable Whole Bible/current-book/testament search scopes plus Exact phrase / All words matching, truthful truncation and safe literal result highlighting; verify the scope foundation live in a narrow Obsidian pane.
+- [x] Discover and reopen exact Scripture-linked Markdown notes from Obsidian's metadata cache with bounded scans/results and truthful partial states.
 
 ## Threat model
 

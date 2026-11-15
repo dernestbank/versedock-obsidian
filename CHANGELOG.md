@@ -2,6 +2,14 @@
 
 ## Unreleased — 0.1.11 SwordDock Bible developer candidate
 
+### Scripture-linked note discovery (November 15, 2026)
+
+- Discover notes whose `scripture` frontmatter exactly matches the active canonical OSIS reference, including a bounded array of references, without reading Markdown note bodies.
+- Prioritize the stable `Bible Study/<Book>/...` primary note through Obsidian's indexed path lookup, then examine at most 5,000 metadata-cache entries and show at most the fifty most recently modified matches.
+- Fail closed for malformed, oversized or non-string frontmatter; deduplicate the primary note by vault path and report partial scans or additional results truthfully.
+- Upgrade the Study Inspector Notes tab with linked-note buttons, relative paths, a truthful empty state, primary-note create/open, copy and refresh actions. Existing note paths and contents remain unchanged.
+- Expand automated coverage to 122 tests across nineteen files. Deliberately crossing the 5,000-entry boundary is caught by the focused adapter suite.
+
 ### Scoped offline Bible search (November 15, 2026)
 
 - Add canonical Whole Bible, Current book, Old Testament and New Testament search scopes without accepting caller-supplied file paths.
@@ -18,7 +26,7 @@
 - Keep the selected tab as the only native button and expose inactive choices as pointer-operable ARIA tabs. Arrow/Home/End selection rebuilds the destination as the selected button, focuses it, and scrolls it into view.
 - Verify the repair in the isolated Obsidian 1.15.1 `test-vault`: End reaches the visible History edge, Right wraps to Commentary, Tab exits the tab list, and an older Romans 8:28 history entry reopens and moves ahead of Romans 8:27. The reference and reordered history survive an app reload.
 - Expand automated coverage to 105 tests across fifteen files. The destructive clear-history action and actual VoiceOver remain separate approval-gated checks.
-- Build the 76-file offline preview twice with identical 1,756,045-byte output and SHA-256 `0b4ddf35803ce4ba80bb6b57e700aa34fd70ee510d8794708d62b349e438064b`; clean extraction and simulated offline restart pass for all 66 books and 31,103 verses.
+- Build the 76-file offline preview twice with identical 1,756,962-byte output and SHA-256 `8d08c569e59be442faf7e02e77b785c028f113f40775457fa320c91531c1c0c5`; clean extraction and simulated offline restart pass for all 66 books and 31,103 verses.
 - Re-run the cooperative read-only preflight in Obsidian 1.15.1 against the ignored 31,103-verse publisher WEB fixture. The live report matches the established semantic totals, blocks conversion/installation, and leaves the 5,414,912-byte source at SHA-256 `d0605fb28dbb0aee37f078931fdc54925295f846b068b954da2d1923011b2bb5`.
 - Refresh the provisional name-risk checkpoint against the live USPTO exact-wordmark search, official Obsidian community list, GitHub, npm and public-web results. No exact `SwordDock` collision was found, but similar/common-law/international and professional legal review remain required before a stable launch.
 - Update the validation workflow to the official Node 24-based `actions/checkout@v7` and `actions/setup-node@v7`, and pin Ubuntu 24.04 instead of the migrating `ubuntu-latest` label. The resulting PR run passes check, packaging and clean-install smoke tests with zero annotations.

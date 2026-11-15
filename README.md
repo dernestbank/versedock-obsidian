@@ -10,7 +10,7 @@ SwordDock Bible was previously developed under the working titles *MySword+* and
 - Jump to books and chapters, or type references such as `John 3:16`, `Ps 23`, and `1co 13:4-7`.
 - Search exact phrases or all entered words across the whole Bible, the current book, or either testament, with safe in-result highlighting; preview and copy passages.
 - Insert an attributed Bible callout or quotation directly into a Markdown note.
-- Create and open linked study notes as **ordinary Markdown files**, not proprietary records.
+- Create, discover, and reopen Scripture-linked study notes as **ordinary Markdown files**, using bounded Obsidian metadata-cache lookup rather than proprietary records or note-body scanning.
 - Save passage bookmarks and highlights.
 - Reopen up to fifty recent passages from the Study Inspector's bounded reading history.
 - Open native Obsidian Reader, Study Inspector, Search, and Module Library views.

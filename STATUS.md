@@ -6,6 +6,14 @@ This independent project started under the internal name **MySword+**. Its origi
 
 > **Branding update (2026-11-12):** Visible branding changed to **SwordDock Bible** while keeping the installed plugin ID `versedock` and the existing GitHub repository URL stable. The historical GUI checks below were performed before the rename; rerun the GUI check for final verification. Official trademark clearance is pending.
 
+## Scripture-linked note discovery — 2026-11-15
+
+- The Study Inspector Notes tab now discovers exact canonical OSIS links in Obsidian's cached `scripture` frontmatter and opens the resulting normal Markdown files. Note bodies are never read for discovery.
+- The established primary-note path is looked up directly and prioritized. Remaining discovery examines at most 5,000 indexed Markdown files, displays at most fifty recent matches and truthfully reports partial scans/additional results.
+- Scalar or bounded-array frontmatter is validated fail-closed; invalid, oversized and non-string values are ignored. Same-path primary entries are deduplicated even if Obsidian returns different object identities.
+- The UI retains create/open and copy behavior, adds refresh, relative-path context and honest empty/partial states, and does not introduce proprietary note storage.
+- Full verification passes at 122 tests across nineteen files, strict TypeScript, production build and zero dependency findings. The 5,000-entry boundary mutation fails as required.
+
 ## Scoped offline Bible search — 2026-11-15
 
 - Added canonical Whole Bible, Current book, Old Testament and New Testament filters. Searches remain offline, accept no caller-controlled resource path, cap phrases at 200 characters and results at 200, and stop superseded/closed work between books and chapters.
@@ -24,7 +32,7 @@ This independent project started under the internal name **MySword+**. Its origi
 - The repaired build reports only `The installed offline Bible data for John is missing or unreadable.` Loading, Search, copy and Reader consumers now receive the same safe failure, while the Module Library integrity report uses a fixed problem description. Restoring `JOH.json` and reloading returned John 3:16 without altering a personal vault.
 - Replaced only the final disposable vault's John file with malformed JSON. The packaged Reader retained the safe error, while **Verify installed Bible** reported file-size mismatch, SHA-256 mismatch and invalid JSON without a path. Restoring the original file returned the integrity report to 66/66 and John 3:16 after reload.
 - Missing and malformed `library/webp/manifest.json` cycles now show package-level recovery guidance instead of builder/test-vault instructions. Restoring the original manifest and choosing **Recheck offline library** recovered John 3:16 without an app reload; the manifest matched the repository source afterward and no backup remained.
-- Full verification passes at 114 tests across seventeen files. The current 76-file package remains reproducible; clean extraction and simulated offline restart still cover all 66 books and 31,103 verses.
+- Full verification passes at 122 tests across nineteen files. The current 76-file package remains reproducible; clean extraction and simulated offline restart still cover all 66 books and 31,103 verses.
 
 ## Inspector tab keyboard navigation — 2026-11-15
 
@@ -32,7 +40,7 @@ This independent project started under the internal name **MySword+**. Its origi
 - Selecting a tab by pointer or keyboard rebuilds the panel with the destination tab focused and scrolled into view, addressing narrow-pane overflow without forcing the tab strip to wrap.
 - Each tab now owns an instance-scoped ID and `aria-controls` relationship; the shared `tabpanel` names its active tab through `aria-labelledby` without duplicate IDs if Obsidian restores more than one Inspector leaf.
 - Live 0.1.10 testing exposed that Obsidian's focus manager still visited inactive native buttons despite `tabindex="-1"`. The 0.1.11 repair keeps only the selected tab as a native button while inactive choices remain pointer-operable ARIA tabs.
-- Focused RED/GREEN tests and deliberate ArrowRight/native-element mutations cover the navigation policy, focus-manager repair and duplicate-view IDs. The current full verification passes at 114 tests across seventeen files.
+- Focused RED/GREEN tests and deliberate ArrowRight/native-element mutations cover the navigation policy, focus-manager repair and duplicate-view IDs. The current full verification passes at 122 tests across nineteen files.
 - Live 0.1.11 QA in the isolated Obsidian 1.15.1 vault confirmed End navigation and far-edge reveal, Right wraparound, destination focus, and Tab exiting the tab list. The History tab remained visible and selected in the narrow pane.
 - Selecting the older Romans 8:28 history entry returned the Reader to it, promoted it ahead of Romans 8:27, and preserved both the current reference and reordered history across an app reload. Destructive clear-button execution remains approval-gated and unverified.
 
@@ -124,7 +132,7 @@ This independent project started under the internal name **MySword+**. Its origi
 ## Verified on macOS / Obsidian 1.15.0–1.15.1
 
 - **Build:** strict TypeScript `tsc --noEmit` passed, esbuild `main.js` generated successfully.
-- **Original QA tests:** 18/18 passed (book references, OSIS IDs, 66-book WEB dataset, local chapter reading and search). **Current developer candidate:** 114 automated tests across seventeen files cover those foundations plus scoped/cancellable phrase/all-word search, safe literal highlighting, input safety, privacy-safe resource failures and recovery, module inspection, semantic interpretation, performance statistics, persistence bounds and Inspector keyboard navigation.
+- **Original QA tests:** 18/18 passed (book references, OSIS IDs, 66-book WEB dataset, local chapter reading and search). **Current developer candidate:** 122 automated tests across nineteen files cover those foundations plus Scripture-linked note discovery, scoped/cancellable phrase/all-word search, safe literal highlighting, input safety, privacy-safe resource failures and recovery, module inspection, semantic interpretation, performance statistics, persistence bounds and Inspector keyboard navigation.
 - **Data:** 66 public-domain ENGWEBP book files, 31,103 verses, exact text preserved; provenance and checksum documented.
 - **Actual GUI:** opened an isolated test vault in Obsidian; enabled the plugin; opened its Bible Reader from the native command palette.
 - **Reader:** John 3:16 appeared with styled passage text, contextual actions, book/chapter controls and theme-aware dark UI.
@@ -135,7 +143,7 @@ This independent project started under the internal name **MySword+**. Its origi
 - **Original 0.1.0 test:** renamed manifest ID and product to VerseDock; reinstalled the plugin in an isolated vault and confirmed **VerseDock (Preview)** commands appeared and Bible Reader opened. That historical GUI test predates the SwordDock Bible rebrand.
 - **Manual preview ZIP:** the archive includes `main.js`, `manifest.json`, `styles.css`, license, README and every offline WEB book, and passed ZIP integrity check.
 
-**Current local package:** `SwordDock-Bible-0.1.11-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced identical 1,756,045-byte archives with SHA-256 `0b4ddf35803ce4ba80bb6b57e700aa34fd70ee510d8794708d62b349e438064b`; clean-vault extraction and simulated offline restart pass for all 66 books and 31,103 verses. A separate fresh GUI vault passed trust, enablement, offline Reader launch, Obsidian reload, missing/malformed-book integrity recovery, missing/malformed-manifest in-app recheck, and scoped-search cycles under stable ID `versedock`. The established upgrade vault preserved `reference: "Rom.8.28"`, history `['Rom.8.28', 'Rom.8.27']`, bookmarks, highlights and appearance settings. It remains a local developer candidate, **not a published GitHub release**. Full release validation (mobile, broader community-theme coverage, interrupted-install recovery, destructive history clearing and actual VoiceOver) remains pending.
+**Current local package:** `SwordDock-Bible-0.1.11-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced identical 1,756,962-byte archives with SHA-256 `8d08c569e59be442faf7e02e77b785c028f113f40775457fa320c91531c1c0c5`; clean-vault extraction and simulated offline restart pass for all 66 books and 31,103 verses. A separate fresh GUI vault passed trust, enablement, offline Reader launch, Obsidian reload, missing/malformed-book integrity recovery, missing/malformed-manifest in-app recheck, and scoped-search cycles under stable ID `versedock`. The established upgrade vault preserved `reference: "Rom.8.28"`, history `['Rom.8.28', 'Rom.8.27']`, bookmarks, highlights and appearance settings. It remains a local developer candidate, **not a published GitHub release**. Full release validation (mobile, broader community-theme coverage, interrupted-install recovery, destructive history clearing and actual VoiceOver) remains pending.
 
 ## Test boundaries / not yet verified
 
