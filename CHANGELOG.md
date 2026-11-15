@@ -11,6 +11,7 @@
 - Build the 76-file offline preview twice with identical 1,754,504-byte output and SHA-256 `5105747cb28578de79f6a62e5dd0307a8cf0eac81903717a35c7a918b504e493`; clean extraction and simulated offline restart pass for all 66 books and 31,103 verses.
 - Re-run the cooperative read-only preflight in Obsidian 1.15.1 against the ignored 31,103-verse publisher WEB fixture. The live report matches the established semantic totals, blocks conversion/installation, and leaves the 5,414,912-byte source at SHA-256 `d0605fb28dbb0aee37f078931fdc54925295f846b068b954da2d1923011b2bb5`.
 - Refresh the provisional name-risk checkpoint against the live USPTO exact-wordmark search, official Obsidian community list, GitHub, npm and public-web results. No exact `SwordDock` collision was found, but similar/common-law/international and professional legal review remain required before a stable launch.
+- Update the validation workflow to the official Node 24-based `actions/checkout@v7` and `actions/setup-node@v7`, and pin Ubuntu 24.04 instead of the migrating `ubuntu-latest` label. The resulting PR run passes check, packaging and clean-install smoke tests with zero annotations.
 
 ## 0.1.10 — Local developer candidate (2026-11-15; unpublished)
 
