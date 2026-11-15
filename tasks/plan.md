@@ -7,7 +7,7 @@ Continue the existing SwordDock Bible developer preview from the verified GBF le
 ## Observed baseline
 
 - Local branch `branding/sworddock-bible` entered Phase 2 at verified checkpoint `01f35b8`.
-- `npm run check` passes for 0.1.7: 11 test files and 86 tests, strict TypeScript, and the production bundle.
+- `npm run check` passes for 0.1.7: 12 test files and 90 tests, strict TypeScript, and the production bundle.
 - `npm audit --json` reports zero known vulnerabilities.
 - GitHub `dernestbank/versedock-obsidian` is public; PR #1 tracks this pushed branch. Only prerelease/tag `0.1.0` is published.
 - Phase 2 now provides an inert semantic IR and an isolated safe-DOM rendering primitive; neither enables module conversion or installation.
@@ -45,6 +45,8 @@ Continue the existing SwordDock Bible developer preview from the verified GBF le
 - [x] Unsupported tokens remain visible and conversion remains blocked.
 - [x] Keyboard order/activation, focus restoration, and accessibility-tree output are manually verified in a disposable vault.
 - [ ] Actual VoiceOver announcement/navigation is manually verified after explicit approval to change the macOS assistive setting.
+- [x] Desktop full-corpus preview/preflight performance has a bounded reproducible benchmark and 25-run evidence.
+- [ ] Slow-device, mobile, and UI long-task performance is measured on representative targets.
 
 ### Phase 3: Authorized opt-in import design
 
@@ -66,7 +68,7 @@ Continue the existing SwordDock Bible developer preview from the verified GBF le
 | Publisher extensions differ from documented syntax | Medium | Accept only evidence-backed forms and keep all others unresolved and lossless. |
 | Canonical chapter checks misrepresent alternate canons | High | Keep the current 66-book scope explicit and block unsupported schemes. |
 | Parsed metadata is mistaken for faithful rendering | High | Label it inspection-only; retain conversion blockers and raw source. |
-| Main-thread corpus analysis is slow on weaker devices | Medium | Keep O(n) scans, add corpus timing evidence, and defer writer/UI expansion pending profiling. |
+| Main-thread corpus analysis is slow on weaker devices | Medium | Keep O(n) scans; retain the 25-run desktop baseline; defer writer/UI expansion pending slow-device, mobile and UI long-task profiling. |
 | Rights are unclear | High | Never infer rights from technical validity; require explicit provenance review before installation. |
 
 ## Open questions

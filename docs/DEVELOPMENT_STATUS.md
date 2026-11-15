@@ -13,14 +13,16 @@ Updated: 2026-11-15
 - Plugin ID: `versedock` (compatibility contract; unchanged)
 - GitHub: public repository `dernestbank/versedock-obsidian`; branch `branding/sworddock-bible` is pushed and pull request [#1](https://github.com/dernestbank/versedock-obsidian/pull/1) targets `main`. The historical prerelease/tag `0.1.0` remains the only published release.
 - Current accessibility checkpoint: keyboard and accessibility-tree verification complete; actual VoiceOver verification pending
+- Current performance checkpoint: reproducible desktop full-corpus benchmark complete; slow-device/mobile profiling pending
 
 ## Verified baseline
 
-- `npm run check`: passed on 2026-11-15 for 0.1.7 (86 tests in 11 files, TypeScript, production build). A deliberate keyboard-activation mutation was caught by the focused suite and the restored implementation passed.
+- `npm run check`: passed on 2026-11-15 for 0.1.7 (90 tests in 12 files, TypeScript, production build). Deliberate keyboard-activation and benchmark-p95 mutations were caught by their focused suites and the restored implementations passed.
 - `npm audit --json`: 0 known vulnerabilities across 113 dependencies.
-- Package: `dist/SwordDock-Bible-0.1.7-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,752,193 bytes, SHA-256 `fe42eeabb8d7e3dd6a6f0f312718359c7cf679ff5a9b5cce45360a4dd31fa0ac`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed.
+- Package: `dist/SwordDock-Bible-0.1.7-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,752,430 bytes, SHA-256 `7a629c4e987df0175ffce35a0eabc869dde770990c0f9df7ba5608b41bcb2b25`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed.
 - Updated full-corpus evidence: 31,103 WEB verses pass source round-trip enforcement; 71,821 recognized markers, seven inert HTML markers, 424 validated RX markers, zero unresolved markers, 15,866 semantic-ready markup verses, seven opaque events, 1,126 translator notes and 169 titles. Conversion remains blocked.
 - Live GUI: Obsidian 1.15.0 reloaded the 0.1.7 implementation in the isolated repository `test-vault`. Keyboard Tab order and Return activation worked; the hostile HTML fixture stayed literal; semantic inspection reported zero of one markup verses fully interpreted and one opaque event; conversion/installation remained blocked; diagnostics were exposed as plain accessibility text; and focus returned to the preflight button. Actual VoiceOver announcement/navigation remains pending.
+- Full-corpus performance: a 25-run Node 22/darwin arm64 benchmark of the ignored 5.4 MiB publisher WEB fixture produced 98.873 ms combined median and 126.184 ms p95 after one warm-up, with stable 31,103-verse semantics and unchanged source SHA-256. Post-iteration process RSS was 95.078–99.766 MiB; this is not a mobile, slow-device or in-operation peak profile.
 - GitHub Actions: PR #1 is mergeable and `build-and-test` passed for accessibility checkpoint commit `f4bae5a`. The following documentation-only status commit triggers the same validation again.
 
 ## Completed capabilities
@@ -32,6 +34,7 @@ Updated: 2026-11-15
 - Lossless GBF lexical scanning with exact UTF-16 offsets and inert HTML classification.
 - Bounded GBF semantic events for supported typography/layout, translator notes and titles, plus an isolated fail-closed text-node renderer.
 - Deterministic offline preview packaging and clean-install filesystem smoke tests.
+- Bounded, non-writing full-corpus performance benchmark with stable-output and source-hash enforcement.
 
 ## Current implementation priority
 

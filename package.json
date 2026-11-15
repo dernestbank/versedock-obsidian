@@ -13,7 +13,8 @@
     "check": "npm run typecheck && npm test && npm run build",
     "package:preview": "python3 scripts/build_preview.py",
     "smoke:preview": "python3 scripts/smoke_preview.py",
-    "qa:mysword": "node scripts/verify_mysword_local.mjs"
+    "qa:mysword": "node scripts/verify_mysword_local.mjs",
+    "qa:mysword:benchmark": "node --expose-gc scripts/benchmark_mysword_local.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

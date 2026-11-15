@@ -143,6 +143,27 @@
 
 **Estimated scope:** Small.
 
+## Checkpoint: Full-corpus performance QA
+
+**Description:** Make large-module preview and semantic-preflight latency reproducible without adding an importer or exposing Scripture.
+
+**Acceptance criteria:**
+- [x] Benchmark iterations are explicitly bounded from 3 through 25 and summarized with minimum, median, p95, maximum and mean.
+- [x] Compilation, WASM initialization, file I/O, hashing and one warm-up pass are excluded and disclosed.
+- [x] Every iteration verifies stable counts/references and the source SHA-256 before reporting success.
+- [x] Output contains no Scripture text and the command performs no network access, file writes, conversion or installation.
+- [x] Unreadable-file errors do not disclose the user-supplied absolute source path.
+- [x] The ignored 5.4 MiB publisher WEB fixture completes 25 measured desktop runs with stable 31,103-verse results.
+- [ ] Slow-device, mobile and UI long-task profiling passes on representative targets.
+
+**Verification:**
+- [x] Focused RED/GREEN tests cover odd/even statistics, non-mutation, invalid samples, defaults and iteration bounds.
+- [x] Real-file benchmark reports preview, preflight, combined and coarse process-memory measurements.
+
+**Dependencies:** Phase 2 semantic IR.
+
+**Estimated scope:** Small.
+
 ## Task 6: Specify authorized, reversible module import
 
 **Description:** Define the provenance, rights acknowledgement, storage, integrity, transaction, rollback, recovery and removal contract that must be accepted before any module writer is implemented.

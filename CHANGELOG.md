@@ -2,6 +2,13 @@
 
 ## Unreleased — 0.1.7 SwordDock Bible developer candidate
 
+### Full-corpus performance QA (November 15, 2026)
+
+- Add a bounded, read-only local benchmark for MySword preview inspection and semantic conversion preflight, with warm-up exclusion, stable-result enforcement, source-byte hash verification, and coarse process-memory samples.
+- Benchmark the ignored 5.4 MiB publisher WEB fixture for 25 measured runs on Node 22/darwin arm64: combined median 98.873 ms and p95 126.184 ms, with all 31,103 verse counts and semantic diagnostics stable.
+- Keep the benchmark free of Scripture output, file writes, installation, and network access. Slower-device and actual mobile profiling remain separate release gates.
+- Expand automated coverage to 90 tests across twelve files, including regression protection against disclosing an unreadable source path.
+
 ### Inspector keyboard accessibility (November 15, 2026)
 
 - Preserve keyboard focus on the text-conversion preflight button after its asynchronous read-only analysis completes, while never stealing focus that moved to another control.
