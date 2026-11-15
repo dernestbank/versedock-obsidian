@@ -10,6 +10,8 @@ export interface IndexedScriptureNote {
   basename: string;
   scripture: unknown;
   modified: number;
+  primary?: boolean;
+  linkedToPrimary?: boolean;
 }
 
 export interface ScriptureNoteDiscovery {
@@ -54,9 +56,10 @@ export function discoverScriptureNotes(
   const matches: IndexedScriptureNote[] = [];
   for (let index = 0; index < examined; index++) {
     const entry = entries[index];
-    if (linksToReference(entry.scripture, target)) matches.push(entry);
+    if (entry.primary || entry.linkedToPrimary || linksToReference(entry.scripture, target)) matches.push(entry);
   }
-  matches.sort((left, right) => right.modified - left.modified || (left.path < right.path ? -1 : left.path > right.path ? 1 : 0));
+  matches.sort((left, right) => Number(Boolean(right.primary)) - Number(Boolean(left.primary)) ||
+    right.modified - left.modified || (left.path < right.path ? -1 : left.path > right.path ? 1 : 0));
   return {
     notes: matches.slice(0, MAX_SCRIPTURE_NOTE_RESULTS),
     examined,

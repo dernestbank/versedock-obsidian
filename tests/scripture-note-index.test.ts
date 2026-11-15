@@ -79,6 +79,34 @@ describe("Obsidian Scripture-note metadata index", () => {
     expect(discoverVaultScriptureNotes(app, reference).notes.map(note => note.path)).toEqual([primary.path]);
   });
 
+  it("discovers a bounded Obsidian backlink to the primary note without reading note bodies", () => {
+    const reference = parseReference("John 3:16");
+    const primaryPath = studyNotePath(reference);
+    const primary = {path: primaryPath, basename: "John 3-16", stat: {mtime: 1}};
+    const backlink = {path: "Journal/Grace.md", basename: "Grace", stat: {mtime: 30}};
+    const zeroCount = {path: "Journal/Draft.md", basename: "Draft", stat: {mtime: 40}};
+    const read = () => { throw new Error("raw note content must not be read"); };
+    const app = {
+      vault: {
+        getMarkdownFiles: () => [backlink, zeroCount, primary] as unknown as TFile[],
+        getFileByPath: (path: string) => path === primaryPath ? primary as unknown as TFile : null,
+        read
+      },
+      metadataCache: {
+        resolvedLinks: {
+          [backlink.path]: {[primaryPath]: 1},
+          [zeroCount.path]: {[primaryPath]: 0}
+        },
+        getFileCache: (file: FakeFile) => ({frontmatter: file.path === primaryPath ? {scripture: "John.3.16"} : undefined})
+      }
+    } as unknown as App;
+
+    const result = discoverVaultScriptureNotes(app, reference);
+
+    expect(result.notes.map(note => note.path)).toEqual([primaryPath, backlink.path]);
+    expect(result.notes.find(note => note.path === backlink.path)?.linkedToPrimary).toBe(true);
+  });
+
   it("reuses a recognized legacy generated range note", () => {
     const reference = parseReference("John 3:16-18");
     const legacyPath = legacyStudyNotePath(reference);

@@ -38,6 +38,18 @@ describe("Scripture-linked note discovery", () => {
     expect(entries).toEqual(original);
   });
 
+  it("keeps the primary note first and includes an indexed backlink without Scripture frontmatter", () => {
+    const entries: IndexedScriptureNote[] = [
+      {...note("Primary.md", undefined, 1), primary: true},
+      {...note("Backlink.md", undefined, 30), linkedToPrimary: true},
+      note("Frontmatter.md", "John.3.16", 20),
+      note("Unrelated.md", undefined, 40)
+    ];
+
+    expect(discoverScriptureNotes(entries, parseReference("John 3:16")).notes.map(item => item.path))
+      .toEqual(["Primary.md", "Backlink.md", "Frontmatter.md"]);
+  });
+
   it("fails closed for oversized, invalid, and non-string frontmatter values", () => {
     const tooMany = Array.from({length: MAX_SCRIPTURE_NOTE_REFERENCES + 1}, () => "John.3.16");
     const entries = [

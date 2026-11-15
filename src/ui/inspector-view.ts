@@ -107,10 +107,10 @@ export class InspectorView extends ItemView {
     if (this.tab === "notes") {
       body.createEl("h3", { text: "Your Scripture notes" });
       body.createEl("p", { cls: "vd-inspector-help", text:
-        "Linked notes are normal Markdown files discovered from Obsidian's metadata cache. SwordDock does not read their note contents for this list." });
+        "Linked notes are normal Markdown files found through Scripture frontmatter or Obsidian backlinks to the primary study note. SwordDock does not read their note contents for this list." });
       const discovery = this.plugin.findScriptureNotes(ref);
       if (!discovery.notes.length) {
-        emptyState(body, "No linked notes", "Create the primary note or add this passage's canonical OSIS value to a note's scripture frontmatter.", "notebook-pen");
+        emptyState(body, "No linked notes", "Create the primary note, add this passage's canonical OSIS value to Scripture frontmatter, or link another note to the primary study note.", "notebook-pen");
       } else {
         const heading = discovery.resultsTruncated
           ? "Linked notes · " + discovery.notes.length + "+ shown"
@@ -120,7 +120,7 @@ export class InspectorView extends ItemView {
         for (const note of discovery.notes) {
           const item = list.createDiv({ cls: "vd-note-item" });
           textButton(item, note.basename, () => { void this.plugin.openLinkedNote(note.path); }, "vd-note-link");
-          item.createDiv({ cls: "vd-note-path", text: note.path });
+          item.createDiv({ cls: "vd-note-path", text: (note.linkedToPrimary ? "Backlink · " : "") + note.path });
         }
       }
       if (discovery.scanTruncated) body.createEl("p", { cls: "vd-inspector-warning", text:

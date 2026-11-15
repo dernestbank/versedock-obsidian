@@ -11,13 +11,29 @@ import {
   type ScriptureNoteDiscovery
 } from "../core/scripture-notes";
 
-function indexedNote(app: App, file: TFile, scriptureOverride?: string): IndexedScriptureNote {
+function indexedNote(
+  app: App,
+  file: TFile,
+  options: {scriptureOverride?: string; primary?: boolean; linkedToPrimary?: boolean} = {}
+): IndexedScriptureNote {
   return {
     path: file.path,
     basename: file.basename,
-    scripture: scriptureOverride ?? app.metadataCache.getFileCache(file)?.frontmatter?.scripture,
-    modified: file.stat.mtime
+    scripture: options.scriptureOverride ?? app.metadataCache.getFileCache(file)?.frontmatter?.scripture,
+    modified: file.stat.mtime,
+    ...(options.primary ? {primary: true} : {}),
+    ...(options.linkedToPrimary ? {linkedToPrimary: true} : {})
   };
+}
+
+function hasResolvedBacklink(app: App, file: TFile, primaryPath?: string): boolean {
+  if (!primaryPath) return false;
+  const sources = app.metadataCache.resolvedLinks;
+  if (!sources || !Object.prototype.hasOwnProperty.call(sources, file.path)) return false;
+  const destinations = sources[file.path];
+  if (!destinations || !Object.prototype.hasOwnProperty.call(destinations, primaryPath)) return false;
+  const count = destinations[primaryPath];
+  return Number.isSafeInteger(count) && count > 0;
 }
 
 function isRecognizedLegacyRange(app: App, file: TFile, reference: PassageReference): boolean {
@@ -63,10 +79,13 @@ export function discoverVaultScriptureNotes(app: App, reference: PassageReferenc
     if (file.path !== primary?.path) selected.push(file);
   }
   const legacyRange = reference.endVerse !== undefined && primary?.path === legacyStudyNotePath(reference);
-  const discovery = discoverScriptureNotes(selected.map(file => indexedNote(
-    app,
-    file,
-    legacyRange && file.path === primary?.path ? scriptureNoteReferenceId(reference) : undefined
-  )), reference);
+  const discovery = discoverScriptureNotes(selected.map(file => {
+    const isPrimary = file.path === primary?.path;
+    return indexedNote(app, file, {
+      scriptureOverride: legacyRange && isPrimary ? scriptureNoteReferenceId(reference) : undefined,
+      primary: isPrimary,
+      linkedToPrimary: !isPrimary && hasResolvedBacklink(app, file, primary?.path)
+    });
+  }), reference);
   return {...discovery, scanTruncated: files.length > selected.length};
 }
