@@ -240,12 +240,13 @@
 - [x] Local-author trust and plugin enablement lead to an offline John 3:16 Reader without network setup.
 - [x] Obsidian app reload restores the Reader workspace and passage from the extracted package.
 - [x] A missing installed book produces a truthful fixed error without an absolute vault/plugin path.
-- [x] Restoring the missing book and reloading returns the passage without reinstalling or touching another vault.
+- [x] Malformed installed JSON produces the same safe Reader error plus precise size, checksum and JSON integrity diagnostics without a local path.
+- [x] Restoring the original book returns integrity to 66/66 and reloading returns the passage without reinstalling or touching another vault.
 
 **Verification:**
 - [x] Focused RED/GREEN coverage proves chapter-loading and integrity-check failures do not expose injected private paths.
 - [x] Full `npm run check`, deterministic package rebuild and clean-install/restart smoke test pass.
-- [x] Live Obsidian 1.15.1 first-run, reload, missing-book and recovery sequence passes against the final ZIP in ignored `.research/qa/clean-gui-011-final`.
+- [x] Live Obsidian 1.15.1 first-run, reload, missing/malformed-book, integrity and recovery sequences pass against the final ZIP in ignored `.research/qa/clean-gui-011-final`.
 
 **Dependencies:** Current 0.1.11 preview package and bundled WEB library.
 
