@@ -20,12 +20,13 @@ export class SearchView extends ItemView {
   async onOpen(): Promise<void> {
     this.contentEl.empty(); this.contentEl.addClass("versedock","vd-search");
     this.contentEl.createEl("h2", { text: "Search Scripture" });
-    this.contentEl.createEl("p", { cls: "vd-subtle", text: "Search the installed WEB edition entirely offline and narrow results by book or testament." });
+    this.contentEl.createEl("p", { cls: "vd-subtle", text: "Search the installed WEB edition entirely offline and narrow results by chapter, book, or testament." });
     const filterRow = this.contentEl.createDiv({ cls: "vd-search-filter-row" });
     const scopeLabel = filterRow.createEl("label", { text: "Search in" });
     const scope = scopeLabel.createEl("select", { attr: { "aria-label": "Bible search scope" } });
     for (const [value, label] of [
       ["all", "Whole Bible"],
+      ["current-chapter", "Current chapter · " + this.plugin.currentRef.book.name + " " + this.plugin.currentRef.chapter],
       ["current-book", "Current book · " + this.plugin.currentRef.book.name],
       ["old-testament", "Old Testament"],
       ["new-testament", "New Testament"]
@@ -66,6 +67,7 @@ export class SearchView extends ItemView {
           scope: parseBibleSearchScope(scope.value),
           match: selectedMatch,
           currentBook: this.plugin.currentRef.book,
+          currentChapter: this.plugin.currentRef.chapter,
           limit: 80,
           signal: controller.signal
         });

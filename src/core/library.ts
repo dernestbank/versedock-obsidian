@@ -6,6 +6,7 @@ import { checkBookIntegrity, type IntegrityReport } from "./integrity";
 import {
   booksForSearchScope,
   boundedSearchLimit,
+  currentChapterForSearchScope,
   prepareBibleSearchQuery,
   verseMatchesSearch,
   type BibleSearchRequest
@@ -109,6 +110,7 @@ export class OfflineBibleLibrary {
     const query = prepareBibleSearchQuery(request.phrase, request.match);
     const limit = boundedSearchLimit(request.limit);
     const books = booksForSearchScope(request.scope, request.currentBook);
+    const currentChapter = currentChapterForSearchScope(request.scope, request.currentChapter);
     const assertActive = (): void => {
       if (request.signal?.aborted) {
         const error = new Error("Bible search cancelled.");
@@ -122,7 +124,13 @@ export class OfflineBibleLibrary {
     for (const book of books) {
       assertActive();
       const data = await this.loadBook(book);
-      for (const chapter of data.chapters) {
+      const chapters = currentChapter === undefined
+        ? data.chapters
+        : data.chapters.filter(chapter => chapter.chapter === currentChapter);
+      if (currentChapter !== undefined && chapters.length === 0) {
+        throw new Error(book.name + " does not have chapter " + currentChapter + ".");
+      }
+      for (const chapter of chapters) {
         assertActive();
         for (const verse of chapter.verses) {
           if (verseMatchesSearch(verse.text, query)) {

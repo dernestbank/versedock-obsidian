@@ -19,7 +19,7 @@ const libraryPath = path.resolve("library/webp");
 const john = BOOK_BY_OSIS.get("John")!;
 
 describe("offline Bible search scopes", () => {
-  it("resolves canonical whole-Bible, testament, and current-book scopes", () => {
+  it("resolves canonical whole-Bible, testament, current-book, and current-chapter scopes", () => {
     expect(booksForSearchScope("all", john)).toEqual(BOOKS);
 
     const oldTestament = booksForSearchScope("old-testament", john);
@@ -33,10 +33,12 @@ describe("offline Bible search scopes", () => {
     expect(newTestament.at(-1)?.osis).toBe("Rev");
 
     expect(booksForSearchScope("current-book", john)).toEqual([john]);
+    expect(booksForSearchScope("current-chapter", john)).toEqual([john]);
   });
 
   it("validates scope values and bounds result limits", () => {
     expect(parseBibleSearchScope("new-testament")).toBe("new-testament");
+    expect(parseBibleSearchScope("current-chapter")).toBe("current-chapter");
     expect(() => parseBibleSearchScope("../../outside")).toThrow("Unsupported Bible search scope.");
     expect(parseBibleSearchMatch("all-words")).toBe("all-words");
     expect(() => parseBibleSearchMatch("regex")).toThrow("Unsupported Bible search match mode.");
@@ -46,6 +48,50 @@ describe("offline Bible search scopes", () => {
     expect(boundedSearchLimit(0)).toBe(1);
     expect(boundedSearchLimit(500)).toBe(200);
     expect(boundedSearchLimit(Number.POSITIVE_INFINITY)).toBe(80);
+  });
+
+  it("searches only the current canonical chapter and requires valid chapter context", async () => {
+    const app = { vault: {
+      configDir: ".obsidian",
+      adapter: { read: async (name: string) => readFileSync(path.join(libraryPath, path.basename(name)), "utf8") }
+    } } as unknown as App;
+    const library = new OfflineBibleLibrary(app, "versedock");
+    expect(await library.initialize()).toBe(true);
+
+    const page = await library.search({
+      phrase: "God",
+      scope: "current-chapter",
+      match: "phrase",
+      currentBook: john,
+      currentChapter: 3,
+      limit: 200
+    });
+    expect(page.results.some(result => result.label === "John 3:16")).toBe(true);
+    expect(page.results.every(result => result.chapter === 3)).toBe(true);
+
+    await expect(library.search({
+      phrase: "God",
+      scope: "current-chapter",
+      match: "phrase",
+      currentBook: john,
+      limit: 10
+    })).rejects.toThrow("Current chapter is required for this search scope.");
+    await expect(library.search({
+      phrase: "God",
+      scope: "current-chapter",
+      match: "phrase",
+      currentBook: john,
+      currentChapter: 0,
+      limit: 10
+    })).rejects.toThrow("Current chapter is outside the supported range.");
+    await expect(library.search({
+      phrase: "God",
+      scope: "current-chapter",
+      match: "phrase",
+      currentBook: john,
+      currentChapter: 200,
+      limit: 10
+    })).rejects.toThrow("John does not have chapter 200.");
   });
 
   it("searches only the selected scope and reports real truncation", async () => {

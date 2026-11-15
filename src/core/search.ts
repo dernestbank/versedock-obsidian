@@ -1,6 +1,6 @@
 import { BOOKS, BOOK_BY_OSIS, type BookInfo } from "./books";
 
-export type BibleSearchScope = "all" | "current-book" | "old-testament" | "new-testament";
+export type BibleSearchScope = "all" | "current-chapter" | "current-book" | "old-testament" | "new-testament";
 export type BibleSearchMatch = "phrase" | "all-words";
 export const MAX_SEARCH_PHRASE_LENGTH = 200;
 export const MAX_SEARCH_TERMS = 16;
@@ -10,6 +10,7 @@ export interface BibleSearchRequest {
   scope: BibleSearchScope;
   match: BibleSearchMatch;
   currentBook: BookInfo;
+  currentChapter?: number;
   limit?: number;
   signal?: AbortSignal;
 }
@@ -25,6 +26,7 @@ export interface PreparedBibleSearchQuery {
 export function parseBibleSearchScope(value: string): BibleSearchScope {
   switch (value) {
     case "all":
+    case "current-chapter":
     case "current-book":
     case "old-testament":
     case "new-testament":
@@ -69,12 +71,22 @@ export function booksForSearchScope(scope: BibleSearchScope, currentBook: BookIn
     case "all": return BOOKS;
     case "old-testament": return BOOKS.slice(0, NEW_TESTAMENT_INDEX);
     case "new-testament": return BOOKS.slice(NEW_TESTAMENT_INDEX);
+    case "current-chapter":
     case "current-book": {
       const canonical = BOOK_BY_OSIS.get(currentBook.osis);
       if (!canonical) throw new Error("Current book is outside the supported 66-book canon.");
       return [canonical];
     }
   }
+}
+
+export function currentChapterForSearchScope(scope: BibleSearchScope, chapter?: number): number | undefined {
+  if (scope !== "current-chapter") return undefined;
+  if (chapter === undefined) throw new Error("Current chapter is required for this search scope.");
+  if (!Number.isSafeInteger(chapter) || chapter < 1 || chapter > 200) {
+    throw new Error("Current chapter is outside the supported range.");
+  }
+  return chapter;
 }
 
 export function boundedSearchLimit(value = 80): number {
