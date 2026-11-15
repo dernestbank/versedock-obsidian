@@ -7,7 +7,7 @@ Continue the existing SwordDock Bible developer preview from the verified GBF le
 ## Observed baseline
 
 - Local branch `branding/sworddock-bible` entered Phase 2 at verified checkpoint `01f35b8`.
-- `npm run check` passes for 0.1.11: 19 test files and 133 tests, strict TypeScript, and the production bundle.
+- `npm run check` passes for 0.1.11: 19 test files and 134 tests, strict TypeScript, and the production bundle.
 - `npm audit --json` reports zero known vulnerabilities.
 - GitHub `dernestbank/versedock-obsidian` is public; PR #1 tracks this pushed branch. Only prerelease/tag `0.1.0` is published.
 - Phase 2 now provides an inert semantic IR and an isolated safe-DOM rendering primitive; neither enables module conversion or installation.
@@ -67,9 +67,11 @@ Continue the existing SwordDock Bible developer preview from the verified GBF le
 - [x] Add bounded, cancellable Whole Bible/current-book/testament search scopes plus Exact phrase / All words / Any words matching, truthful truncation and safe literal result highlighting; verify the scope foundation live in a narrow Obsidian pane.
 - [x] Add a bounded Current chapter scope that validates the active canonical context and scans only that chapter.
 - [x] Add a canonical Selected book filter that reads only the chosen bundled book and refuses caller-supplied resource identifiers.
+- [x] Verify Current chapter, Selected book and Any words in live Obsidian; repair the runtime-found hidden Selected book control layout defect.
 - [x] Discover and reopen exact Scripture-linked Markdown notes from Obsidian's metadata cache with bounded scans/results and truthful partial states.
 - [x] Preserve complete verse ranges in new note metadata and paths while recovering positively identified legacy range notes without overwriting single-verse notes.
 - [x] Include resolved Obsidian backlinks to the primary study note without reading note bodies, and guarantee primary-first ordering.
+- [x] Verify primary-note creation, two-note backlink discovery, primary-first presentation and linked-note opening in live Obsidian.
 
 ## Threat model
 

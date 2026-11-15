@@ -270,12 +270,13 @@
 
 **Verification:**
 - [x] Focused RED/GREEN tests cover canonical scopes, invalid scope/match values, current-chapter isolation/context errors, exact/all-word/any-word behavior, empty queries, term/phrase/result bounds, exact-limit/truncated results and pre-read cancellation.
-- [x] Reversed current-chapter, caller-path selected-book and any-to-all matching mutations are caught by the focused corpus suite; full `npm run check` passes at 133 tests across nineteen files.
+- [x] Reversed current-chapter, caller-path selected-book and any-to-all matching mutations are caught by the focused corpus suite; full `npm run check` passes at 134 tests across nineteen files.
 - [x] Deliberate exact-limit, all-to-any match and literal-escaping mutations are caught by the focused suites; full `npm run check` passes at 114 tests across seventeen files.
 - [x] Obsidian 1.15.1 live checks in the disposable final vault cover all four scopes, automatic reruns and the truthful 80+ state.
-- [ ] The new Current chapter scope is verified live in the disposable Obsidian vault.
-- [ ] The new Selected book control and single-book result isolation are verified live in the disposable Obsidian vault.
-- [ ] The new Any words control and at-least-one-term behavior are verified live in the disposable Obsidian vault.
+- [x] The Current chapter scope is verified live in the disposable Obsidian vault with John 3-only results including John 3:16.
+- [x] The Selected book control and single-book result isolation are verified live with a Psalms-only `shepherd` result set.
+- [x] The Any words control is verified live with `world shepherd`; only the present `world` term matches and highlights in John 3.
+- [x] Live QA exposes the Selected book label outside its scope before a scoped CSS repair; a RED/GREEN contract test and computed-style check cover hidden/visible layout behavior.
 
 **Dependencies:** Bundled WEB library and current Reader reference.
 
@@ -297,7 +298,7 @@
 - [x] Focused RED/GREEN tests cover scalar/array links, recent-first order, immutability, invalid metadata, scan/result caps, direct path lookup, no note-body reads and duplicate wrappers.
 - [x] Deliberate scan-cap, zero-count-backlink and primary-order mutations are caught by focused suites; full `npm run check` passes at 130 tests across nineteen files.
 - [x] New range notes preserve both endpoints in canonical metadata and use non-colliding paths; positively identified legacy range notes reopen unchanged, and a deliberate signature mutation is caught by focused recovery/collision tests.
-- [ ] Live Notes-tab discovery/opening is verified in the disposable Obsidian vault with a generated primary note and a second linked note.
+- [x] Live Notes-tab discovery/opening is verified with a generated John 3:15 primary note and a second ordinary Markdown note linked through Obsidian's backlink index.
 
 **Dependencies:** Existing canonical note frontmatter and Study Inspector.
 

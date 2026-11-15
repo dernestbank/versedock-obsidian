@@ -2,6 +2,15 @@
 
 ## Unreleased — 0.1.11 SwordDock Bible developer candidate
 
+### Live search and linked-note workflow verification (November 15, 2026)
+
+- Verify Current chapter live against John 3, including John 3:16 and chapter-only result isolation; verify Selected book exposes the canonical book control and returns only Psalms for a Psalms query.
+- Verify Any words live with `world shepherd`: John 3:16 matches through the present `world` term, absent `shepherd` is not highlighted, and the status reports the exact result count.
+- Create the canonical John 3:15 study note through the Inspector, discover a second ordinary Markdown note through Obsidian's resolved backlink index, keep the primary first, label the backlink and open it successfully.
+- Repair a live narrow-pane defect where the hidden Selected book label remained visible because its flex rule overrode native hidden presentation. A failing style-contract test now protects the scoped `display: none` rule; live computed styles switch between `none` and `flex` as the scope changes.
+- Expand automated coverage to 134 tests across nineteen files; strict TypeScript, production build and dependency audit pass.
+- Rebuild the 76-file offline preview twice with identical 1,757,882-byte output and SHA-256 `5e58b1938e9d7126b7df7e0af26bb0fe220546470d5d1cf5df65103921bd15a9`. All entries byte-match reviewed sources, the clean-install/restart smoke test passes, and the exact archive repeats the live search and linked-note checks with preserved settings and no captured Obsidian errors.
+
 ### Any-word Scripture search (November 15, 2026)
 
 - Add an explicit **Any words** match option alongside Exact phrase and All words without adding a query language, regular expressions, an index or a network dependency.
