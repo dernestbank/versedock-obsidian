@@ -7,7 +7,7 @@ Continue the existing SwordDock Bible developer preview from the verified GBF le
 ## Observed baseline
 
 - Local branch `branding/sworddock-bible` entered Phase 2 at verified checkpoint `01f35b8`.
-- `npm run check` passes for 0.1.8: 12 test files and 93 tests, strict TypeScript, and the production bundle.
+- `npm run check` passes for 0.1.9: 13 test files and 97 tests, strict TypeScript, and the production bundle.
 - `npm audit --json` reports zero known vulnerabilities.
 - GitHub `dernestbank/versedock-obsidian` is public; PR #1 tracks this pushed branch. Only prerelease/tag `0.1.0` is published.
 - Phase 2 now provides an inert semantic IR and an isolated safe-DOM rendering primitive; neither enables module conversion or installation.
@@ -55,6 +55,11 @@ Continue the existing SwordDock Bible developer preview from the verified GBF le
 - [ ] Task 6: Specify provenance, rights acknowledgement, storage, rollback, and integrity metadata. Proposed spec and ADR await review.
 - [ ] Task 7: Implement import preview for an authorized public-domain fixture only.
 - [ ] Task 8: Implement a reversible writer only after semantic, performance, GUI, and rights gates pass.
+
+### Premium workflow checkpoints
+
+- [x] Persist a bounded, canonical, migration-safe reading history and expose it in the Study Inspector.
+- [ ] Re-verify reading-history navigation and persistence live in a disposable Obsidian vault.
 
 ## Threat model
 

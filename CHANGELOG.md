@@ -1,6 +1,16 @@
 # Changelog
 
-## Unreleased — 0.1.8 SwordDock Bible developer candidate
+## Unreleased — 0.1.9 SwordDock Bible developer candidate
+
+### Bounded reading history (November 15, 2026)
+
+- Persist the fifty most recent canonical passage references as a most-recent-first list in the existing `versedock` plugin settings without changing bookmarks, highlights, appearance, or the current reference.
+- Add migration-safe normalization that canonicalizes OSIS, removes duplicates, ignores invalid/user-edited values, caps stored entries at 50, and bounds legacy input scanning at 500 values with a 64-character per-entry limit.
+- Add an honest History tab to the Study Inspector. Selecting a recent passage returns to the Reader and moves it to the front of the bounded history; an explicit clear action erases history without changing other settings.
+- State the privacy boundary in the UI: SwordDock does not upload history, while vault/plugin settings may still be included by the user's chosen sync or backup system.
+- Expand automated coverage to 97 tests across thirteen files. Live Obsidian verification remains pending.
+
+## 0.1.8 — Local developer candidate (2026-11-15; unpublished)
 
 ### Cooperative conversion preflight (November 15, 2026)
 

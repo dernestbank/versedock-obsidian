@@ -11,11 +11,13 @@ export interface SwordDockSettings {
   mode: "classic" | "compact" | "focus";
   bookmarks: string[];
   highlights: string[];
+  /** Canonical OSIS references, most recent first. */
+  history: string[];
 }
 export const DEFAULT_SETTINGS: SwordDockSettings = {
   reference: "John.3.16", fontSize: 17, lineHeight: 1.68,
   textWidth: 65, fontStyle: "serif", mode: "classic",
-  bookmarks: [], highlights: []
+  bookmarks: [], highlights: [], history: []
 };
 export interface SwordDockController {
   app: App;

@@ -185,6 +185,27 @@
 
 **Estimated scope:** Medium.
 
+## Checkpoint: Bounded reading history
+
+**Description:** Add useful session continuity without proprietary note storage, telemetry, unbounded settings growth, or changes to existing user data.
+
+**Acceptance criteria:**
+- [x] Passage selections persist as canonical OSIS in most-recent-first order.
+- [x] Revisited passages move to the front without duplicate entries or input mutation.
+- [x] History is capped at 50 entries; migration examines at most 500 values and refuses strings longer than 64 characters.
+- [x] Invalid or user-edited history entries are ignored without changing bookmarks, highlights, appearance or current-reference restoration.
+- [x] The Study Inspector provides truthful recent-reading and empty states with no upload claim.
+- [x] Users can clear reading history without deleting bookmarks, highlights, notes or appearance settings.
+- [ ] Navigation and persistence are re-verified live in a disposable Obsidian vault.
+
+**Verification:**
+- [x] Focused RED/GREEN tests cover canonicalization, deduplication, MRU promotion, storage bounds, migration bounds and immutability.
+- [x] Strict TypeScript and production build pass.
+
+**Dependencies:** Existing settings and reference parser.
+
+**Estimated scope:** Small.
+
 ## Task 6: Specify authorized, reversible module import
 
 **Description:** Define the provenance, rights acknowledgement, storage, integrity, transaction, rollback, recovery and removal contract that must be accepted before any module writer is implemented.

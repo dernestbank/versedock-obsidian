@@ -4,7 +4,7 @@ Updated: 2026-11-15
 
 ## Current state
 
-- Version: `0.1.8` local developer candidate
+- Version: `0.1.9` local developer candidate
 - Branch: `branding/sworddock-bible`
 - Starting commit: `e5f95174c2ad25a825883bf3cf77c44229ed35b0`
 - Verified implementation commit: `5a4f5b2` (`feat: validate MySword cross-reference semantics`)
@@ -17,12 +17,13 @@ Updated: 2026-11-15
 - Current accessibility checkpoint: keyboard and accessibility-tree verification complete; actual VoiceOver verification pending
 - Current performance checkpoint: reproducible desktop full-corpus benchmark complete; slow-device/mobile profiling pending
 - Current responsiveness checkpoint: cooperative 1,000-row UI preflight implemented and corpus-simulated; live Obsidian re-verification pending
+- Current workflow checkpoint: bounded reading history implemented and migration-tested; live Inspector verification pending
 
 ## Verified baseline
 
-- `npm run check`: passed on 2026-11-15 for 0.1.8 (93 tests in 12 files, TypeScript, production build). A deliberate final-batch mutation produced an extra yield and was caught by the focused suite.
+- `npm run check`: passed on 2026-11-15 for 0.1.9 (97 tests in 13 files, TypeScript, production build). A deliberate 51-entry-cap mutation was caught by the focused history suite.
 - `npm audit --json`: 0 known vulnerabilities across 113 dependencies.
-- Package: `dist/SwordDock-Bible-0.1.8-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,752,904 bytes, SHA-256 `24bf14a7d1094c5b59524f7a21a945fc2c6f50dbc662b71a5bd0385d5bd3ed99`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed; stable ID `versedock` and version 0.1.8 were deployed to `test-vault`.
+- Package: `dist/SwordDock-Bible-0.1.9-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,753,388 bytes, SHA-256 `9f9abd18122758fecfc29b7b97e1bfc1e2910ca6317c0d6d2dd210b6a80e5e41`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed; stable ID `versedock` and version 0.1.9 were deployed to `test-vault`.
 - Updated full-corpus evidence: 31,103 WEB verses pass source round-trip enforcement; 71,821 recognized markers, seven inert HTML markers, 424 validated RX markers, zero unresolved markers, 15,866 semantic-ready markup verses, seven opaque events, 1,126 translator notes and 169 titles. Conversion remains blocked.
 - Live GUI: Obsidian 1.15.0 reloaded the 0.1.7 implementation in the isolated repository `test-vault`. Keyboard Tab order and Return activation worked; the hostile HTML fixture stayed literal; semantic inspection reported zero of one markup verses fully interpreted and one opaque event; conversion/installation remained blocked; diagnostics were exposed as plain accessibility text; and focus returned to the preflight button. Actual VoiceOver announcement/navigation remains pending.
 - Full-corpus performance: a 25-run Node 22/darwin arm64 benchmark of the ignored 5.4 MiB publisher WEB fixture produced 98.873 ms combined median and 126.184 ms p95 after one warm-up, with stable 31,103-verse semantics and unchanged source SHA-256. Post-iteration process RSS was 95.078–99.766 MiB; this is not a mobile, slow-device or in-operation peak profile.
@@ -39,6 +40,7 @@ Updated: 2026-11-15
 - Bounded GBF semantic events for supported typography/layout, translator notes and titles, plus an isolated fail-closed text-node renderer.
 - Deterministic offline preview packaging and clean-install filesystem smoke tests.
 - Bounded, non-writing full-corpus performance benchmark with stable-output and source-hash enforcement.
+- Bounded canonical reading history with migration-safe settings normalization and Inspector navigation.
 
 ## Current implementation priority
 

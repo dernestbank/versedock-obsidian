@@ -2,6 +2,7 @@ import { Plugin, PluginSettingTab, Setting, Notice, TFile, type WorkspaceLeaf } 
 import { BOOKS } from "./core/books";
 import { OfflineBibleLibrary } from "./core/library";
 import { parseOsis, parseReference, osisId, refLabel, type PassageReference } from "./core/references";
+import { normalizeReadingHistory, recordReadingHistory } from "./core/reading-history";
 import { DEFAULT_SETTINGS, type SwordDockSettings, type SwordDockController } from "./controller";
 import { ReaderView, READER_VIEW } from "./ui/reader-view";
 import { InspectorView, INSPECTOR_VIEW } from "./ui/inspector-view";
@@ -19,7 +20,8 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     const previous = await this.loadData() as Partial<SwordDockSettings> | null;
     this.settings = { ...DEFAULT_SETTINGS, ...(previous ?? {}),
       bookmarks: Array.isArray(previous?.bookmarks) ? previous.bookmarks : [],
-      highlights: Array.isArray(previous?.highlights) ? previous.highlights : []
+      highlights: Array.isArray(previous?.highlights) ? previous.highlights : [],
+      history: normalizeReadingHistory(previous?.history)
     };
     try { this.currentRef = parseOsis(this.settings.reference); }
     catch { this.currentRef = parseReference("John 3:16"); }
@@ -62,6 +64,7 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     if (!BOOKS.includes(ref.book)) return;
     this.currentRef = ref;
     this.settings.reference = osisId(ref);
+    this.settings.history = recordReadingHistory(this.settings.history, ref);
     void this.saveSettings();
     for (const subscriber of [...this.listeners]) subscriber(ref);
   }

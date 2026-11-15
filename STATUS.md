@@ -1,10 +1,17 @@
 # SwordDock Bible — Development QA Report
 
-Version: **0.1.8 (local developer candidate)** · Date: **2026-11-15** · Internal project directory: `mysword+`
+Version: **0.1.9 (local developer candidate)** · Date: **2026-11-15** · Internal project directory: `mysword+`
 
 This independent project started under the internal name **MySword+**. Its original public name was **VerseDock**; its current preferred name is **SwordDock Bible**, with no affiliation with the original MySword app.
 
 > **Branding update (2026-11-12):** Visible branding changed to **SwordDock Bible** while keeping the installed plugin ID `versedock` and the existing GitHub repository URL stable. The historical GUI checks below were performed before the rename; rerun the GUI check for final verification. Official trademark clearance is pending.
+
+## Bounded reading history — 2026-11-15
+
+- Added a migration-safe, most-recent-first reading history with a hard 50-reference storage cap, 500-entry migration scan cap and 64-character per-entry bound. Stored values are canonical OSIS; invalid, duplicate and user-edited legacy values are ignored without touching other settings.
+- Every valid Reader selection records the passage through the same settings save used by current-reference restoration. Existing bookmark, highlight, appearance and stable plugin-ID contracts are unchanged.
+- Added a Study Inspector History tab with truthful empty state and local-settings privacy language. Selecting an item reopens it in the Reader and promotes it to most recent; an explicit clear action erases only reading history.
+- Automated coverage is 97 tests across thirteen files. Live Obsidian, sync-tool and mobile behavior remain pending.
 
 ## Cooperative conversion preflight — 2026-11-15
 
@@ -98,7 +105,7 @@ This independent project started under the internal name **MySword+**. Its origi
 - **Original 0.1.0 test:** renamed manifest ID and product to VerseDock; reinstalled the plugin in an isolated vault and confirmed **VerseDock (Preview)** commands appeared and Bible Reader opened. That historical GUI test predates the SwordDock Bible rebrand.
 - **Manual preview ZIP:** the archive includes `main.js`, `manifest.json`, `styles.css`, license, README and every offline WEB book, and passed ZIP integrity check.
 
-**Current local package:** `SwordDock-Bible-0.1.8-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced 1,752,904-byte archives with SHA-256 `24bf14a7d1094c5b59524f7a21a945fc2c6f50dbc662b71a5bd0385d5bd3ed99`; clean-vault ZIP extraction and simulated offline restart reads pass. It is a local developer candidate, **not a published GitHub release**. The 0.1.8 files are deployed to the isolated `test-vault`, but live Obsidian verification of the cooperative scan remains pending. Prior 0.1.7 live verification kept hostile HTML literal, blocked conversion/installation and retained keyboard focus. Full release validation (mobile, themes, resource failures, restart and actual VoiceOver) remains pending.
+**Current local package:** `SwordDock-Bible-0.1.9-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced 1,753,388-byte archives with SHA-256 `9f9abd18122758fecfc29b7b97e1bfc1e2910ca6317c0d6d2dd210b6a80e5e41`; clean-vault ZIP extraction and simulated offline restart reads pass. It is a local developer candidate, **not a published GitHub release**. The 0.1.9 files are deployed to the isolated `test-vault`, but live Obsidian verification of cooperative preflight and reading history remains pending. Prior 0.1.7 live verification kept hostile HTML literal, blocked conversion/installation and retained keyboard focus. Full release validation (mobile, themes, resource failures, restart and actual VoiceOver) remains pending.
 
 ## Test boundaries / not yet verified
 
