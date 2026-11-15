@@ -8,8 +8,9 @@
 - Keep the selected tab as the only native button and expose inactive choices as pointer-operable ARIA tabs. Arrow/Home/End selection rebuilds the destination as the selected button, focuses it, and scrolls it into view.
 - Verify the repair in the isolated Obsidian 1.15.1 `test-vault`: End reaches the visible History edge, Right wraps to Commentary, Tab exits the tab list, and an older Romans 8:28 history entry reopens and moves ahead of Romans 8:27. The reference and reordered history survive an app reload.
 - Expand automated coverage to 102 tests across fourteen files. The destructive clear-history action and actual VoiceOver remain separate approval-gated checks.
-- Build the 76-file offline preview twice with identical 1,753,882-byte output and SHA-256 `f7292b1ce94d1bfa8bb6f770d5705e1dc2b4737bc5993f4bd7fc2b1a2e382a43`; clean extraction and simulated offline restart pass for all 66 books and 31,103 verses.
+- Build the 76-file offline preview twice with identical 1,754,504-byte output and SHA-256 `5105747cb28578de79f6a62e5dd0307a8cf0eac81903717a35c7a918b504e493`; clean extraction and simulated offline restart pass for all 66 books and 31,103 verses.
 - Re-run the cooperative read-only preflight in Obsidian 1.15.1 against the ignored 31,103-verse publisher WEB fixture. The live report matches the established semantic totals, blocks conversion/installation, and leaves the 5,414,912-byte source at SHA-256 `d0605fb28dbb0aee37f078931fdc54925295f846b068b954da2d1923011b2bb5`.
+- Refresh the provisional name-risk checkpoint against the live USPTO exact-wordmark search, official Obsidian community list, GitHub, npm and public-web results. No exact `SwordDock` collision was found, but similar/common-law/international and professional legal review remain required before a stable launch.
 
 ## 0.1.10 — Local developer candidate (2026-11-15; unpublished)
 

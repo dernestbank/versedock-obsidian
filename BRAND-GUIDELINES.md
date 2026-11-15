@@ -2,7 +2,7 @@
 title: SwordDock Bible Brand & UI Guidelines
 type: brand-guidelines
 status: provisional-pending-trademark-clearance
-date: 2026-11-12
+date: 2026-11-15
 ---
 
 # SwordDock Bible — brand and product language
@@ -42,4 +42,15 @@ The technical ID `versedock`, folder `.obsidian/plugins/versedock/`, saved setti
 
 ## Clearance checkpoint
 
-2026-11-12: preliminary public web, Obsidian directory and GitHub name searches found no obvious exact-name match. USPTO live database was not fully queryable in this session. A comprehensive trademark/common-law search and review for similar software/Bible-study products are still outstanding. This document is a product decision, not a legal clearance opinion.
+### Preliminary exact-name screening — 2026-11-15
+
+The following reproducible checks found no exact `SwordDock` name collision:
+
+- The official [USPTO Trademark Search](https://tmsearch.uspto.gov/) Wordmark query for `SwordDock`, with live and dead filings enabled, returned zero records.
+- The official Obsidian [community plugin list](https://github.com/obsidianmd/obsidian-releases/blob/master/community-plugins.json) contained no `SwordDock` name or ID. The broader Bible-plugin category is crowded, so this result distinguishes the name only; it does not establish market distinctiveness.
+- [GitHub repository search](https://github.com/search?q=SwordDock&type=repositories) returned no exact-name repository; its only substring result was the unrelated 2018 `SwordDocker` repository. The [npm registry search](https://www.npmjs.com/search?q=sworddock) returned no `sworddock` package.
+- Exact public-web queries for `SwordDock` and `SwordDock Bible` returned no indexed result in the search service used for this checkpoint.
+
+These are narrow exact-name checks, not a comprehensive clearance search. They do not cover unregistered/common-law use, confusingly similar spellings or meanings, state registrations, international registers, app stores, domains, social handles, logos, or design marks. Search results can change after the date above. The USPTO itself recommends searching similar marks and coordinated classes, not only exact terms. Professional trademark counsel should review the name and icon before a stable/public-directory launch.
+
+**Decision status:** keep `SwordDock Bible` provisional for developer previews while preserving the legacy `versedock` ID. Do not describe the name or icon as cleared, registered, exclusive, or legally available. This document records product research, not legal advice or a legal clearance opinion.
