@@ -7,8 +7,9 @@ Updated: 2026-11-15
 - Version: `0.1.5` local developer candidate
 - Branch: `branding/sworddock-bible`
 - Starting commit: `e5f95174c2ad25a825883bf3cf77c44229ed35b0`
+- Verified implementation commit: `5a4f5b2` (`feat: validate MySword cross-reference semantics`)
 - Plugin ID: `versedock` (compatibility contract; unchanged)
-- GitHub: public repository `dernestbank/versedock-obsidian`; remote `main` and prerelease/tag `0.1.0` remain at `b5904a8`. No current pull request or SwordDock release was found.
+- GitHub: public repository `dernestbank/versedock-obsidian`; branch `branding/sworddock-bible` is pushed and pull request [#1](https://github.com/dernestbank/versedock-obsidian/pull/1) targets `main`. The historical prerelease/tag `0.1.0` remains the only published release.
 - Worktree at recovery: clean
 
 ## Verified baseline
@@ -18,6 +19,7 @@ Updated: 2026-11-15
 - Package: `dist/SwordDock-Bible-0.1.5-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,750,706 bytes, SHA-256 `7504f4225d5ae6da83d07df2975a7e50b75c5654c9a3c5e71b9d254debec5978`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed.
 - Updated full-corpus evidence: 31,103 WEB verses pass source round-trip enforcement; 71,821 recognized markers, seven inert HTML markers, 424 validated RX markers, zero unresolved markers and zero tag-issue verses.
 - Live GUI: Obsidian 1.15.0 reloaded and enabled SwordDock Bible 0.1.5 in the isolated repository `test-vault`; the hostile HTML fixture stayed literal text, conversion remained blocked, and the RX diagnostic/versification warning rendered in the preflight result.
+- GitHub Actions: PR #1 `build-and-test` passed for implementation commit `5a4f5b2`; the documentation checkpoint triggers the same validation again.
 
 ## Completed capabilities
 
@@ -43,7 +45,7 @@ Begin Phase 2 Task 3 in `tasks/plan.md`: define a text-first semantic event mode
 
 ## Publication status
 
-Only the historical VerseDock `0.1.0` developer prerelease is public. Do not claim a stable release or Community Plugins eligibility. The verified 0.1.5 branch may be pushed for review; no release publication is authorized by technical validation alone.
+Only the historical VerseDock `0.1.0` developer prerelease is public. PR #1 is reviewable, but it is not a release. Do not claim a stable release or Community Plugins eligibility; no release publication is authorized by technical validation alone.
 
 ## Next continuation instruction
 
