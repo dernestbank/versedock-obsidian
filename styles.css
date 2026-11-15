@@ -141,11 +141,11 @@
 .versedock .vd-inspector-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 14px 12px; gap: 8px; }
 .versedock .vd-inspector-header strong { font-size: 13px; }
 .versedock .vd-inspector-tabs { display: flex; overflow-x: auto; border-bottom: 1px solid var(--vd-border); gap: 1px; padding-inline: 9px; }
-.versedock .vd-inspector-tabs button {
+.versedock .vd-inspector-tabs [role="tab"] {
   border-radius: 0; font-size: 12px; color: var(--vd-muted);
-  padding: 7px 10px 10px; border-bottom: 2px solid transparent;
+  padding: 7px 10px 10px; border-bottom: 2px solid transparent; cursor: pointer;
 }
-.versedock .vd-inspector-tabs button.is-active { color: var(--vd-accent); border-bottom-color: var(--vd-accent); font-weight: 660; }
+.versedock .vd-inspector-tabs [role="tab"].is-active { color: var(--vd-accent); border-bottom-color: var(--vd-accent); font-weight: 660; }
 .versedock .vd-inspector-body { flex: 1; min-height: 0; overflow-y: auto; padding: 20px 15px; }
 .versedock .vd-resource-heading { font-family: "Iowan Old Style", Georgia, serif; font-size: 24px; margin-bottom: 24px; }
 .versedock .vd-inspector-help { color: var(--vd-muted); line-height: 1.6; }

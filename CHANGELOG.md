@@ -1,14 +1,24 @@
 # Changelog
 
-## Unreleased — 0.1.10 SwordDock Bible developer candidate
+## Unreleased — 0.1.11 SwordDock Bible developer candidate
+
+### Obsidian focus-manager repair (November 15, 2026)
+
+- Repair a live-only 0.1.10 regression where Obsidian's focus manager still visited every native Inspector tab button even when inactive buttons had `tabindex="-1"`.
+- Keep the selected tab as the only native button and expose inactive choices as pointer-operable ARIA tabs. Arrow/Home/End selection rebuilds the destination as the selected button, focuses it, and scrolls it into view.
+- Verify the repair in the isolated Obsidian 1.15.1 `test-vault`: End reaches the visible History edge, Right wraps to Commentary, Tab exits the tab list, and an older Romans 8:28 history entry reopens and moves ahead of Romans 8:27. The reference and reordered history survive an app reload.
+- Expand automated coverage to 102 tests across fourteen files. The destructive clear-history action and actual VoiceOver remain separate approval-gated checks.
+- Build the 76-file offline preview twice with identical 1,753,882-byte output and SHA-256 `f7292b1ce94d1bfa8bb6f770d5705e1dc2b4737bc5993f4bd7fc2b1a2e382a43`; clean extraction and simulated offline restart pass for all 66 books and 31,103 verses.
+
+## 0.1.10 — Local developer candidate (2026-11-15; unpublished)
 
 ### Inspector tab keyboard navigation (November 15, 2026)
 
 - Give the Study Inspector a roving tab stop: only the selected resource tab participates in normal Tab order.
 - Support Left/Right Arrow wrapping plus Home/End movement across Commentary, Lexicon, References, Notes, Bookmarks and History.
 - Keep the newly selected tab focused and scroll it into view in narrow Inspector panes; connect each tab to its panel with explicit, instance-scoped ARIA relationships that remain unique if Obsidian restores duplicate Inspector leaves.
-- Live-load 0.1.9 in the isolated Obsidian vault, verify the truthful empty History state, record Romans 8:28 through Quick Jump, observe the new entry and clear control, and confirm the reference/history values persisted across an app reload. Older-entry activation and the clear action remain separate live checks.
-- Expand automated coverage to 101 tests across fourteen files. Live Obsidian verification of the 0.1.10 keyboard behavior remains pending.
+- Live-load 0.1.9 in the isolated Obsidian vault, verify the truthful empty History state, record Romans 8:28 through Quick Jump, observe the new entry and clear control, and confirm the reference/history values persisted across an app reload.
+- Expand automated coverage to 101 tests across fourteen files. Live 0.1.10 verification later exposed the Obsidian focus-manager regression repaired in 0.1.11.
 
 ## 0.1.9 — Local developer candidate (2026-11-15; unpublished)
 

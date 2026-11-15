@@ -2,7 +2,13 @@ import { ItemView, type WorkspaceLeaf } from "obsidian";
 import type { SwordDockController } from "../controller";
 import { refLabel, parseOsis } from "../core/references";
 import { emptyState, iconButton, textButton } from "./components";
-import { INSPECTOR_TABS, inspectorTabDomIds, inspectorTabForKey, type InspectorTab } from "./inspector-tabs";
+import {
+  INSPECTOR_TABS,
+  inspectorTabDomIds,
+  inspectorTabElementTag,
+  inspectorTabForKey,
+  type InspectorTab
+} from "./inspector-tabs";
 
 export const INSPECTOR_VIEW = "versedock-inspector";
 let inspectorViewSequence = 0;
@@ -19,7 +25,7 @@ export class InspectorView extends ItemView {
   private activateTab(tab: InspectorTab): void {
     this.tab = tab;
     this.render();
-    const activeTab = this.contentEl.querySelector<HTMLButtonElement>(`[data-vd-inspector-tab="${tab}"]`);
+    const activeTab = this.contentEl.querySelector<HTMLElement>(`[data-vd-inspector-tab="${tab}"]`);
     activeTab?.focus({ preventScroll: true });
     activeTab?.scrollIntoView({ block: "nearest", inline: "nearest" });
   }
@@ -34,14 +40,20 @@ export class InspectorView extends ItemView {
       const label = tab === "references" ? "References" : tab[0].toUpperCase() + tab.slice(1);
       const selected = this.tab === tab;
       const ids = inspectorTabDomIds(this.domScope, tab);
-      const btn = textButton(tabs, label, () => this.activateTab(tab), selected ? "is-active" : "");
-      btn.id = ids.tabId;
-      btn.dataset.vdInspectorTab = tab;
-      btn.setAttribute("role", "tab");
-      btn.setAttribute("aria-controls", ids.panelId);
-      btn.setAttribute("aria-selected", String(selected));
-      btn.tabIndex = selected ? 0 : -1;
-      btn.addEventListener("keydown", event => {
+      const tabElement = tabs.createEl(inspectorTabElementTag(selected), {
+        cls: "vd-text-button " + (selected ? "is-active" : ""),
+        text: label,
+        attr: selected ? { type: "button" } : undefined
+      });
+      tabElement.id = ids.tabId;
+      tabElement.dataset.vdInspectorTab = tab;
+      tabElement.setAttribute("role", "tab");
+      tabElement.setAttribute("aria-controls", ids.panelId);
+      tabElement.setAttribute("aria-selected", String(selected));
+      tabElement.tabIndex = selected ? 0 : -1;
+      tabElement.addEventListener("click", () => this.activateTab(tab));
+      tabElement.addEventListener("keydown", event => {
+        if (!(event instanceof KeyboardEvent)) return;
         const destination = inspectorTabForKey(tab, event.key);
         if (!destination) return;
         event.preventDefault();

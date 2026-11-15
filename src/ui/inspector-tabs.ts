@@ -9,6 +9,11 @@ export const INSPECTOR_TABS = [
 
 export type InspectorTab = typeof INSPECTOR_TABS[number];
 
+/** Obsidian's focus manager visits every native button even with tabindex=-1. */
+export function inspectorTabElementTag(selected: boolean): "button" | "div" {
+  return selected ? "button" : "div";
+}
+
 export function inspectorTabDomIds(scope: string, tab: InspectorTab): {
   panelId: string;
   tabId: string;

@@ -2,6 +2,7 @@ import {describe, expect, it} from "vitest";
 import {
   INSPECTOR_TABS,
   inspectorTabDomIds,
+  inspectorTabElementTag,
   inspectorTabForKey
 } from "../src/ui/inspector-tabs";
 
@@ -30,5 +31,10 @@ describe("Inspector tab keyboard navigation", () => {
     });
     expect(inspectorTabDomIds("inspector-2", "history"))
       .not.toEqual(inspectorTabDomIds("inspector-1", "history"));
+  });
+
+  it("keeps only the selected tab as a native Obsidian focus target", () => {
+    expect(inspectorTabElementTag(true)).toBe("button");
+    expect(inspectorTabElementTag(false)).toBe("div");
   });
 });
