@@ -194,6 +194,7 @@
 .versedock .vd-subtle { color: var(--vd-muted); font-size: 12px; line-height: 1.5; }
 .versedock .vd-search-filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 18px 0 0; }
 .versedock .vd-search-filter-row label { display: flex; align-items: center; gap: 8px; color: var(--vd-muted); font-size: var(--font-ui-small); }
+.versedock .vd-search-filter-row label[hidden] { display: none; }
 .versedock .vd-search-filter-row select { min-width: 170px; padding: 7px 28px 7px 9px; border: 1px solid var(--vd-border); border-radius: var(--radius-s, 6px); background: var(--background-primary); color: var(--vd-ink); }
 .versedock .vd-search-input-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 12px; }
 .versedock .vd-search-input-row input { flex: 1 1 220px; min-width: 0; }

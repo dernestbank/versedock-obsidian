@@ -29,4 +29,9 @@ describe("SwordDock Bible branding and compatibility", () => {
       expect(content).not.toMatch(/VerseDock|MySwordPlus/);
     }
   });
+
+  it("keeps hidden search controls out of the flex layout", () => {
+    const styles = readFileSync(path.join(root, "styles.css"), "utf8");
+    expect(styles).toMatch(/\.versedock \.vd-search-filter-row label\[hidden\]\s*\{\s*display:\s*none;\s*\}/u);
+  });
 });
