@@ -13,6 +13,7 @@
 - Refresh the provisional name-risk checkpoint against the live USPTO exact-wordmark search, official Obsidian community list, GitHub, npm and public-web results. No exact `SwordDock` collision was found, but similar/common-law/international and professional legal review remain required before a stable launch.
 - Update the validation workflow to the official Node 24-based `actions/checkout@v7` and `actions/setup-node@v7`, and pin Ubuntu 24.04 instead of the migrating `ubuntu-latest` label. The resulting PR run passes check, packaging and clean-install smoke tests with zero annotations.
 - Re-verify the 0.1.11 Reader and Study Inspector visually in Obsidian 1.15.1's native Light and Dark schemes. Editorial text, selection/accent treatment, contextual actions, narrow Inspector tabs and truthful empty states remain readable; the isolated vault is restored to its original Light setting with plugin data unchanged.
+- Verify the same surfaces in both Light and Dark variants of Minimal 9.1.4, installed from Obsidian's official community-theme catalog. Reader typography, selected-passage treatment, contextual actions, Inspector tabs and unavailable-resource states remain readable; the isolated vault is restored to Default/Light with reference, history, bookmarks, highlights and appearance settings unchanged.
 
 ## 0.1.10 — Local developer candidate (2026-11-15; unpublished)
 

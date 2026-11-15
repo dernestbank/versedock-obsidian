@@ -26,7 +26,7 @@ Updated: 2026-11-15
 - Current workflow checkpoint: bounded reading history navigation, MRU promotion and reload persistence are verified live; destructive clearing remains approval-gated
 - Current narrow-pane checkpoint: Inspector tab roving focus and arrow/Home/End navigation are verified live after the 0.1.11 Obsidian focus-manager repair
 - Current brand checkpoint: 2026-11-15 exact-name screening found no `SwordDock` record in the live USPTO wordmark search, Obsidian community name/ID, npm registry or exact public-web results; comprehensive similar/common-law/international and professional review remain outstanding
-- Current theme checkpoint: 0.1.11 Reader and Inspector rendering are visually verified in Obsidian 1.15.1 native Light and Dark schemes; the test vault is restored to Light and community-theme coverage remains open
+- Current theme checkpoint: 0.1.11 Reader and Inspector rendering are visually verified in Obsidian 1.15.1 native Light/Dark and official-catalog Minimal 9.1.4 Light/Dark; the test vault is restored to Default/Light and broader community-theme coverage remains open
 
 ## Verified baseline
 
@@ -36,6 +36,7 @@ Updated: 2026-11-15
 - Updated full-corpus evidence: 31,103 WEB verses pass source round-trip enforcement; 71,821 recognized markers, seven inert HTML markers, 424 validated RX markers, zero unresolved markers, 15,866 semantic-ready markup verses, seven opaque events, 1,126 translator notes and 169 titles. Conversion remains blocked.
 - Live GUI: Obsidian 1.15.1 loaded 0.1.11 in the isolated repository `test-vault`. Live 0.1.10 first exposed that Obsidian still tabbed through inactive native buttons despite `tabindex="-1"`; 0.1.11 keeps only the selected tab native. End reached and revealed History, Right wrapped to Commentary, and Tab exited the tab list. Selecting the older Romans 8:28 history entry promoted it ahead of Romans 8:27; the Reader reference and reordered history survived reload. The clear action and actual VoiceOver remain pending because both require explicit approval at action time.
 - Native themes: the same 0.1.11 Reader and Inspector are visually readable in Obsidian 1.15.1 Light and Dark schemes, including editorial Scripture, selected-passage/accent treatment, contextual actions, narrow tabs and unavailable-resource states. The isolated vault was restored to `moonstone` Light with reference, history, bookmarks, highlights and appearance settings unchanged.
+- Community theme: official-catalog Minimal 9.1.4 was installed only in the isolated `test-vault` and exercised in Light and Dark. The Reader and Inspector retained readable typography, selection/accent treatment, contextual actions, narrow tabs and truthful unavailable-resource states. The vault was restored to Default/`moonstone` Light; `reference: "Rom.8.28"`, history `['Rom.8.28', 'Rom.8.27']`, bookmarks, highlights and all plugin appearance settings remained unchanged. Minimal remains installed but inactive only in the disposable vault.
 - Full-corpus performance: a 25-run Node 22/darwin arm64 benchmark of the ignored 5.4 MiB publisher WEB fixture produced 98.873 ms combined median and 126.184 ms p95 after one warm-up, with stable 31,103-verse semantics and unchanged source SHA-256. Post-iteration process RSS was 95.078–99.766 MiB; this is not a mobile, slow-device or in-operation peak profile.
 - Cooperative responsiveness: the same 31,103-verse report matched the synchronous baseline exactly while yielding 31 times. Its 32 measured work segments produced 5.127 ms p95 and 26.795 ms maximum on the tested Mac. This simulation excludes Obsidian rendering and is not a mobile guarantee.
 - Live full-corpus preflight: Obsidian 1.15.1 inspected the ignored 5,414,912-byte publisher WEB fixture and completed the cooperative read-only report with the established totals: 71,821 recognized markers, seven HTML markers, 424 validated RX markers, 15,866 semantic-ready markup verses, seven opaque events, 1,126 translator notes and 169 titles. Conversion/installation remained blocked, the UI reported no writes or uploads, and source SHA-256 remained `d0605fb28dbb0aee37f078931fdc54925295f846b068b954da2d1923011b2bb5`.
@@ -64,7 +65,7 @@ Review the proposed [authorized-import specification](specs/authorized-mysword-i
 - Proposed rights/provenance and reversible storage contracts exist, but they are not accepted or implemented.
 - No conversion writer or installer.
 - No authorized second translation/commentary fixture in the repository.
-- No mobile, Windows, Linux, community-theme, automated accessibility, or slow-device validation.
+- No mobile, Windows, Linux, broader community-theme matrix, automated accessibility, or slow-device validation.
 - Naming/trademark clearance is not established.
 
 ## Publication status
