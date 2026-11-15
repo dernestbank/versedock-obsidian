@@ -6,9 +6,13 @@ import { BOOKS, BOOK_BY_OSIS } from "../src/core/books";
 import { OfflineBibleLibrary } from "../src/core/library";
 import {
   MAX_SEARCH_PHRASE_LENGTH,
+  MAX_SEARCH_TERMS,
   booksForSearchScope,
   boundedSearchLimit,
-  parseBibleSearchScope
+  parseBibleSearchMatch,
+  parseBibleSearchScope,
+  prepareBibleSearchQuery,
+  verseMatchesSearch
 } from "../src/core/search";
 
 const libraryPath = path.resolve("library/webp");
@@ -34,6 +38,11 @@ describe("offline Bible search scopes", () => {
   it("validates scope values and bounds result limits", () => {
     expect(parseBibleSearchScope("new-testament")).toBe("new-testament");
     expect(() => parseBibleSearchScope("../../outside")).toThrow("Unsupported Bible search scope.");
+    expect(parseBibleSearchMatch("all-words")).toBe("all-words");
+    expect(() => parseBibleSearchMatch("regex")).toThrow("Unsupported Bible search match mode.");
+    expect(() => prepareBibleSearchQuery("God", "regex" as never)).toThrow("Unsupported Bible search match mode.");
+    expect(verseMatchesSearch("God", prepareBibleSearchQuery("  ", "phrase"))).toBe(false);
+    expect(verseMatchesSearch("God is love", prepareBibleSearchQuery("God world", "all-words"))).toBe(false);
     expect(boundedSearchLimit(0)).toBe(1);
     expect(boundedSearchLimit(500)).toBe(200);
     expect(boundedSearchLimit(Number.POSITIVE_INFINITY)).toBe(80);
@@ -55,6 +64,7 @@ describe("offline Bible search scopes", () => {
     const exact = await library.search({
       phrase: "For God so loved the world",
       scope: "current-book",
+      match: "phrase",
       currentBook: john,
       limit: 1
     });
@@ -65,6 +75,7 @@ describe("offline Bible search scopes", () => {
     const limited = await library.search({
       phrase: "God",
       scope: "current-book",
+      match: "phrase",
       currentBook: john,
       limit: 2
     });
@@ -74,10 +85,47 @@ describe("offline Bible search scopes", () => {
     await expect(library.search({
       phrase: "x".repeat(MAX_SEARCH_PHRASE_LENGTH + 1),
       scope: "current-book",
+      match: "phrase",
       currentBook: john,
       limit: 5
     })).rejects.toThrow("Search phrase must be 200 characters or fewer.");
     expect(reads).toEqual(["manifest.json", "JOH.json"]);
+  });
+
+  it("matches an exact phrase or all bounded words without changing verse text", async () => {
+    const app = { vault: {
+      configDir: ".obsidian",
+      adapter: { read: async (name: string) => readFileSync(path.join(libraryPath, path.basename(name)), "utf8") }
+    } } as unknown as App;
+    const library = new OfflineBibleLibrary(app, "versedock");
+    expect(await library.initialize()).toBe(true);
+
+    const phrase = await library.search({
+      phrase: "world God",
+      scope: "current-book",
+      match: "phrase",
+      currentBook: john,
+      limit: 10
+    });
+    expect(phrase.results.map(result => result.label)).not.toContain("John 3:16");
+
+    const allWords = await library.search({
+      phrase: "  world   God world  ",
+      scope: "current-book",
+      match: "all-words",
+      currentBook: john,
+      limit: 10
+    });
+    const john316 = allWords.results.find(result => result.label === "John 3:16");
+    expect(john316?.text).toContain("For God so loved the world");
+
+    await expect(library.search({
+      phrase: Array.from({ length: MAX_SEARCH_TERMS + 1 }, (_, index) => "word" + index).join(" "),
+      scope: "current-book",
+      match: "all-words",
+      currentBook: john,
+      limit: 10
+    })).rejects.toThrow("Search supports at most 16 words.");
   });
 
   it("stops before reading a book when its search is already cancelled", async () => {
@@ -98,6 +146,7 @@ describe("offline Bible search scopes", () => {
     await expect(library.search({
       phrase: "God",
       scope: "all",
+      match: "phrase",
       currentBook: john,
       limit: 80,
       signal: controller.signal

@@ -1,6 +1,6 @@
 import { ItemView, type WorkspaceLeaf } from "obsidian";
 import type { SwordDockController } from "../controller";
-import { MAX_SEARCH_PHRASE_LENGTH, parseBibleSearchScope } from "../core/search";
+import { MAX_SEARCH_PHRASE_LENGTH, parseBibleSearchMatch, parseBibleSearchScope } from "../core/search";
 import { emptyState, textButton } from "./components";
 
 export const SEARCH_VIEW = "versedock-search";
@@ -24,6 +24,10 @@ export class SearchView extends ItemView {
       ["old-testament", "Old Testament"],
       ["new-testament", "New Testament"]
     ] as const) scope.createEl("option", { value, text: label });
+    const matchLabel = filterRow.createEl("label", { text: "Match" });
+    const matchMode = matchLabel.createEl("select", { attr: { "aria-label": "Bible search match mode" } });
+    matchMode.createEl("option", { value: "phrase", text: "Exact phrase" });
+    matchMode.createEl("option", { value: "all-words", text: "All words" });
     const inputRow = this.contentEl.createDiv({ cls: "vd-search-input-row" });
     const input = inputRow.createEl("input", { attr: {
       type: "search",
@@ -52,6 +56,7 @@ export class SearchView extends ItemView {
         const page = await this.plugin.library.search({
           phrase: term,
           scope: parseBibleSearchScope(scope.value),
+          match: parseBibleSearchMatch(matchMode.value),
           currentBook: this.plugin.currentRef.book,
           limit: 80,
           signal: controller.signal
@@ -81,7 +86,8 @@ export class SearchView extends ItemView {
     textButton(inputRow, "Search", () => { void perform(); }, "mod-cta");
     input.addEventListener("keydown", e => { if(e.key === "Enter") { e.preventDefault(); void perform(); } });
     scope.addEventListener("change", () => { if (input.value.trim().length >= 2) void perform(); });
-    emptyState(results, "Find a passage", "Enter two or more letters, choose a scope, and search the local WEB text.", "search");
+    matchMode.addEventListener("change", () => { if (input.value.trim().length >= 2) void perform(); });
+    emptyState(results, "Find a passage", "Enter two or more letters, choose a scope and match style, and search the local WEB text.", "search");
     input.focus();
   }
   async onClose(): Promise<void> { this.version++; this.activeSearch?.abort(); this.activeSearch = null; this.contentEl.empty(); }

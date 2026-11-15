@@ -4,9 +4,10 @@ import type { PassageReference } from "./references";
 import { refLabel } from "./references";
 import { checkBookIntegrity, type IntegrityReport } from "./integrity";
 import {
-  MAX_SEARCH_PHRASE_LENGTH,
   booksForSearchScope,
   boundedSearchLimit,
+  prepareBibleSearchQuery,
+  verseMatchesSearch,
   type BibleSearchRequest
 } from "./search";
 
@@ -105,11 +106,7 @@ export class OfflineBibleLibrary {
   }
   async search(request: BibleSearchRequest): Promise<SearchPage> {
     if (!this.manifest) throw new Error("Offline WEB module not installed.");
-    const phrase = request.phrase.trim();
-    if (phrase.length > MAX_SEARCH_PHRASE_LENGTH) {
-      throw new Error("Search phrase must be 200 characters or fewer.");
-    }
-    const term = phrase.toLocaleLowerCase();
+    const query = prepareBibleSearchQuery(request.phrase, request.match);
     const limit = boundedSearchLimit(request.limit);
     const books = booksForSearchScope(request.scope, request.currentBook);
     const assertActive = (): void => {
@@ -120,7 +117,7 @@ export class OfflineBibleLibrary {
       }
     };
     assertActive();
-    if (term.length < 2) return { results: [], truncated: false };
+    if (query.normalized.length < 2) return { results: [], truncated: false };
     const found: SearchResult[] = [];
     for (const book of books) {
       assertActive();
@@ -128,7 +125,7 @@ export class OfflineBibleLibrary {
       for (const chapter of data.chapters) {
         assertActive();
         for (const verse of chapter.verses) {
-          if (verse.text.toLocaleLowerCase().includes(term)) {
+          if (verseMatchesSearch(verse.text, query)) {
             found.push({ label: book.name + " " + chapter.chapter + ":" + verse.verse, text: verse.text, book, chapter: chapter.chapter, verse: verse.verse });
             if (found.length > limit) return { results: found.slice(0, limit), truncated: true };
           }

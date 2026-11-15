@@ -37,6 +37,7 @@ describe("official WEB content", () => {
     const search = await reader.search({
       phrase: "For God so loved the world",
       scope: "all",
+      match: "phrase",
       currentBook: parseReference("John 3:16").book,
       limit: 5
     });
