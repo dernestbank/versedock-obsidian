@@ -125,3 +125,28 @@
 
 **Estimated scope:** Medium.
 
+## Task 6: Specify authorized, reversible module import
+
+**Description:** Define the provenance, rights acknowledgement, storage, integrity, transaction, rollback, recovery and removal contract that must be accepted before any module writer is implemented.
+
+**Acceptance criteria:**
+- [x] Proposed spec defines explicit rights bases, acknowledgement language, provenance limits and legal/authenticity non-claims.
+- [x] Proposed storage ADR separates user imports from replaceable plugin assets and compares alternatives.
+- [x] Spec defines content-addressed IDs, staging/read-back/commit, separate activation, rollback, quarantine and guarded permanent deletion.
+- [x] Manifest fields, hashes, resource bounds, unsupported types and initial eligibility gates are concrete.
+- [x] Threat model, abuse cases, negative tests, commands and implementation boundaries are documented.
+- [ ] User reviews and approves the proposed specification and ADR, or requests changes.
+
+**Verification:**
+- [x] Spec and ADR are internally consistent with the current `versedock` ID, inspector bounds and read-only safety contract.
+- [ ] After approval, convert the accepted contract into Task 7 implementation slices; do not write importer code in the specification turn.
+
+**Dependencies:** Phase 2 semantic IR; manual VoiceOver checkpoint remains separately open.
+
+**Files touched:**
+- `docs/specs/authorized-mysword-import.md`
+- `docs/decisions/0001-imported-module-storage.md`
+- `tasks/todo.md`
+
+**Estimated scope:** Medium.
+

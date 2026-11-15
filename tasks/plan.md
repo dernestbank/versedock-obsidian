@@ -47,7 +47,7 @@ Continue the existing SwordDock Bible developer preview from the verified GBF le
 
 ### Phase 3: Authorized opt-in import design
 
-- [ ] Task 6: Specify provenance, rights acknowledgement, storage, rollback, and integrity metadata.
+- [ ] Task 6: Specify provenance, rights acknowledgement, storage, rollback, and integrity metadata. Proposed spec and ADR await review.
 - [ ] Task 7: Implement import preview for an authorized public-domain fixture only.
 - [ ] Task 8: Implement a reversible writer only after semantic, performance, GUI, and rights gates pass.
 

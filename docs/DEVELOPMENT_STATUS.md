@@ -34,12 +34,12 @@ Updated: 2026-11-15
 
 ## Current implementation priority
 
-Perform the remaining Phase 2 checkpoint: re-verify the 0.1.6 semantic diagnostic in the disposable Obsidian vault, then proceed to Phase 3 design only. Preserve raw tokens, keep HTML/CustomCSS/VerseRules inert, and do not add a writer without the rights, storage, rollback, and integrity specification.
+Review the proposed [authorized-import specification](specs/authorized-mysword-import.md) and [storage ADR](decisions/0001-imported-module-storage.md). Do not plan or implement Task 7 until the storage root, rights acknowledgement, deletion confirmation and unbenchmarked generated-size cap questions are accepted or revised. The separate VoiceOver/keyboard checkpoint remains open.
 
 ## Known blockers
 
 - Semantic support is deliberately incomplete for lexical/interlinear tags, HTML, CustomCSS and VerseRules; the renderer refuses them.
-- No rights/provenance workflow or reversible imported-module storage design.
+- Proposed rights/provenance and reversible storage contracts exist, but they are not accepted or implemented.
 - No conversion writer or installer.
 - No authorized second translation/commentary fixture in the repository.
 - No mobile, Windows, Linux, community-theme, automated accessibility, or slow-device validation.
