@@ -1,7 +1,13 @@
 import { ItemView, type WorkspaceLeaf } from "obsidian";
 import type { SwordDockController } from "../controller";
-import { MAX_SEARCH_PHRASE_LENGTH, parseBibleSearchMatch, parseBibleSearchScope } from "../core/search";
+import {
+  MAX_SEARCH_PHRASE_LENGTH,
+  parseBibleSearchMatch,
+  parseBibleSearchScope,
+  prepareBibleSearchQuery
+} from "../core/search";
 import { emptyState, textButton } from "./components";
+import { renderSearchHighlights } from "./search-highlights";
 
 export const SEARCH_VIEW = "versedock-search";
 export class SearchView extends ItemView {
@@ -53,10 +59,12 @@ export class SearchView extends ItemView {
       this.activeSearch = controller;
       status.setText("Searching offline Bible…");
       try {
+        const selectedMatch = parseBibleSearchMatch(matchMode.value);
+        const preparedQuery = prepareBibleSearchQuery(term, selectedMatch);
         const page = await this.plugin.library.search({
           phrase: term,
           scope: parseBibleSearchScope(scope.value),
-          match: parseBibleSearchMatch(matchMode.value),
+          match: selectedMatch,
           currentBook: this.plugin.currentRef.book,
           limit: 80,
           signal: controller.signal
@@ -65,13 +73,14 @@ export class SearchView extends ItemView {
         const found = page.results;
         results.empty();
         status.setText(page.truncated ? found.length + "+ results (first " + found.length + " shown)" : found.length + " results");
-        for (const match of found) {
+        for (const result of found) {
           const row = results.createDiv({ cls: "vd-search-result" });
-          textButton(row, match.label, () => {
-            this.plugin.selectReference({ book: match.book, chapter: match.chapter, verse: match.verse });
+          textButton(row, result.label, () => {
+            this.plugin.selectReference({ book: result.book, chapter: result.chapter, verse: result.verse });
             void this.plugin.openReader();
           }, "vd-result-ref");
-          row.createEl("p", { text: match.text });
+          const verseText = row.createEl("p");
+          renderSearchHighlights(verseText, result.text, preparedQuery);
         }
         if (!found.length) emptyState(results, "No matching verses", "Try fewer words, different spelling, or a shorter phrase.", "search-x");
       } catch(error) {
