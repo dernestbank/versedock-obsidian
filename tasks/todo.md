@@ -285,13 +285,14 @@
 **Acceptance criteria:**
 - [x] Exact canonical OSIS values are discovered from scalar or bounded-array `scripture` frontmatter through Obsidian's metadata cache only.
 - [x] The stable primary SwordDock note path is resolved through direct indexed lookup and prioritized without changing existing paths or contents.
+- [x] Existing primary notes remain first even without matching frontmatter, and resolved Obsidian backlinks to that primary note are included without reading note bodies.
 - [x] Discovery examines at most 5,000 indexed Markdown files, displays at most fifty recent matches and truthfully reports partial scans/additional results.
 - [x] Malformed, oversized and non-string frontmatter fails closed; duplicate path wrappers cannot duplicate a result.
 - [x] The Notes tab provides open, create/open primary, copy and refresh actions plus relative-path, empty and partial-result context.
 
 **Verification:**
 - [x] Focused RED/GREEN tests cover scalar/array links, recent-first order, immutability, invalid metadata, scan/result caps, direct path lookup, no note-body reads and duplicate wrappers.
-- [x] A deliberate scan-cap mutation is caught by the focused adapter suite; full `npm run check` passes at 127 tests across nineteen files.
+- [x] Deliberate scan-cap, zero-count-backlink and primary-order mutations are caught by focused suites; full `npm run check` passes at 130 tests across nineteen files.
 - [x] New range notes preserve both endpoints in canonical metadata and use non-colliding paths; positively identified legacy range notes reopen unchanged, and a deliberate signature mutation is caught by focused recovery/collision tests.
 - [ ] Live Notes-tab discovery/opening is verified in the disposable Obsidian vault with a generated primary note and a second linked note.
 

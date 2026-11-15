@@ -2,6 +2,14 @@
 
 ## Unreleased — 0.1.11 SwordDock Bible developer candidate
 
+### Obsidian study-note backlinks (November 15, 2026)
+
+- Discover ordinary Markdown notes that Obsidian's resolved-link index identifies as linking to the passage's existing primary study note, without reading note bodies.
+- Keep the exact primary note first even when it is older than other matches or its frontmatter was removed; retain recent-first ordering for all remaining frontmatter/backlink matches.
+- Reject absent, zero and non-integer link counts, retain the existing 5,000-file/50-result bounds and label backlink matches in the Notes tab.
+- Expand automated coverage to 130 tests across nineteen files. Zero-count and primary-order mutations are caught by focused suites; TypeScript, production build and dependency audit pass.
+- Rebuild the 76-file offline preview twice with identical 1,757,695-byte output and SHA-256 `7e35dc1f77ebf3185df16e28ab75eea0cb66f6a9005c29f51bafe0d7d411d110`; clean extraction and simulated offline restart pass for all 66 books and 31,103 verses.
+
 ### Current-chapter Scripture search (November 15, 2026)
 
 - Add a canonical Current chapter filter alongside Whole Bible, Current book and testament scopes without accepting a resource path or loading another book.
