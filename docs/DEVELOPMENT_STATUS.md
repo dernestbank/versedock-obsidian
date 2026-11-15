@@ -20,6 +20,7 @@ Updated: 2026-11-15
 - Verified native-theme checkpoint commit: `75a4ba0` (`docs: verify native theme rendering`)
 - Verified community-theme checkpoint commit: `dbe3266` (`docs: verify Minimal community theme`)
 - Verified package-recovery checkpoint commit: `fd83d7d` (`fix: redact offline resource paths`)
+- Verified offline-library recovery checkpoint commit: `c90cd67` (`fix: add offline library recovery flow`)
 - Plugin ID: `versedock` (compatibility contract; unchanged)
 - GitHub: public repository `dernestbank/versedock-obsidian`; branch `branding/sworddock-bible` is pushed and pull request [#1](https://github.com/dernestbank/versedock-obsidian/pull/1) targets `main`. The historical prerelease/tag `0.1.0` remains the only published release.
 - Current accessibility checkpoint: keyboard and accessibility-tree verification complete; actual VoiceOver verification pending
@@ -44,7 +45,7 @@ Updated: 2026-11-15
 - Full-corpus performance: a 25-run Node 22/darwin arm64 benchmark of the ignored 5.4 MiB publisher WEB fixture produced 98.873 ms combined median and 126.184 ms p95 after one warm-up, with stable 31,103-verse semantics and unchanged source SHA-256. Post-iteration process RSS was 95.078–99.766 MiB; this is not a mobile, slow-device or in-operation peak profile.
 - Cooperative responsiveness: the same 31,103-verse report matched the synchronous baseline exactly while yielding 31 times. Its 32 measured work segments produced 5.127 ms p95 and 26.795 ms maximum on the tested Mac. This simulation excludes Obsidian rendering and is not a mobile guarantee.
 - Live full-corpus preflight: Obsidian 1.15.1 inspected the ignored 5,414,912-byte publisher WEB fixture and completed the cooperative read-only report with the established totals: 71,821 recognized markers, seven HTML markers, 424 validated RX markers, 15,866 semantic-ready markup verses, seven opaque events, 1,126 translator notes and 169 titles. Conversion/installation remained blocked, the UI reported no writes or uploads, and source SHA-256 remained `d0605fb28dbb0aee37f078931fdc54925295f846b068b954da2d1923011b2bb5`.
-- GitHub Actions: PR #1 is mergeable and `build-and-test` passed on pinned Ubuntu 24.04 with `actions/checkout@v7` and `actions/setup-node@v7` for package-recovery checkpoint commit `fd83d7d` in run `43719888869`. The run completed with zero annotations.
+- GitHub Actions: PR #1 is mergeable and `build-and-test` passed on pinned Ubuntu 24.04 with `actions/checkout@v7` and `actions/setup-node@v7` for offline-library recovery commit `c90cd67` in run `43721513712` (job `132834311707`). The run completed with zero annotations.
 
 ## Completed capabilities
 
