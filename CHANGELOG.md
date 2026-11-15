@@ -2,6 +2,14 @@
 
 ## Unreleased — 0.1.11 SwordDock Bible developer candidate
 
+### Any-word Scripture search (November 15, 2026)
+
+- Add an explicit **Any words** match option alongside Exact phrase and All words without adding a query language, regular expressions, an index or a network dependency.
+- Match when at least one case-insensitive, whitespace-delimited literal term is present, independent of term order and duplicate input; retain the shared 16-term, 200-character and 200-result bounds.
+- Highlight every present literal term while safely ignoring absent terms and preserving the canonical returned Scripture text.
+- Expand automated coverage to 133 tests across nineteen files. Deliberately changing Any words to require every term fails both the direct matcher and bundled-corpus tests; TypeScript, production build and dependency audit pass.
+- Rebuild the 76-file offline preview twice with identical 1,757,872-byte output and SHA-256 `d6c541932eef05e24fe6d411107f38e17ad391007a94d3c62e61bae39ad782a2`; archive integrity, clean extraction, byte comparison and simulated offline restart pass for all 66 books and 31,103 verses.
+
 ### Direct book search filter (November 15, 2026)
 
 - Add a Selected book scope with an accessible 66-book selector so users can search another book without first navigating the Reader.
