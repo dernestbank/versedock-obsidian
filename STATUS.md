@@ -1,10 +1,18 @@
 # SwordDock Bible — Development QA Report
 
-Version: **0.1.5 (local developer candidate)** · Date: **2026-11-15** · Internal project directory: `mysword+`
+Version: **0.1.6 (local developer candidate)** · Date: **2026-11-15** · Internal project directory: `mysword+`
 
 This independent project started under the internal name **MySword+**. Its original public name was **VerseDock**; its current preferred name is **SwordDock Bible**, with no affiliation with the original MySword app.
 
 > **Branding update (2026-11-12):** Visible branding changed to **SwordDock Bible** while keeping the installed plugin ID `versedock` and the existing GitHub repository URL stable. The historical GUI checks below were performed before the rename; rerun the GUI check for final verification. Official trademark clearance is pending.
+
+## Safe GBF semantic inspection — 2026-11-15
+
+- Added a bounded, lossless semantic event layer for supported GBF typography, paragraph/separator/poetry structure, validated RX metadata, translator notes, and titles. Exact raw text and UTF-16 source spans remain authoritative.
+- HTML, lexical/interlinear, malformed, unknown, excessive nesting, and unsupported escape/entity syntax remain visible but make a verse ineligible for complete semantic interpretation.
+- Added an isolated fail-closed DOM renderer primitive. It uses detached fragments, text nodes, and fixed tag/class allowlists; opaque or inconsistent events fail before target mutation. It is not connected to module conversion, installation, or the Reader.
+- The read-only preflight now reports semantic diagnostics. The ignored publisher WEB fixture remains exact across 31,103 verses: 15,866 of 15,870 markup verses fully interpreted, seven opaque events, 1,126 translator notes, 169 titles, and conversion still blocked.
+- Automated coverage is 81 tests across ten files; strict typecheck/build, zero-vulnerability dependency audit, and mutation checks pass. The reproducible 0.1.6 package and clean-install/restart smoke test pass. No writer, installer, or public release was added.
 
 ## Safe RX cross-reference semantics — 2026-11-15
 
@@ -70,7 +78,7 @@ This independent project started under the internal name **MySword+**. Its origi
 - **Original 0.1.0 test:** renamed manifest ID and product to VerseDock; reinstalled the plugin in an isolated vault and confirmed **VerseDock (Preview)** commands appeared and Bible Reader opened. That historical GUI test predates the SwordDock Bible rebrand.
 - **Manual preview ZIP:** the archive includes `main.js`, `manifest.json`, `styles.css`, license, README and every offline WEB book, and passed ZIP integrity check.
 
-**Current local package:** `SwordDock-Bible-0.1.5-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced SHA-256 `7504f4225d5ae6da83d07df2975a7e50b75c5654c9a3c5e71b9d254debec5978`; clean-vault ZIP extraction and simulated offline restart reads pass. It is a local developer candidate, **not a published GitHub release**; the conversion-preflight GUI and new RX diagnostic were tested with synthetic invalid markup, but full release validation (mobile, themes, resource failures, restart and accessibility) remains pending.
+**Current local package:** `SwordDock-Bible-0.1.6-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced SHA-256 `0cbbb5ab0dbe87e03996a4a09ae3188c19c584b77e584124c552049a40082fa4`; clean-vault ZIP extraction and simulated offline restart reads pass. It is a local developer candidate, **not a published GitHub release**. Live Obsidian 1.15.0 verification in the isolated `test-vault` kept hostile HTML literal, reported zero of one markup verses fully interpreted with one opaque event, and kept conversion/installation blocked. Full release validation (mobile, themes, resource failures, restart and accessibility) remains pending.
 
 ## Test boundaries / not yet verified
 

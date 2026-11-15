@@ -1,6 +1,17 @@
 # Changelog
 
-## Unreleased — 0.1.5 SwordDock Bible developer candidate
+## Unreleased — 0.1.6 SwordDock Bible developer candidate
+
+### Safe GBF semantic inspection (November 15, 2026)
+
+- Add a bounded, typed, source-preserving semantic event model for supported MySword GBF typography, paragraph/separator/poetry layout, and validated RX metadata.
+- Extract balanced translator-note (`RF/Rf`) and title (`TS/Ts`) regions with exact source/content spans and optional inert labels/levels; reject mismatched or excessive nesting without losing source.
+- Keep HTML, lexical/interlinear, malformed, unknown, and unsupported escape/entity syntax opaque and ineligible for complete semantic interpretation.
+- Add an isolated, atomic safe-DOM renderer that uses only text nodes and fixed elements/classes, refuses opaque data before target mutation, and never follows RX references.
+- Surface semantic-ready, opaque-event, translator-note, and title counts in read-only conversion preflight while keeping all markup conversion and installation blocked.
+- Re-scan the publisher WEB fixture losslessly: 15,866 of 15,870 markup verses fully interpreted, seven opaque events, 1,126 translator notes, and 169 titles. Expand automated coverage to 81 tests.
+
+## 0.1.5 — Local developer candidate (2026-11-15; unpublished)
 
 ### Safe cross-reference semantics (November 15, 2026)
 

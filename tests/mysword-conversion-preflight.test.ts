@@ -49,6 +49,8 @@ describe("private MySword text-conversion preflight", () => {
       fixture({strong: true, text: "Verse \\f footnote"}));
     expect(report.status).toBe("blocked");
     expect(report.blockers.join(" ")).toContain("Strong's");
+    expect(report.semanticReadyMarkupVerses).toBe(0);
+    expect(report.tagIssueVerses).toBe(1);
   });
   it("blocks chapters exceeding canonical book count", () => {
     const report = preflightMySwordPlainText(sql, "test.bbl.mybible",
@@ -80,7 +82,24 @@ describe("private MySword text-conversion preflight", () => {
     expect(report.tagIssueVerses).toBe(1);
     expect(report.crossReferences).toBe(0);
     expect(report.unresolvedCrossReferences).toBe(0);
+    expect(report.semanticReadyMarkupVerses).toBe(0);
+    expect(report.opaqueSemanticEvents).toBe(2);
+    expect(report.translatorNotes).toBe(0);
+    expect(report.titles).toBe(0);
     expect(report.status).toBe("blocked");
+  });
+  it("reports fully interpreted markup while keeping conversion blocked", () => {
+    const report = preflightMySwordPlainText(sql, "test.bbl.mybible", fixture({
+      text: "<TS2>Heading<Ts><RF q=a>note<Rf><FI>word<Fi><CM>"
+    }));
+    expect(report.semanticReadyMarkupVerses).toBe(1);
+    expect(report.opaqueSemanticEvents).toBe(0);
+    expect(report.translatorNotes).toBe(1);
+    expect(report.titles).toBe(1);
+    expect(report.tagIssueVerses).toBe(0);
+    expect(report.markupVerses).toBe(1);
+    expect(report.status).toBe("blocked");
+    expect(report.installsModule).toBe(false);
   });
   it("distinguishes validated and unresolved RX markers without following links", () => {
     const report = preflightMySwordPlainText(sql, "test.bbl.mybible", fixture({

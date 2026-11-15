@@ -2,7 +2,7 @@ import type { SqlJsStatic, Database } from "sql.js";
 import { BOOKS } from "./books";
 import { CANON_CHAPTERS } from "./canon";
 import { inspectMySwordBible } from "./mysword-preview";
-import { tokenizeMySwordGbf } from "./mysword-gbf";
+import { interpretMySwordGbf } from "./mysword-gbf-semantics";
 
 export { CANON_CHAPTERS } from "./canon";
 
@@ -22,6 +22,10 @@ export interface ConversionPreflight {
   unknownMarkers: number;
   crossReferences: number;
   unresolvedCrossReferences: number;
+  semanticReadyMarkupVerses: number;
+  opaqueSemanticEvents: number;
+  translatorNotes: number;
+  titles: number;
   tagIssueVerses: number;
   invalidChapterVerses: number;
   emptyVerses: number;
@@ -47,6 +51,8 @@ export function preflightMySwordPlainText(sql: SqlJsStatic, name: string, bytes:
     let markupVerses = 0, invalidChapterVerses = 0, emptyVerses = 0;
     let gbfMarkers = 0, htmlMarkers = 0, unknownMarkers = 0, tagIssueVerses = 0;
     let crossReferences = 0, unresolvedCrossReferences = 0;
+    let semanticReadyMarkupVerses = 0, opaqueSemanticEvents = 0;
+    let translatorNotes = 0, titles = 0;
     let count = 0;
     const stmt = db.prepare("SELECT Book, Chapter, Scripture FROM Bible");
     try {
@@ -58,17 +64,21 @@ export function preflightMySwordPlainText(sql: SqlJsStatic, name: string, bytes:
         if (chapter > CANON_CHAPTERS[book - 1]) invalidChapterVerses++;
         if (MARKUP.test(text)) {
           markupVerses++;
-          const scan = tokenizeMySwordGbf(text);
-          if (!scan.lossless) throw new Error("GBF source round-trip failed.");
-          gbfMarkers += scan.knownMarkers;
-          htmlMarkers += scan.htmlMarkers;
-          unknownMarkers += scan.unknownMarkers;
-          for (const token of scan.tokens) {
-            if (token.kind === "cross-reference") crossReferences++;
-            else if ((token.kind === "unknown" || token.kind === "malformed") &&
-                token.raw.startsWith("<RX")) unresolvedCrossReferences++;
+          const semantics = interpretMySwordGbf(text);
+          if (!semantics.lossless) throw new Error("GBF semantic source round-trip failed.");
+          gbfMarkers += semantics.knownMarkers;
+          htmlMarkers += semantics.htmlMarkers;
+          unknownMarkers += semantics.unknownMarkers;
+          opaqueSemanticEvents += semantics.opaqueEvents;
+          translatorNotes += semantics.translatorNotes.length;
+          titles += semantics.titles.length;
+          if (semantics.fullyInterpreted) semanticReadyMarkupVerses++;
+          for (const event of semantics.events) {
+            if (event.kind === "cross-reference") crossReferences++;
+            else if (event.kind === "opaque" && event.raw.startsWith("<RX"))
+              unresolvedCrossReferences++;
           }
-          if (scan.issues.length) tagIssueVerses++;
+          if (semantics.issues.length) tagIssueVerses++;
         }
         if (text.length === 0) emptyVerses++;
       }
@@ -102,7 +112,7 @@ export function preflightMySwordPlainText(sql: SqlJsStatic, name: string, bytes:
     if (typeof metadata.customcss === "string" && metadata.customcss.trim())
       blockers.push("Module CustomCSS is present; its display behavior requires safe rendering review.");
     const notes = [
-      "GBF markers were tokenized without changing source text; semantic rendering/conversion remains unavailable.",
+      "Supported GBF semantics were analyzed without changing source text; conversion and installation remain unavailable.",
       "Read-only preflight: no files were created, modified, uploaded or installed.",
       "Technical preflight cannot verify copyright, licensing, provenance or translation accuracy.",
       "Verse mappings must be compared to the edition's published versification before any conversion."
@@ -113,6 +123,7 @@ export function preflightMySwordPlainText(sql: SqlJsStatic, name: string, bytes:
       status: blockers.length ? "blocked" : "text-candidate",
       verses: count, books: preview.books, markupVerses, gbfMarkers, htmlMarkers,
       unknownMarkers, crossReferences, unresolvedCrossReferences, tagIssueVerses,
+      semanticReadyMarkupVerses, opaqueSemanticEvents, translatorNotes, titles,
       invalidChapterVerses, emptyVerses,
       partialBooks: preview.books < 66,
       blockers, notes, installsModule: false

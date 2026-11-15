@@ -53,3 +53,75 @@
 - [x] Publisher WEB fixture scan remains exact and bounded.
 - [x] Documentation and development status are current.
 
+## Task 3: Define a text-first GBF semantic event model
+
+**Description:** Convert the lossless GBF token stream into inert, typed events for plain text, supported typography, structural layout and validated cross-references. Preserve source spans for every event and represent HTML, malformed, unknown and not-yet-implemented semantics as opaque data.
+
+**Acceptance criteria:**
+- [x] `FI`, `FO`, `FR` and `FU` pairs produce typed format-open/format-close events without changing their source spans.
+- [x] `CM`, `CI`, `PI0`–`PI7` and `PF0`–`PF7` produce inert structural events; validated RX metadata is retained.
+- [x] HTML, malformed, unknown and lexical/interlinear tokens remain opaque and force `fullyInterpreted: false`; translator-note/title handling is deferred to Task 4.
+- [x] Concatenating event `raw` values exactly reconstructs the source, including Unicode and hostile HTML-like strings.
+- [x] Semantic interpretation rejects Scripture strings exceeding the existing 32,768-character boundary.
+
+**Verification:**
+- [x] Focused test fails before implementation and passes afterward.
+- [x] Full `npm run check` succeeds.
+- [x] Publisher WEB fixture remains source-lossless and conversion remains blocked.
+
+**Dependencies:** Tasks 1–2.
+
+**Files likely touched:**
+- `src/core/mysword-gbf-semantics.ts`
+- `tests/mysword-gbf-semantics.test.ts`
+- `docs/GBF-compatibility.md`
+
+**Estimated scope:** Medium.
+
+## Task 4: Extract inert translator notes and titles
+
+**Description:** Recognize balanced `RF/Rf` translator notes and `TS/Ts` titles as semantic regions with exact source/content spans. Preserve inner markup literally, expose optional note labels/title levels as data, and refuse complete interpretation when pairing or nesting is unsafe.
+
+**Acceptance criteria:**
+- [x] Balanced translator notes and titles produce typed open/close events and exact extracted regions.
+- [x] Optional `RF q=...` labels and `TS1`–`TS9` levels are retained as inert metadata.
+- [x] Inner HTML remains opaque and present in `contentRaw`; no markup executes or disappears.
+- [x] Unmatched/mismatched annotation markers produce no false extracted region and force `fullyInterpreted: false`.
+- [x] Pair nesting beyond 32 levels remains lossless but is refused as a complete interpretation.
+
+**Verification:**
+- [x] Focused test fails before implementation and passes afterward.
+- [x] Full `npm run check` succeeds.
+- [x] Mutation review proves the nesting boundary is covered.
+
+**Dependencies:** Task 3.
+
+**Files likely touched:**
+- `src/core/mysword-gbf-semantics.ts`
+- `tests/mysword-gbf-semantics.test.ts`
+
+**Estimated scope:** Medium.
+
+## Task 5: Render fully interpreted GBF through safe DOM APIs
+
+**Description:** Add an atomic renderer for fully interpreted semantic documents. Module text must enter the DOM only through text nodes; tag names and classes must be hardcoded. Refuse HTML, unknown, malformed and unimplemented semantic events before mutating the target.
+
+**Acceptance criteria:**
+- [x] Supported text, format, title, note and structural events render through `createTextNode` and fixed DOM elements/classes.
+- [x] HTML or any other opaque event is rejected before the target is cleared or changed.
+- [x] Renderer never reads or writes `innerHTML`, never creates an element from module data, and never follows RX references.
+- [x] Rendering is built in a detached fragment and committed atomically.
+
+**Verification:**
+- [x] Focused renderer test fails before implementation and passes afterward.
+- [x] Full `npm run check` succeeds.
+- [x] Source review and mutation test cover the rejection boundary.
+
+**Dependencies:** Tasks 3–4.
+
+**Files likely touched:**
+- `src/ui/mysword-gbf-renderer.ts`
+- `tests/mysword-gbf-renderer.test.ts`
+
+**Estimated scope:** Medium.
+

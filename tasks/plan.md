@@ -2,15 +2,15 @@
 
 ## Overview
 
-Continue the existing SwordDock Bible developer preview from the verified 0.1.4 GBF lexical scanner. The next work is a sequence of small, read-only semantic inspection slices. No module writer, installer, HTML execution, CustomCSS execution, VerseRules execution, or licensing inference is in scope until the corresponding safety and provenance gates are satisfied.
+Continue the existing SwordDock Bible developer preview from the verified GBF lexical scanner and RX parser. The current work is a sequence of small, read-only semantic inspection slices. No module writer, installer, HTML execution, CustomCSS execution, VerseRules execution, or licensing inference is in scope until the corresponding safety and provenance gates are satisfied.
 
 ## Observed baseline
 
-- Local branch `branding/sworddock-bible` is clean at `e5f9517`.
-- `npm run check` passes: 8 test files and 55 tests, strict TypeScript, and the production bundle.
+- Local branch `branding/sworddock-bible` entered Phase 2 at verified checkpoint `01f35b8`.
+- `npm run check` passes: 10 test files and 81 tests, strict TypeScript, and the production bundle.
 - `npm audit --json` reports zero known vulnerabilities.
-- GitHub `dernestbank/versedock-obsidian` is public; only `main` and prerelease/tag `0.1.0` are published. The SwordDock branch and 0.1.4 candidate are not remote.
-- The first explicit unfinished compatibility gate is semantic GBF interpretation. The smallest independently safe slice is cross-reference parsing.
+- GitHub `dernestbank/versedock-obsidian` is public; PR #1 tracks this pushed branch. Only prerelease/tag `0.1.0` is published.
+- Phase 2 now provides an inert semantic IR and an isolated safe-DOM rendering primitive; neither enables module conversion or installation.
 
 ## Architecture decisions
 
@@ -35,14 +35,14 @@ Continue the existing SwordDock Bible developer preview from the verified 0.1.4 
 
 ### Phase 2: Safe semantic intermediate representation
 
-- [ ] Task 3: Define a text-first semantic event model for supported typography and structural GBF tags.
-- [ ] Task 4: Add inert translator-note and title extraction with nesting/error limits.
-- [ ] Task 5: Add safe renderer tests that use DOM text APIs only and explicitly reject HTML tokens.
+- [x] Task 3: Define a text-first semantic event model for supported typography and structural GBF tags.
+- [x] Task 4: Add inert translator-note and title extraction with nesting/error limits.
+- [x] Task 5: Add safe renderer tests that use DOM text APIs only and explicitly reject HTML tokens.
 
 ### Checkpoint: Semantic IR
 
-- [ ] Corpus source round-trip remains exact.
-- [ ] Unsupported tokens remain visible and conversion remains blocked.
+- [x] Corpus source round-trip remains exact.
+- [x] Unsupported tokens remain visible and conversion remains blocked.
 - [ ] Keyboard and screen-reader behavior is manually verified in a disposable vault.
 
 ### Phase 3: Authorized opt-in import design
