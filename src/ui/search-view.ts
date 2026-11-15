@@ -1,5 +1,6 @@
 import { ItemView, type WorkspaceLeaf } from "obsidian";
 import type { SwordDockController } from "../controller";
+import { BOOKS, BOOK_BY_OSIS } from "../core/books";
 import {
   MAX_SEARCH_PHRASE_LENGTH,
   parseBibleSearchMatch,
@@ -28,9 +29,15 @@ export class SearchView extends ItemView {
       ["all", "Whole Bible"],
       ["current-chapter", "Current chapter · " + this.plugin.currentRef.book.name + " " + this.plugin.currentRef.chapter],
       ["current-book", "Current book · " + this.plugin.currentRef.book.name],
+      ["selected-book", "Selected book"],
       ["old-testament", "Old Testament"],
       ["new-testament", "New Testament"]
     ] as const) scope.createEl("option", { value, text: label });
+    const bookLabel = filterRow.createEl("label", { text: "Book" });
+    const selectedBook = bookLabel.createEl("select", { attr: { "aria-label": "Selected Bible book" } });
+    for (const book of BOOKS) selectedBook.createEl("option", {value: book.osis, text: book.name});
+    selectedBook.value = this.plugin.currentRef.book.osis;
+    bookLabel.hidden = true;
     const matchLabel = filterRow.createEl("label", { text: "Match" });
     const matchMode = matchLabel.createEl("select", { attr: { "aria-label": "Bible search match mode" } });
     matchMode.createEl("option", { value: "phrase", text: "Exact phrase" });
@@ -68,6 +75,7 @@ export class SearchView extends ItemView {
           match: selectedMatch,
           currentBook: this.plugin.currentRef.book,
           currentChapter: this.plugin.currentRef.chapter,
+          selectedBook: BOOK_BY_OSIS.get(selectedBook.value),
           limit: 80,
           signal: controller.signal
         });
@@ -96,7 +104,11 @@ export class SearchView extends ItemView {
     };
     textButton(inputRow, "Search", () => { void perform(); }, "mod-cta");
     input.addEventListener("keydown", e => { if(e.key === "Enter") { e.preventDefault(); void perform(); } });
-    scope.addEventListener("change", () => { if (input.value.trim().length >= 2) void perform(); });
+    scope.addEventListener("change", () => {
+      bookLabel.hidden = scope.value !== "selected-book";
+      if (input.value.trim().length >= 2) void perform();
+    });
+    selectedBook.addEventListener("change", () => { if (input.value.trim().length >= 2) void perform(); });
     matchMode.addEventListener("change", () => { if (input.value.trim().length >= 2) void perform(); });
     emptyState(results, "Find a passage", "Enter two or more letters, choose a scope and match style, and search the local WEB text.", "search");
     input.focus();

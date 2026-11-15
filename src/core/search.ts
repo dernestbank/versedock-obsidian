@@ -1,6 +1,6 @@
 import { BOOKS, BOOK_BY_OSIS, type BookInfo } from "./books";
 
-export type BibleSearchScope = "all" | "current-chapter" | "current-book" | "old-testament" | "new-testament";
+export type BibleSearchScope = "all" | "current-chapter" | "current-book" | "selected-book" | "old-testament" | "new-testament";
 export type BibleSearchMatch = "phrase" | "all-words";
 export const MAX_SEARCH_PHRASE_LENGTH = 200;
 export const MAX_SEARCH_TERMS = 16;
@@ -11,6 +11,7 @@ export interface BibleSearchRequest {
   match: BibleSearchMatch;
   currentBook: BookInfo;
   currentChapter?: number;
+  selectedBook?: BookInfo;
   limit?: number;
   signal?: AbortSignal;
 }
@@ -28,6 +29,7 @@ export function parseBibleSearchScope(value: string): BibleSearchScope {
     case "all":
     case "current-chapter":
     case "current-book":
+    case "selected-book":
     case "old-testament":
     case "new-testament":
       return value;
@@ -66,7 +68,11 @@ export function verseMatchesSearch(text: string, query: PreparedBibleSearchQuery
 }
 
 /** Resolves UI search scopes to canonical books; caller-supplied book paths are never accepted. */
-export function booksForSearchScope(scope: BibleSearchScope, currentBook: BookInfo): readonly BookInfo[] {
+export function booksForSearchScope(
+  scope: BibleSearchScope,
+  currentBook: BookInfo,
+  selectedBook?: BookInfo
+): readonly BookInfo[] {
   switch (scope) {
     case "all": return BOOKS;
     case "old-testament": return BOOKS.slice(0, NEW_TESTAMENT_INDEX);
@@ -75,6 +81,12 @@ export function booksForSearchScope(scope: BibleSearchScope, currentBook: BookIn
     case "current-book": {
       const canonical = BOOK_BY_OSIS.get(currentBook.osis);
       if (!canonical) throw new Error("Current book is outside the supported 66-book canon.");
+      return [canonical];
+    }
+    case "selected-book": {
+      if (!selectedBook) throw new Error("Selected book is required for this search scope.");
+      const canonical = BOOK_BY_OSIS.get(selectedBook.osis);
+      if (!canonical) throw new Error("Selected book is outside the supported 66-book canon.");
       return [canonical];
     }
   }

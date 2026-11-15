@@ -109,7 +109,7 @@ export class OfflineBibleLibrary {
     if (!this.manifest) throw new Error("Offline WEB module not installed.");
     const query = prepareBibleSearchQuery(request.phrase, request.match);
     const limit = boundedSearchLimit(request.limit);
-    const books = booksForSearchScope(request.scope, request.currentBook);
+    const books = booksForSearchScope(request.scope, request.currentBook, request.selectedBook);
     const currentChapter = currentChapterForSearchScope(request.scope, request.currentChapter);
     const assertActive = (): void => {
       if (request.signal?.aborted) {
