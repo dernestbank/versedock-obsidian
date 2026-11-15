@@ -8,7 +8,7 @@ SwordDock Bible was previously developed under the working titles *MySword+* and
 
 - Read the **World English Bible (WEB, 66-book ENGWEBP edition)** offline, with an elegant theme-adaptive serif reader and adjustable typography.
 - Jump to books and chapters, or type references such as `John 3:16`, `Ps 23`, and `1co 13:4-7`.
-- Search local Bible text; preview and copy passages.
+- Search local Bible text across the whole Bible, the current book, or either testament; preview and copy passages.
 - Insert an attributed Bible callout or quotation directly into a Markdown note.
 - Create and open linked study notes as **ordinary Markdown files**, not proprietary records.
 - Save passage bookmarks and highlights.
@@ -30,7 +30,7 @@ The plugin currently includes **only the WEB**. Commentaries, dictionaries, Stro
 
 ## Download and install this development preview
 
-This preview is **not yet eligible for one-click installation from Obsidian's directory**. The original public 0.1.0 preview was released under the previous VerseDock name. Until a SwordDock Bible release is published, download the existing `VerseDock-0.1.0-offline-preview.zip` asset from [GitHub Releases](https://github.com/dernestbank/versedock-obsidian/releases). Its installed folder and manifest ID remain `versedock`. The locally staged **0.1.11 development candidate** is named `SwordDock-Bible-0.1.11-offline-preview.zip`, but it is not yet a published release. It adds safe Quick Verse Insert, library integrity checks, MySword read-only inspection, a non-destructive cooperative conversion-readiness preflight, inert RX validation, bounded GBF semantic diagnostics, retained keyboard focus, bounded reading history, keyboard-complete Inspector tabs with an Obsidian-tested roving focus repair, privacy-safe missing-resource errors, and an in-app recheck flow for a restored WEB manifest without restarting Obsidian.
+This preview is **not yet eligible for one-click installation from Obsidian's directory**. The original public 0.1.0 preview was released under the previous VerseDock name. Until a SwordDock Bible release is published, download the existing `VerseDock-0.1.0-offline-preview.zip` asset from [GitHub Releases](https://github.com/dernestbank/versedock-obsidian/releases). Its installed folder and manifest ID remain `versedock`. The locally staged **0.1.11 development candidate** is named `SwordDock-Bible-0.1.11-offline-preview.zip`, but it is not yet a published release. It adds safe Quick Verse Insert, library integrity checks, MySword read-only inspection, a non-destructive cooperative conversion-readiness preflight, inert RX validation, bounded GBF semantic diagnostics, retained keyboard focus, bounded reading history, scoped and cancellable offline Bible search, keyboard-complete Inspector tabs with an Obsidian-tested roving focus repair, privacy-safe missing-resource errors, and an in-app recheck flow for a restored WEB manifest without restarting Obsidian.
 
 1. In Obsidian, create a dedicated **test vault** before installing; do not trial experimental builds in irreplaceable notes.
 2. Extract the ZIP into `<vault>/.obsidian/plugins/versedock/`. The folder must contain `main.js`, `manifest.json`, `styles.css`, `assets/sql-wasm.wasm`, and `library/webp/manifest.json` plus per-book JSON files.

@@ -254,6 +254,25 @@
 
 **Estimated scope:** Small.
 
+## Checkpoint: Scoped offline Bible search
+
+**Description:** Deliver the first advanced-search filter slice without adding an index, network dependency, or caller-controlled resource path.
+
+**Acceptance criteria:**
+- [x] Whole Bible, Current book, Old Testament and New Testament scopes resolve only to the canonical bundled 66-book inventory.
+- [x] Search phrases are capped at 200 characters, requested results at 1–200, and only one extra match is retained long enough to prove truncation.
+- [x] Superseded searches and closed Search views cancel between books and chapters.
+- [x] Narrow-pane controls wrap, the phrase field receives initial focus, and a dedicated polite status reports progress and result counts.
+
+**Verification:**
+- [x] Focused RED/GREEN tests cover canonical scopes, invalid scope values, exact-limit/truncated results, phrase/result bounds and pre-read cancellation.
+- [x] A deliberate exact-limit mutation is caught by the focused suite; full `npm run check` passes at 109 tests across sixteen files.
+- [x] Obsidian 1.15.1 live checks in the disposable final vault cover all four scopes, automatic reruns and the truthful 80+ state.
+
+**Dependencies:** Bundled WEB library and current Reader reference.
+
+**Estimated scope:** Small.
+
 ## Task 6: Specify authorized, reversible module import
 
 **Description:** Define the provenance, rights acknowledgement, storage, integrity, transaction, rollback, recovery and removal contract that must be accepted before any module writer is implemented.
