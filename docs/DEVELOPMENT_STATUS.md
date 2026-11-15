@@ -13,6 +13,7 @@ Updated: 2026-11-15
 - Verified performance checkpoint commit: `53a4da9` (`test: add bounded MySword benchmark`)
 - Verified responsiveness checkpoint commit: `ef63eb2` (`perf: yield during MySword preflight`)
 - Verified workflow checkpoint commit: `7dba619` (`feat: add bounded reading history`)
+- Verified narrow-pane checkpoint commit: `4913dcb` (`feat: improve inspector keyboard navigation`)
 - Plugin ID: `versedock` (compatibility contract; unchanged)
 - GitHub: public repository `dernestbank/versedock-obsidian`; branch `branding/sworddock-bible` is pushed and pull request [#1](https://github.com/dernestbank/versedock-obsidian/pull/1) targets `main`. The historical prerelease/tag `0.1.0` remains the only published release.
 - Current accessibility checkpoint: keyboard and accessibility-tree verification complete; actual VoiceOver verification pending
@@ -30,7 +31,7 @@ Updated: 2026-11-15
 - Live GUI: Obsidian 1.15.0 reloaded the 0.1.9 implementation in the isolated repository `test-vault`. The History tab exposed its truthful empty state, Quick Jump opened and recorded Romans 8:28, the populated entry and clear control appeared, and an app reload restored Romans 8:28; `data.json` retained `history: ["Rom.8.28"]`. The earlier 0.1.7 keyboard/preflight check kept hostile HTML literal, blocked conversion/installation and returned focus. Older-history activation, the clear action, 0.1.10 tab-key behavior and actual VoiceOver remain pending.
 - Full-corpus performance: a 25-run Node 22/darwin arm64 benchmark of the ignored 5.4 MiB publisher WEB fixture produced 98.873 ms combined median and 126.184 ms p95 after one warm-up, with stable 31,103-verse semantics and unchanged source SHA-256. Post-iteration process RSS was 95.078–99.766 MiB; this is not a mobile, slow-device or in-operation peak profile.
 - Cooperative responsiveness: the same 31,103-verse report matched the synchronous baseline exactly while yielding 31 times. Its 32 measured work segments produced 5.127 ms p95 and 26.795 ms maximum on the tested Mac. This simulation excludes Obsidian rendering and is not a mobile guarantee.
-- GitHub Actions: PR #1 is mergeable and `build-and-test` passed for reading-history checkpoint commit `7dba619`. The following documentation-only status commit triggers the same validation again.
+- GitHub Actions: PR #1 is mergeable and `build-and-test` passed for Inspector keyboard checkpoint commit `4913dcb`. The following documentation-only status commit triggers the same validation again.
 
 ## Completed capabilities
 
