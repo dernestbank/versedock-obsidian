@@ -231,6 +231,26 @@
 
 **Estimated scope:** Small.
 
+## Checkpoint: Fresh package and resource recovery
+
+**Description:** Verify the current complete preview as a first-run Obsidian installation and keep offline-resource failures useful without disclosing local paths.
+
+**Acceptance criteria:**
+- [x] The unmodified 0.1.11 ZIP is extracted into a new disposable vault and appears as SwordDock Bible 0.1.11 under stable plugin ID `versedock`.
+- [x] Local-author trust and plugin enablement lead to an offline John 3:16 Reader without network setup.
+- [x] Obsidian app reload restores the Reader workspace and passage from the extracted package.
+- [x] A missing installed book produces a truthful fixed error without an absolute vault/plugin path.
+- [x] Restoring the missing book and reloading returns the passage without reinstalling or touching another vault.
+
+**Verification:**
+- [x] Focused RED/GREEN coverage proves chapter-loading and integrity-check failures do not expose injected private paths.
+- [x] Full `npm run check`, deterministic package rebuild and clean-install/restart smoke test pass.
+- [x] Live Obsidian 1.15.1 first-run, reload, missing-book and recovery sequence passes against the final ZIP in ignored `.research/qa/clean-gui-011-final`.
+
+**Dependencies:** Current 0.1.11 preview package and bundled WEB library.
+
+**Estimated scope:** Small.
+
 ## Task 6: Specify authorized, reversible module import
 
 **Description:** Define the provenance, rights acknowledgement, storage, integrity, transaction, rollback, recovery and removal contract that must be accepted before any module writer is implemented.

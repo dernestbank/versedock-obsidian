@@ -6,13 +6,21 @@ This independent project started under the internal name **MySword+**. Its origi
 
 > **Branding update (2026-11-12):** Visible branding changed to **SwordDock Bible** while keeping the installed plugin ID `versedock` and the existing GitHub repository URL stable. The historical GUI checks below were performed before the rename; rerun the GUI check for final verification. Official trademark clearance is pending.
 
+## Fresh 0.1.11 installation and resource recovery — 2026-11-15
+
+- Extracted the final reproducible 76-file 0.1.11 preview ZIP into a new ignored `.research/qa/clean-gui-011-final` vault, opened it through Obsidian's native vault picker, accepted the local-author trust prompt, and enabled **SwordDock Bible 0.1.11** under stable plugin ID `versedock`.
+- The ribbon opened the offline Reader at John 3:16. Obsidian's **Reload app without saving** command restored the Reader workspace and the same passage using only the extracted plugin and WEB resources.
+- An earlier disposable `.research/qa/clean-gui-011-fresh` cycle temporarily moved only its `JOH.json` and exposed the file's absolute vault path in the otherwise truthful **Chapter unavailable** state. A focused failing test reproduced the privacy bug before the library boundary was repaired.
+- The repaired build reports only `The installed offline Bible data for John is missing or unreadable.` Loading, Search, copy and Reader consumers now receive the same safe failure, while the Module Library integrity report uses a fixed problem description. Restoring `JOH.json` and reloading returned John 3:16 without altering a personal vault.
+- Full verification passes at 103 tests across fourteen files. The 76-file package is reproducible at 1,754,564 bytes with SHA-256 `64ff00a08551e0d865ce335b174527aac0cfe25b9207a9c56d07f7edc02357ef`; clean extraction and simulated offline restart still cover all 66 books and 31,103 verses.
+
 ## Inspector tab keyboard navigation — 2026-11-15
 
 - Added a roving tab stop for the six Study Inspector tabs. Left/Right Arrow wraps, Home/End moves to the edge, and unrelated keys remain available to the tab button or Obsidian.
 - Selecting a tab by pointer or keyboard rebuilds the panel with the destination tab focused and scrolled into view, addressing narrow-pane overflow without forcing the tab strip to wrap.
 - Each tab now owns an instance-scoped ID and `aria-controls` relationship; the shared `tabpanel` names its active tab through `aria-labelledby` without duplicate IDs if Obsidian restores more than one Inspector leaf.
 - Live 0.1.10 testing exposed that Obsidian's focus manager still visited inactive native buttons despite `tabindex="-1"`. The 0.1.11 repair keeps only the selected tab as a native button while inactive choices remain pointer-operable ARIA tabs.
-- Focused RED/GREEN tests and deliberate ArrowRight/native-element mutations cover the navigation policy, focus-manager repair and duplicate-view IDs. Full verification passes at 102 tests across fourteen files.
+- Focused RED/GREEN tests and deliberate ArrowRight/native-element mutations cover the navigation policy, focus-manager repair and duplicate-view IDs. The current full verification passes at 103 tests across fourteen files.
 - Live 0.1.11 QA in the isolated Obsidian 1.15.1 vault confirmed End navigation and far-edge reveal, Right wraparound, destination focus, and Tab exiting the tab list. The History tab remained visible and selected in the narrow pane.
 - Selecting the older Romans 8:28 history entry returned the Reader to it, promoted it ahead of Romans 8:27, and preserved both the current reference and reordered history across an app reload. Destructive clear-button execution remains approval-gated and unverified.
 
@@ -101,10 +109,10 @@ This independent project started under the internal name **MySword+**. Its origi
 - Full integrity integration test checks the shipped data and a simulated missing book; other tests cover corruption and insertion selection drift.
 - Current local 0.1.4 candidate is **not released**. The GBF lexical-diagnostics UI has passed a live test in a disposable Obsidian vault; full import, fresh 0.1.4 installation and restart, broader theme/mobile QA, and public naming clearance remain pending.
 
-## Verified on macOS / Obsidian 1.15.0
+## Verified on macOS / Obsidian 1.15.0–1.15.1
 
 - **Build:** strict TypeScript `tsc --noEmit` passed, esbuild `main.js` generated successfully.
-- **Original QA tests:** 18/18 passed (book references, OSIS IDs, 66-book WEB dataset, local chapter reading and search). **Current developer candidate:** 102 automated tests across fourteen files cover those foundations plus input safety, module inspection, semantic interpretation, performance statistics, persistence bounds and Inspector keyboard navigation.
+- **Original QA tests:** 18/18 passed (book references, OSIS IDs, 66-book WEB dataset, local chapter reading and search). **Current developer candidate:** 103 automated tests across fourteen files cover those foundations plus input safety, privacy-safe resource failures, module inspection, semantic interpretation, performance statistics, persistence bounds and Inspector keyboard navigation.
 - **Data:** 66 public-domain ENGWEBP book files, 31,103 verses, exact text preserved; provenance and checksum documented.
 - **Actual GUI:** opened an isolated test vault in Obsidian; enabled the plugin; opened its Bible Reader from the native command palette.
 - **Reader:** John 3:16 appeared with styled passage text, contextual actions, book/chapter controls and theme-aware dark UI.
@@ -115,13 +123,13 @@ This independent project started under the internal name **MySword+**. Its origi
 - **Original 0.1.0 test:** renamed manifest ID and product to VerseDock; reinstalled the plugin in an isolated vault and confirmed **VerseDock (Preview)** commands appeared and Bible Reader opened. That historical GUI test predates the SwordDock Bible rebrand.
 - **Manual preview ZIP:** the archive includes `main.js`, `manifest.json`, `styles.css`, license, README and every offline WEB book, and passed ZIP integrity check.
 
-**Current local package:** `SwordDock-Bible-0.1.11-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced identical 1,754,504-byte archives with SHA-256 `5105747cb28578de79f6a62e5dd0307a8cf0eac81903717a35c7a918b504e493`; clean-vault extraction and simulated offline restart pass for all 66 books and 31,103 verses. Redeployment preserved stable ID `versedock`, `reference: "Rom.8.28"`, history `['Rom.8.28', 'Rom.8.27']`, bookmarks, highlights and appearance settings. It remains a local developer candidate, **not a published GitHub release**. Full release validation (mobile, broader community-theme coverage, resource failures, destructive history clearing and actual VoiceOver) remains pending.
+**Current local package:** `SwordDock-Bible-0.1.11-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced identical 1,754,564-byte archives with SHA-256 `64ff00a08551e0d865ce335b174527aac0cfe25b9207a9c56d07f7edc02357ef`; clean-vault extraction and simulated offline restart pass for all 66 books and 31,103 verses. A separate fresh GUI vault passed trust, enablement, offline Reader launch, Obsidian reload and one missing-book recovery cycle under stable ID `versedock`. The established upgrade vault preserved `reference: "Rom.8.28"`, history `['Rom.8.28', 'Rom.8.27']`, bookmarks, highlights and appearance settings. It remains a local developer candidate, **not a published GitHub release**. Full release validation (mobile, broader community-theme coverage, broader corruption/recovery cases, destructive history clearing and actual VoiceOver) remains pending.
 
 ## Test boundaries / not yet verified
 
 - No GUI testing on Windows/Linux or mobile; this preview is marked desktop-only until mobile compatibility is validated.
 - The 0.1.11 Reader and Study Inspector were visually re-verified in Obsidian 1.15.1's native Light and Dark schemes and in both Light and Dark variants of official-catalog Minimal 9.1.4. Editorial text, selected-passage/accent treatment, contextual actions, narrow Inspector tabs and truthful empty states remain readable. The isolated vault was restored to Default/Light with plugin data unchanged; a broader community-theme matrix remains open.
-- Fresh 0.1.2 ZIP installation was visually verified in a newly registered GUI vault. A separate fresh first-run and restart check for the updated 0.1.3 ZIP remains to be completed; the 0.1.3 conversion button was verified in the disposable vault after updating it.
+- Fresh 0.1.11 ZIP installation was visually verified in a newly registered GUI vault, including local-author trust, plugin enablement, offline Reader launch, app reload, privacy-safe missing-book failure and recovery. The older 0.1.2/0.1.3 checkpoints remain historical evidence rather than current release gates.
 - No automated end-to-end UI harness or visual regression snapshots yet; focused unit coverage and a manual keyboard/accessibility-tree checkpoint now pass, while actual VoiceOver remains pending.
 - No public-domain commentary/lexicon installed; Inspector shows honest unavailable states.
 - MySword SQLite **preview inspection** is available; full import/conversion, parallel translations and interlinear tools are not yet implemented.
@@ -131,7 +139,7 @@ This independent project started under the internal name **MySword+**. Its origi
 
 Development source: `Repository root`
 
-Disposable GUI test vault: `test-vault`
+Disposable GUI test vaults: `test-vault` plus ignored `.research/qa/clean-gui-011-fresh` and `.research/qa/clean-gui-011-final`
 
 The GUI test vault contains temporary screenshots, one test Markdown note and plugin state. These are **not committed** and no personal vault files were modified.
 
@@ -151,7 +159,7 @@ The public installation ZIP contains the source-independent offline WEB library 
 - [x] Extract current unpublished ZIP in a fresh temporary vault and verify all offline data and WASM packaging.
 - [x] Fresh **0.1.2 package GUI** install, author trust, command palette and offline Reader launch in disposable new vault.
 - [x] Verify the 0.1.3 conversion-preflight GUI in an updated disposable vault: markup blocked with explanatory diagnostics.
-- [ ] Repeat a fresh first-run and restart test specifically with 0.1.3; verify upgrade and failure recovery before eventual publication.
+- [x] Repeat fresh first-run and reload testing with the current 0.1.11 ZIP; verify a missing-book failure and recovery without exposing its absolute path.
 - [x] Native Light/Dark desktop and narrow-pane rendering pass in 0.1.11/Obsidian 1.15.1.
 - [x] One maintained official-catalog community theme is tested separately in both schemes: Minimal 9.1.4.
 - [ ] Broader community-theme rendering matrix.

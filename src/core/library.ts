@@ -57,9 +57,8 @@ export class OfflineBibleLibrary {
           for (const problem of await checkBookIntegrity(book, raw))
             issues.push({ code: book.code, problem });
         }
-      } catch (error) {
-        issues.push({ code: book.code, problem: "Unable to read or verify: " +
-          (error instanceof Error ? error.message : String(error)) });
+      } catch {
+        issues.push({ code: book.code, problem: "Unable to read or verify this installed book file" });
       }
       checked++;
       onProgress?.(checked, books.length);
@@ -71,7 +70,12 @@ export class OfflineBibleLibrary {
     if (cached) { this.cache.delete(book.vpl); this.cache.set(book.vpl, cached); return cached; }
     if (!this.manifest) throw new Error("Offline WEB module not installed.");
     const file = this.folder + "/" + book.vpl + ".json";
-    const data = JSON.parse(await this.app.vault.adapter.read(file)) as BookData;
+    let data: BookData;
+    try {
+      data = JSON.parse(await this.app.vault.adapter.read(file)) as BookData;
+    } catch {
+      throw new Error("The installed offline Bible data for " + book.name + " is missing or unreadable.");
+    }
     if (data.code !== book.vpl || !Array.isArray(data.chapters)) {
       throw new Error("Damaged Bible module for " + book.name);
     }
