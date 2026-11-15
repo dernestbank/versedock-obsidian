@@ -42,6 +42,7 @@ export class SearchView extends ItemView {
     const matchMode = matchLabel.createEl("select", { attr: { "aria-label": "Bible search match mode" } });
     matchMode.createEl("option", { value: "phrase", text: "Exact phrase" });
     matchMode.createEl("option", { value: "all-words", text: "All words" });
+    matchMode.createEl("option", { value: "any-words", text: "Any words" });
     const inputRow = this.contentEl.createDiv({ cls: "vd-search-input-row" });
     const input = inputRow.createEl("input", { attr: {
       type: "search",

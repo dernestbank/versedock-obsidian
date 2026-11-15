@@ -68,6 +68,14 @@ describe("search result highlighting", () => {
     ]);
   });
 
+  it("highlights every present Any words term and ignores absent terms", () => {
+    const text = "Grace and peace";
+    const query = prepareBibleSearchQuery("peace world grace", "any-words");
+
+    expect(findSearchHighlightRanges(text, query).map(range => text.slice(range.start, range.end)))
+      .toEqual(["Grace", "peace"]);
+  });
+
   it("treats regular-expression characters in a search phrase as literal text", () => {
     const text = "not a wildcard; literal .* only";
     const query = prepareBibleSearchQuery(".*", "phrase");

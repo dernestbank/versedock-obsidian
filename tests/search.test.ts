@@ -48,10 +48,13 @@ describe("offline Bible search scopes", () => {
     expect(parseBibleSearchScope("selected-book")).toBe("selected-book");
     expect(() => parseBibleSearchScope("../../outside")).toThrow("Unsupported Bible search scope.");
     expect(parseBibleSearchMatch("all-words")).toBe("all-words");
+    expect(parseBibleSearchMatch("any-words")).toBe("any-words");
     expect(() => parseBibleSearchMatch("regex")).toThrow("Unsupported Bible search match mode.");
     expect(() => prepareBibleSearchQuery("God", "regex" as never)).toThrow("Unsupported Bible search match mode.");
     expect(verseMatchesSearch("God", prepareBibleSearchQuery("  ", "phrase"))).toBe(false);
     expect(verseMatchesSearch("God is love", prepareBibleSearchQuery("God world", "all-words"))).toBe(false);
+    expect(verseMatchesSearch("God is love", prepareBibleSearchQuery("God world", "any-words"))).toBe(true);
+    expect(verseMatchesSearch("Grace and peace", prepareBibleSearchQuery("God world", "any-words"))).toBe(false);
     expect(boundedSearchLimit(0)).toBe(1);
     expect(boundedSearchLimit(500)).toBe(200);
     expect(boundedSearchLimit(Number.POSITIVE_INFINITY)).toBe(80);
@@ -203,6 +206,33 @@ describe("offline Bible search scopes", () => {
       phrase: Array.from({ length: MAX_SEARCH_TERMS + 1 }, (_, index) => "word" + index).join(" "),
       scope: "current-book",
       match: "all-words",
+      currentBook: john,
+      limit: 10
+    })).rejects.toThrow("Search supports at most 16 words.");
+  });
+
+  it("matches any bounded literal word while preserving canonical verse text", async () => {
+    const app = { vault: {
+      configDir: ".obsidian",
+      adapter: { read: async (name: string) => readFileSync(path.join(libraryPath, path.basename(name)), "utf8") }
+    } } as unknown as App;
+    const library = new OfflineBibleLibrary(app, "versedock");
+    expect(await library.initialize()).toBe(true);
+
+    const anyWords = await library.search({
+      phrase: "world shepherd",
+      scope: "current-book",
+      match: "any-words",
+      currentBook: john,
+      limit: 200
+    });
+    expect(anyWords.results.find(result => result.label === "John 3:16")?.text)
+      .toContain("For God so loved the world");
+
+    await expect(library.search({
+      phrase: Array.from({length: MAX_SEARCH_TERMS + 1}, (_, index) => "word" + index).join(" "),
+      scope: "current-book",
+      match: "any-words",
       currentBook: john,
       limit: 10
     })).rejects.toThrow("Search supports at most 16 words.");

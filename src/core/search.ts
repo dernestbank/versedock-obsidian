@@ -1,7 +1,7 @@
 import { BOOKS, BOOK_BY_OSIS, type BookInfo } from "./books";
 
 export type BibleSearchScope = "all" | "current-chapter" | "current-book" | "selected-book" | "old-testament" | "new-testament";
-export type BibleSearchMatch = "phrase" | "all-words";
+export type BibleSearchMatch = "phrase" | "all-words" | "any-words";
 export const MAX_SEARCH_PHRASE_LENGTH = 200;
 export const MAX_SEARCH_TERMS = 16;
 
@@ -42,6 +42,7 @@ export function parseBibleSearchMatch(value: string): BibleSearchMatch {
   switch (value) {
     case "phrase":
     case "all-words":
+    case "any-words":
       return value;
     default:
       throw new Error("Unsupported Bible search match mode.");
@@ -61,10 +62,13 @@ export function prepareBibleSearchQuery(phrase: string, match: BibleSearchMatch)
 }
 
 export function verseMatchesSearch(text: string, query: PreparedBibleSearchQuery): boolean {
+  if (query.terms.length === 0) return false;
   const candidate = text.toLocaleLowerCase();
-  return query.terms.length > 0 && (query.match === "phrase"
-    ? candidate.includes(query.terms[0])
-    : query.terms.every(term => candidate.includes(term)));
+  switch (query.match) {
+    case "phrase": return candidate.includes(query.terms[0]);
+    case "all-words": return query.terms.every(term => candidate.includes(term));
+    case "any-words": return query.terms.some(term => candidate.includes(term));
+  }
 }
 
 /** Resolves UI search scopes to canonical books; caller-supplied book paths are never accepted. */
