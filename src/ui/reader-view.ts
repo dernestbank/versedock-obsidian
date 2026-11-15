@@ -3,6 +3,7 @@ import { BOOKS, type BookInfo } from "../core/books";
 import { refLabel, type PassageReference } from "../core/references";
 import type { SwordDockController } from "../controller";
 import { iconButton, textButton, pill, emptyState } from "./components";
+import { OFFLINE_LIBRARY_RECOVERY, recheckOfflineLibrary } from "./library-recovery";
 import { BookPickerModal, ChapterPickerModal } from "./pickers";
 
 export const READER_VIEW = "versedock-reader";
@@ -116,7 +117,7 @@ export class ReaderView extends ItemView {
     if (ref.verse !== undefined) textButton(navigate, ":" + ref.verse, () => this.plugin.openReferenceModal("jump"), "vd-breadcrumb-verse");
     iconButton(navigate, "chevron-right", "Next chapter", () => this.navigateChapter(1));
     const tools = top.createDiv({ cls: "vd-toolbar-actions" });
-    pill(tools, "WEB · Offline", "vd-version-chip");
+    pill(tools, this.plugin.library.metadata ? "WEB · Offline" : OFFLINE_LIBRARY_RECOVERY.unavailableChip, "vd-version-chip");
     iconButton(tools, "search", "Quick Jump", () => this.plugin.openReferenceModal("jump"));
     iconButton(tools, "notebook-pen", "Insert Scripture", () => this.plugin.openReferenceModal("insert"));
     iconButton(tools, "book-open-check", "Study Inspector", () => { void this.plugin.openInspector(); });
@@ -131,7 +132,14 @@ export class ReaderView extends ItemView {
     this.scroll.addEventListener("keydown", event => this.onReaderKey(event));
     const article = this.scroll.createEl("article", { cls: "vd-reading-column" });
     if (!this.plugin.library.metadata) {
-      emptyState(article, "No offline Bible found", "The WEB library is missing from this development installation. Run the library builder and deploy to your test vault.", "book-open");
+      const recovery = emptyState(article, OFFLINE_LIBRARY_RECOVERY.title, OFFLINE_LIBRARY_RECOVERY.description, "book-open");
+      textButton(recovery, OFFLINE_LIBRARY_RECOVERY.action, () => {
+        void (async () => {
+          const result = await recheckOfflineLibrary(this.plugin.library);
+          new Notice(result.notice);
+          if (result.available) await this.render();
+        })();
+      }, "mod-cta");
       return;
     }
     const chapterHead = article.createDiv({ cls: "vd-chapter-head" });

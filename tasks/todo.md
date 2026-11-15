@@ -242,11 +242,13 @@
 - [x] A missing installed book produces a truthful fixed error without an absolute vault/plugin path.
 - [x] Malformed installed JSON produces the same safe Reader error plus precise size, checksum and JSON integrity diagnostics without a local path.
 - [x] Restoring the original book returns integrity to 66/66 and reloading returns the passage without reinstalling or touching another vault.
+- [x] A missing or malformed WEB manifest shows complete-package guidance, a **Recheck offline library** action and an explicit statement that vault notes and saved SwordDock settings are preserved.
+- [x] Restoring the original manifest and choosing **Recheck offline library** returns the Reader to John 3:16 without an Obsidian app reload.
 
 **Verification:**
 - [x] Focused RED/GREEN coverage proves chapter-loading and integrity-check failures do not expose injected private paths.
 - [x] Full `npm run check`, deterministic package rebuild and clean-install/restart smoke test pass.
-- [x] Live Obsidian 1.15.1 first-run, reload, missing/malformed-book, integrity and recovery sequences pass against the final ZIP in ignored `.research/qa/clean-gui-011-final`.
+- [x] Live Obsidian 1.15.1 first-run, reload, missing/malformed-book, integrity, missing/malformed-manifest and in-app recheck sequences pass in ignored `.research/qa/clean-gui-011-final`.
 
 **Dependencies:** Current 0.1.11 preview package and bundled WEB library.
 

@@ -8,6 +8,7 @@ import { ReaderView, READER_VIEW } from "./ui/reader-view";
 import { InspectorView, INSPECTOR_VIEW } from "./ui/inspector-view";
 import { SearchView, SEARCH_VIEW } from "./ui/search-view";
 import { LibraryView, LIBRARY_VIEW } from "./ui/library-view";
+import { OFFLINE_LIBRARY_RECOVERY } from "./ui/library-recovery";
 import { ReferenceModal } from "./ui/reference-modal";
 import { MySwordInspectModal } from "./ui/mysword-inspect-modal";
 
@@ -51,7 +52,7 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     } });
     this.addSettingTab(new SwordDockSettingsTab(this));
 
-    if (!available) new Notice("SwordDock Bible: Offline WEB library missing. Build and deploy the library to the plugin directory.");
+    if (!available) new Notice(OFFLINE_LIBRARY_RECOVERY.startupNotice);
   }
   onunload(): void {
     this.listeners.clear();
