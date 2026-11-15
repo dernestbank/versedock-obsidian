@@ -10,6 +10,7 @@ Updated: 2026-11-15
 - Verified implementation commit: `5a4f5b2` (`feat: validate MySword cross-reference semantics`)
 - Verified semantic milestone commit: `3a50abb` (`feat: add safe GBF semantic inspection`)
 - Verified accessibility checkpoint commit: `f4bae5a` (`fix: preserve inspector keyboard focus`)
+- Verified performance checkpoint commit: `53a4da9` (`test: add bounded MySword benchmark`)
 - Plugin ID: `versedock` (compatibility contract; unchanged)
 - GitHub: public repository `dernestbank/versedock-obsidian`; branch `branding/sworddock-bible` is pushed and pull request [#1](https://github.com/dernestbank/versedock-obsidian/pull/1) targets `main`. The historical prerelease/tag `0.1.0` remains the only published release.
 - Current accessibility checkpoint: keyboard and accessibility-tree verification complete; actual VoiceOver verification pending
@@ -23,7 +24,7 @@ Updated: 2026-11-15
 - Updated full-corpus evidence: 31,103 WEB verses pass source round-trip enforcement; 71,821 recognized markers, seven inert HTML markers, 424 validated RX markers, zero unresolved markers, 15,866 semantic-ready markup verses, seven opaque events, 1,126 translator notes and 169 titles. Conversion remains blocked.
 - Live GUI: Obsidian 1.15.0 reloaded the 0.1.7 implementation in the isolated repository `test-vault`. Keyboard Tab order and Return activation worked; the hostile HTML fixture stayed literal; semantic inspection reported zero of one markup verses fully interpreted and one opaque event; conversion/installation remained blocked; diagnostics were exposed as plain accessibility text; and focus returned to the preflight button. Actual VoiceOver announcement/navigation remains pending.
 - Full-corpus performance: a 25-run Node 22/darwin arm64 benchmark of the ignored 5.4 MiB publisher WEB fixture produced 98.873 ms combined median and 126.184 ms p95 after one warm-up, with stable 31,103-verse semantics and unchanged source SHA-256. Post-iteration process RSS was 95.078–99.766 MiB; this is not a mobile, slow-device or in-operation peak profile.
-- GitHub Actions: PR #1 is mergeable and `build-and-test` passed for accessibility checkpoint commit `f4bae5a`. The following documentation-only status commit triggers the same validation again.
+- GitHub Actions: PR #1 is mergeable and `build-and-test` passed for performance checkpoint commit `53a4da9`. The following documentation-only status commit triggers the same validation again.
 
 ## Completed capabilities
 
