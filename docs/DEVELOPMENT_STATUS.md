@@ -25,6 +25,7 @@ Updated: 2026-11-15
 - Verified search-match implementation commit: `018c656` (`feat: add offline search match modes`)
 - Verified search-highlighting implementation commit: `08b9cb9` (`feat: highlight offline search matches`)
 - Verified linked-note implementation commit: `31819b0` (`feat: discover Scripture-linked notes`)
+- Verified range-note implementation commit: `f078b24` (`fix: preserve study note ranges`)
 - Plugin ID: `versedock` (compatibility contract; unchanged)
 - GitHub: public repository `dernestbank/versedock-obsidian`; branch `branding/sworddock-bible` is pushed and pull request [#1](https://github.com/dernestbank/versedock-obsidian/pull/1) targets `main`. The historical prerelease/tag `0.1.0` remains the only published release.
 - Current accessibility checkpoint: keyboard and accessibility-tree verification complete; actual VoiceOver verification pending
@@ -36,13 +37,13 @@ Updated: 2026-11-15
 - Current theme checkpoint: 0.1.11 Reader and Inspector rendering are visually verified in Obsidian 1.15.1 native Light/Dark and official-catalog Minimal 9.1.4 Light/Dark; the test vault is restored to Default/Light and broader community-theme coverage remains open
 - Current package checkpoint: the complete 0.1.11 ZIP passes a new-vault trust/enable/Reader/reload cycle; missing and malformed-book errors are privacy-safe, and missing or malformed WEB manifests show install/recheck guidance and recover in-app after restoration
 - Current search checkpoint: Whole Bible, Current book, Old Testament and New Testament scopes support bounded Exact phrase / All words matching with literal text-node highlighting, remain cancellable and truthful about truncation, and the scope foundation is verified live in the narrow Obsidian search pane
-- Current notes checkpoint: the Inspector discovers exact `scripture` frontmatter through Obsidian's metadata cache only, prioritizes the stable primary note, caps scanning at 5,000 files/results at 50 and reports truncation without proprietary storage
+- Current notes checkpoint: the Inspector discovers exact `scripture` frontmatter through Obsidian's metadata cache only, prioritizes the stable primary note, caps scanning at 5,000 files/results at 50 and reports truncation without proprietary storage. New range notes preserve both endpoints in metadata and paths; positively identified legacy range notes reopen unchanged without colliding with genuine single-verse notes.
 
 ## Verified baseline
 
-- `npm run check`: passed on 2026-11-15 for 0.1.11 (122 tests in 19 files, TypeScript, production build). Deliberate history-cap, Inspector ArrowRight, note-index scan-cap, offline-library availability, search-truncation, all-to-any match and literal-escaping mutations were caught by their focused suites; focused resource-failure coverage rejects absolute-path disclosure and verifies package-level recovery guidance.
+- `npm run check`: passed on 2026-11-15 for 0.1.11 (127 tests in 19 files, TypeScript, production build). Deliberate history-cap, Inspector ArrowRight, note-index scan-cap, legacy range-signature, offline-library availability, search-truncation, all-to-any match and literal-escaping mutations were caught by their focused suites; focused resource-failure coverage rejects absolute-path disclosure and verifies package-level recovery guidance.
 - `npm audit --json`: 0 known vulnerabilities across 113 dependencies.
-- Package: `dist/SwordDock-Bible-0.1.11-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,756,962 bytes, SHA-256 `8d08c569e59be442faf7e02e77b785c028f113f40775457fa320c91531c1c0c5`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed for all 66 books and 31,103 verses. Redeployment preserved stable ID `versedock`, `reference: "Rom.8.28"`, history `['Rom.8.28', 'Rom.8.27']`, bookmarks, highlights and appearance settings.
+- Package: `dist/SwordDock-Bible-0.1.11-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,757,303 bytes, SHA-256 `277c411f1bde51a94f705118d5eda112e19a6570b63b27c125d6f7ade634e350`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed for all 66 books and 31,103 verses. The previously verified upgrade path preserved stable ID `versedock`, `reference: "Rom.8.28"`, history `['Rom.8.28', 'Rom.8.27']`, bookmarks, highlights and appearance settings.
 - Updated full-corpus evidence: 31,103 WEB verses pass source round-trip enforcement; 71,821 recognized markers, seven inert HTML markers, 424 validated RX markers, zero unresolved markers, 15,866 semantic-ready markup verses, seven opaque events, 1,126 translator notes and 169 titles. Conversion remains blocked.
 - Live GUI: Obsidian 1.15.1 loaded 0.1.11 in the isolated repository `test-vault`. Live 0.1.10 first exposed that Obsidian still tabbed through inactive native buttons despite `tabindex="-1"`; 0.1.11 keeps only the selected tab native. End reached and revealed History, Right wrapped to Commentary, and Tab exited the tab list. Selecting the older Romans 8:28 history entry promoted it ahead of Romans 8:27; the Reader reference and reordered history survived reload. The clear action and actual VoiceOver remain pending because both require explicit approval at action time.
 - Native themes: the same 0.1.11 Reader and Inspector are visually readable in Obsidian 1.15.1 Light and Dark schemes, including editorial Scripture, selected-passage/accent treatment, contextual actions, narrow tabs and unavailable-resource states. The isolated vault was restored to `moonstone` Light with reference, history, bookmarks, highlights and appearance settings unchanged.
@@ -68,6 +69,7 @@ Updated: 2026-11-15
 - Bounded canonical reading history with migration-safe settings normalization and Inspector navigation.
 - Roving, WAI-ARIA-linked Inspector tabs with Arrow/Home/End navigation and narrow-pane reveal.
 - Bounded Scripture-linked Markdown note discovery through Obsidian's metadata cache, with exact canonical references and truthful partial-result states.
+- Range-safe study-note creation with exact full-range metadata, non-colliding filenames and read-only compatibility recovery for positively identified legacy notes.
 
 ## Current implementation priority
 

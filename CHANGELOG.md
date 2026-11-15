@@ -2,6 +2,14 @@
 
 ## Unreleased — 0.1.11 SwordDock Bible developer candidate
 
+### Range-safe Scripture study notes (November 15, 2026)
+
+- Preserve complete verse ranges in new study-note frontmatter (`John.3.16-18`) and use endpoint-aware filenames so a range cannot collide with its starting verse.
+- Reopen positively identified start-only range notes created by older previews without rewriting their contents, while refusing to treat a genuine single-verse note as that range.
+- Match full-range note metadata exactly through the existing bounded metadata-cache index; general settings, history and bookmark OSIS formats remain unchanged.
+- Expand automated coverage to 127 tests across nineteen files. A deliberate legacy-signature mutation is caught by both the recovery and collision tests; TypeScript, production build and dependency audit pass.
+- Rebuild the 76-file offline preview twice with identical 1,757,303-byte output and SHA-256 `277c411f1bde51a94f705118d5eda112e19a6570b63b27c125d6f7ade634e350`; clean extraction and simulated offline restart pass for all 66 books and 31,103 verses.
+
 ### Scripture-linked note discovery (November 15, 2026)
 
 - Discover notes whose `scripture` frontmatter exactly matches the active canonical OSIS reference, including a bounded array of references, without reading Markdown note bodies.

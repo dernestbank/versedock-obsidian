@@ -289,7 +289,8 @@
 
 **Verification:**
 - [x] Focused RED/GREEN tests cover scalar/array links, recent-first order, immutability, invalid metadata, scan/result caps, direct path lookup, no note-body reads and duplicate wrappers.
-- [x] A deliberate scan-cap mutation is caught by the focused adapter suite; full `npm run check` passes at 122 tests across nineteen files.
+- [x] A deliberate scan-cap mutation is caught by the focused adapter suite; full `npm run check` passes at 127 tests across nineteen files.
+- [x] New range notes preserve both endpoints in canonical metadata and use non-colliding paths; positively identified legacy range notes reopen unchanged, and a deliberate signature mutation is caught by focused recovery/collision tests.
 - [ ] Live Notes-tab discovery/opening is verified in the disposable Obsidian vault with a generated primary note and a second linked note.
 
 **Dependencies:** Existing canonical note frontmatter and Study Inspector.
