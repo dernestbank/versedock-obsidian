@@ -28,7 +28,7 @@ This independent project started under the internal name **MySword+**. Its origi
 - The Obsidian inspector now runs the existing read-only semantic scan in 1,000-row batches, yielding to the event loop between batches and cancelling through the modal revision guard when the file or modal changes.
 - Synchronous CLI/benchmark and cooperative UI paths share one scan state and finalizer. Tests prove identical reports, bounded yield counts, cancellation, source-byte preservation and rejected batch sizes; statements/databases close through every failure path.
 - The ignored 31,103-verse publisher WEB fixture produced identical cooperative and synchronous diagnostics. On Node 22/darwin arm64, the cooperative simulation yielded 31 times; its 32 work segments measured 5.127 ms p95 and 26.795 ms maximum, including the initial preview-validation segment.
-- Automated coverage is 93 tests across twelve files. Live Obsidian GUI verification, slow-device/mobile profiling and actual UI long-task tracing remain pending; no conversion or installation was enabled.
+- Automated coverage at this checkpoint was 93 tests across twelve files. The cooperative implementation was subsequently re-verified in Obsidian 1.15.1 against the ignored 31,103-verse publisher WEB fixture: the live report matched the established marker/reference/semantic totals, blocked conversion and installation, and left the source checksum unchanged. Slow-device/mobile profiling and actual UI long-task tracing remain pending.
 
 ## Inspector keyboard accessibility — 2026-11-15
 

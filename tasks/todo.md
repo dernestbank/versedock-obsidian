@@ -175,7 +175,7 @@
 - [x] Statements and databases close on preparation, scan, yield, cancellation and finalization failures.
 - [x] Cooperative and synchronous reports match exactly for mixed plain, supported, hostile, empty and RX-bearing verses.
 - [x] The ignored 31,103-verse publisher WEB fixture retains exact diagnostics across 31 yields.
-- [ ] The 0.1.8 cooperative build is re-verified live in Obsidian with the full-sized fixture.
+- [x] The cooperative implementation is re-verified live in 0.1.11/Obsidian 1.15.1 with the ignored 31,103-verse fixture; report totals match and the source SHA-256 is unchanged.
 
 **Verification:**
 - [x] Focused RED/GREEN tests cover parity, yield count, cancellation, byte preservation and batch bounds.
