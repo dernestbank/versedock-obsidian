@@ -2,6 +2,14 @@
 
 ## Unreleased — 0.1.11 SwordDock Bible developer candidate
 
+### Current-chapter Scripture search (November 15, 2026)
+
+- Add a canonical Current chapter filter alongside Whole Bible, Current book and testament scopes without accepting a resource path or loading another book.
+- Require a present, safe-integer chapter from 1–200 and report a truthful error when the selected canonical book does not contain it.
+- Preserve the existing phrase/all-word semantics, cancellation checkpoints, 1–200 result bound and safe literal highlighting.
+- Expand automated coverage to 128 tests across nineteen files. Reversing the chapter predicate is caught by the focused corpus test; TypeScript, production build and dependency audit pass.
+- Rebuild the 76-file offline preview twice with identical 1,757,447-byte output and SHA-256 `ee7eb57067ebb1973f5a0ecec7e989c681e795dca349f295ad89b6b637b7cb52`; clean extraction and simulated offline restart pass for all 66 books and 31,103 verses.
+
 ### Range-safe Scripture study notes (November 15, 2026)
 
 - Preserve complete verse ranges in new study-note frontmatter (`John.3.16-18`) and use endpoint-aware filenames so a range cannot collide with its starting verse.
