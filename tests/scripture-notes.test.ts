@@ -5,6 +5,10 @@ import {
   MAX_SCRIPTURE_NOTE_RESULTS,
   MAX_SCRIPTURE_NOTE_SCAN,
   discoverScriptureNotes,
+  legacyStudyNotePath,
+  newStudyNoteMarkdown,
+  parseScriptureNoteReference,
+  scriptureNoteReferenceId,
   studyNotePath,
   type IndexedScriptureNote
 } from "../src/core/scripture-notes";
@@ -73,5 +77,35 @@ describe("Scripture-linked note discovery", () => {
   it("builds the backward-compatible primary note path without unsafe filename characters", () => {
     expect(studyNotePath(parseReference("John 3:16"))).toBe("Bible Study/John/John 3-16.md");
     expect(studyNotePath(parseReference("1 John 2"))).toBe("Bible Study/1 John/1 John 2.md");
+  });
+
+  it("preserves a complete canonical range in note metadata and a non-colliding path", () => {
+    const range = parseReference("1 Corinthians 13:4-7");
+
+    expect(scriptureNoteReferenceId(range)).toBe("1Cor.13.4-7");
+    expect(parseScriptureNoteReference("1Cor.13.4-7")).toEqual(range);
+    expect(studyNotePath(range)).toBe("Bible Study/1 Corinthians/1 Corinthians 13-4-7.md");
+    expect(legacyStudyNotePath(range)).toBe("Bible Study/1 Corinthians/1 Corinthians 13-4.md");
+  });
+
+  it("matches full ranges exactly and rejects malformed or descending range metadata", () => {
+    const entries = [
+      note("Full.md", "John.3.16-18", 3),
+      note("Start-only.md", "John.3.16", 2),
+      note("Descending.md", "John.3.18-16", 1)
+    ];
+
+    expect(discoverScriptureNotes(entries, parseReference("John 3:16-18")).notes.map(item => item.path))
+      .toEqual(["Full.md"]);
+    expect(() => parseScriptureNoteReference("John.3-4")).toThrow();
+    expect(() => parseScriptureNoteReference("John.3.18-16")).toThrow();
+  });
+
+  it("writes the complete range into newly generated study-note frontmatter and heading", () => {
+    const markdown = newStudyNoteMarkdown(parseReference("John 3:16-18"));
+
+    expect(markdown).toContain('scripture: "John.3.16-18"');
+    expect(markdown).toContain("# John 3:16-18");
+    expect(newStudyNoteMarkdown(parseReference("John 3:16"))).toContain('scripture: "John.3.16"');
   });
 });

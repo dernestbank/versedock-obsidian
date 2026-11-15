@@ -1,8 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { App, TFile } from "obsidian";
 import { parseReference } from "../src/core/references";
-import { MAX_SCRIPTURE_NOTE_SCAN, studyNotePath } from "../src/core/scripture-notes";
-import { discoverVaultScriptureNotes } from "../src/obsidian/scripture-note-index";
+import {
+  MAX_SCRIPTURE_NOTE_SCAN,
+  legacyStudyNotePath,
+  studyNotePath
+} from "../src/core/scripture-notes";
+import { discoverVaultScriptureNotes, resolveStudyNoteTarget } from "../src/obsidian/scripture-note-index";
 
 interface FakeFile {
   path: string;
@@ -73,5 +77,43 @@ describe("Obsidian Scripture-note metadata index", () => {
     } as unknown as App;
 
     expect(discoverVaultScriptureNotes(app, reference).notes.map(note => note.path)).toEqual([primary.path]);
+  });
+
+  it("reuses a recognized legacy generated range note", () => {
+    const reference = parseReference("John 3:16-18");
+    const legacyPath = legacyStudyNotePath(reference);
+    const legacy = {path: legacyPath, basename: "John 3-16", stat: {mtime: 42}};
+    const app = {
+      vault: {
+        getMarkdownFiles: () => [legacy] as unknown as TFile[],
+        getFileByPath: (path: string) => path === legacyPath ? legacy as unknown as TFile : null
+      },
+      metadataCache: {getFileCache: () => ({
+        frontmatter: {type: "scripture-study", scripture: "John.3.16"},
+        headings: [{heading: "John 3:16-18", level: 1, position: {}}]
+      })}
+    } as unknown as App;
+
+    expect(resolveStudyNoteTarget(app, reference)).toEqual({path: legacyPath, file: legacy});
+    expect(discoverVaultScriptureNotes(app, reference).notes.map(note => note.path)).toEqual([legacyPath]);
+  });
+
+  it("does not overwrite a genuine single-verse note when creating a range note", () => {
+    const reference = parseReference("John 3:16-18");
+    const preferredPath = studyNotePath(reference);
+    const legacyPath = legacyStudyNotePath(reference);
+    const single = {path: legacyPath, basename: "John 3-16", stat: {mtime: 42}};
+    const app = {
+      vault: {
+        getMarkdownFiles: () => [single] as unknown as TFile[],
+        getFileByPath: (path: string) => path === legacyPath ? single as unknown as TFile : null
+      },
+      metadataCache: {getFileCache: () => ({
+        frontmatter: {type: "scripture-study", scripture: "John.3.16"},
+        headings: [{heading: "John 3:16", level: 1, position: {}}]
+      })}
+    } as unknown as App;
+
+    expect(resolveStudyNoteTarget(app, reference)).toEqual({path: preferredPath, file: null});
   });
 });
