@@ -186,8 +186,12 @@
 .versedock.vd-search { height: 100%; overflow: auto; padding: 20px; }
 .versedock.vd-search h2 { font-size: 18px; margin: 0 0 10px; }
 .versedock .vd-subtle { color: var(--vd-muted); font-size: 12px; line-height: 1.5; }
-.versedock .vd-search-input-row { display: flex; gap: 8px; margin: 18px 0 16px; }
-.versedock .vd-search-input-row input { flex: 1; min-width: 0; }
+.versedock .vd-search-filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 18px 0 0; }
+.versedock .vd-search-filter-row label { display: flex; align-items: center; gap: 8px; color: var(--vd-muted); font-size: var(--font-ui-small); }
+.versedock .vd-search-filter-row select { min-width: 170px; padding: 7px 28px 7px 9px; border: 1px solid var(--vd-border); border-radius: var(--radius-s, 6px); background: var(--background-primary); color: var(--vd-ink); }
+.versedock .vd-search-input-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 12px; }
+.versedock .vd-search-input-row input { flex: 1 1 220px; min-width: 0; }
+.versedock .vd-search-status { min-height: 18px; margin-bottom: 4px; }
 .versedock .vd-search-result { padding: 11px 2px; border-bottom: 1px solid var(--vd-border); }
 .versedock .vd-search-result p { font-family: Georgia,serif; line-height: 1.5; font-size: 13px; margin: 5px 0 0; }
 .versedock .vd-result-ref { color: var(--vd-accent); font-size: 12px; font-weight: 600; padding: 4px 0; }

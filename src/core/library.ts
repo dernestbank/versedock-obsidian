@@ -3,6 +3,12 @@ import { BOOKS, type BookInfo } from "./books";
 import type { PassageReference } from "./references";
 import { refLabel } from "./references";
 import { checkBookIntegrity, type IntegrityReport } from "./integrity";
+import {
+  MAX_SEARCH_PHRASE_LENGTH,
+  booksForSearchScope,
+  boundedSearchLimit,
+  type BibleSearchRequest
+} from "./search";
 
 export interface VerseData { verse: number; text: string }
 export interface ChapterData { chapter: number; verses: VerseData[] }
@@ -14,6 +20,7 @@ export interface LibraryManifest {
   sourceSha256: string; verseCount: number; books: ManifestBook[];
 }
 export interface SearchResult { label: string; text: string; book: BookInfo; chapter: number; verse: number }
+export interface SearchPage { results: SearchResult[]; truncated: boolean }
 
 export class OfflineBibleLibrary {
   private readonly folder: string;
@@ -96,22 +103,38 @@ export class OfflineBibleLibrary {
     if (result.length === 0) throw new Error("No verses found at " + refLabel(ref) + ".");
     return result;
   }
-  async search(phrase: string, maxResults = 75): Promise<SearchResult[]> {
+  async search(request: BibleSearchRequest): Promise<SearchPage> {
     if (!this.manifest) throw new Error("Offline WEB module not installed.");
-    const term = phrase.trim().toLocaleLowerCase();
-    if (term.length < 2) return [];
+    const phrase = request.phrase.trim();
+    if (phrase.length > MAX_SEARCH_PHRASE_LENGTH) {
+      throw new Error("Search phrase must be 200 characters or fewer.");
+    }
+    const term = phrase.toLocaleLowerCase();
+    const limit = boundedSearchLimit(request.limit);
+    const books = booksForSearchScope(request.scope, request.currentBook);
+    const assertActive = (): void => {
+      if (request.signal?.aborted) {
+        const error = new Error("Bible search cancelled.");
+        error.name = "AbortError";
+        throw error;
+      }
+    };
+    assertActive();
+    if (term.length < 2) return { results: [], truncated: false };
     const found: SearchResult[] = [];
-    for (const book of BOOKS) {
+    for (const book of books) {
+      assertActive();
       const data = await this.loadBook(book);
       for (const chapter of data.chapters) {
+        assertActive();
         for (const verse of chapter.verses) {
           if (verse.text.toLocaleLowerCase().includes(term)) {
             found.push({ label: book.name + " " + chapter.chapter + ":" + verse.verse, text: verse.text, book, chapter: chapter.chapter, verse: verse.verse });
-            if (found.length >= maxResults) return found;
+            if (found.length > limit) return { results: found.slice(0, limit), truncated: true };
           }
         }
       }
     }
-    return found;
+    return { results: found, truncated: false };
   }
 }

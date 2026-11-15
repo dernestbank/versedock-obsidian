@@ -1,10 +1,12 @@
 import { ItemView, type WorkspaceLeaf } from "obsidian";
 import type { SwordDockController } from "../controller";
+import { MAX_SEARCH_PHRASE_LENGTH, parseBibleSearchScope } from "../core/search";
 import { emptyState, textButton } from "./components";
 
 export const SEARCH_VIEW = "versedock-search";
 export class SearchView extends ItemView {
   private version = 0;
+  private activeSearch: AbortController | null = null;
   constructor(leaf: WorkspaceLeaf, private readonly plugin: SwordDockController) { super(leaf); }
   getViewType(): string { return SEARCH_VIEW; }
   getDisplayText(): string { return "SwordDock Bible Search"; }
@@ -12,21 +14,52 @@ export class SearchView extends ItemView {
   async onOpen(): Promise<void> {
     this.contentEl.empty(); this.contentEl.addClass("versedock","vd-search");
     this.contentEl.createEl("h2", { text: "Search Scripture" });
-    this.contentEl.createEl("p", { cls: "vd-subtle", text: "Search the installed WEB edition entirely offline." });
+    this.contentEl.createEl("p", { cls: "vd-subtle", text: "Search the installed WEB edition entirely offline and narrow results by book or testament." });
+    const filterRow = this.contentEl.createDiv({ cls: "vd-search-filter-row" });
+    const scopeLabel = filterRow.createEl("label", { text: "Search in" });
+    const scope = scopeLabel.createEl("select", { attr: { "aria-label": "Bible search scope" } });
+    for (const [value, label] of [
+      ["all", "Whole Bible"],
+      ["current-book", "Current book · " + this.plugin.currentRef.book.name],
+      ["old-testament", "Old Testament"],
+      ["new-testament", "New Testament"]
+    ] as const) scope.createEl("option", { value, text: label });
     const inputRow = this.contentEl.createDiv({ cls: "vd-search-input-row" });
-    const input = inputRow.createEl("input", { attr: { type: "search", placeholder: "Search words or phrases", "aria-label": "Bible search phrase" } });
+    const input = inputRow.createEl("input", { attr: {
+      type: "search",
+      placeholder: "Search words or phrases",
+      "aria-label": "Bible search phrase",
+      autocomplete: "off",
+      maxlength: String(MAX_SEARCH_PHRASE_LENGTH)
+    } });
+    const status = this.contentEl.createDiv({ cls: "vd-subtle vd-search-status", attr: { role: "status", "aria-live": "polite" } });
     const results = this.contentEl.createDiv({ cls: "vd-search-results" });
     const perform = async (): Promise<void> => {
       const id = ++this.version;
       const term = input.value.trim();
+      this.activeSearch?.abort();
+      this.activeSearch = null;
+      status.empty();
       results.empty();
-      if (term.length < 2) { emptyState(results, "Enter a search term", "Use two or more letters to find verses.", "search"); return; }
-      results.createEl("p", { cls: "vd-subtle", text: "Searching offline Bible..." });
+      if (term.length < 2) {
+        emptyState(results, "Enter a search term", "Use two or more letters to find verses.", "search");
+        return;
+      }
+      const controller = new AbortController();
+      this.activeSearch = controller;
+      status.setText("Searching offline Bible…");
       try {
-        const found = await this.plugin.library.search(term, 80);
+        const page = await this.plugin.library.search({
+          phrase: term,
+          scope: parseBibleSearchScope(scope.value),
+          currentBook: this.plugin.currentRef.book,
+          limit: 80,
+          signal: controller.signal
+        });
         if (id !== this.version) return;
+        const found = page.results;
         results.empty();
-        results.createEl("p", { cls: "vd-subtle", text: found.length + (found.length === 80 ? "+ results (first 80 shown)" : " results") });
+        status.setText(page.truncated ? found.length + "+ results (first " + found.length + " shown)" : found.length + " results");
         for (const match of found) {
           const row = results.createDiv({ cls: "vd-search-result" });
           textButton(row, match.label, () => {
@@ -38,13 +71,18 @@ export class SearchView extends ItemView {
         if (!found.length) emptyState(results, "No matching verses", "Try fewer words, different spelling, or a shorter phrase.", "search-x");
       } catch(error) {
         if (id !== this.version) return;
+        status.empty();
         results.empty();
         emptyState(results, "Search unavailable", error instanceof Error ? error.message : String(error), "alert-circle");
+      } finally {
+        if (this.activeSearch === controller) this.activeSearch = null;
       }
     };
     textButton(inputRow, "Search", () => { void perform(); }, "mod-cta");
     input.addEventListener("keydown", e => { if(e.key === "Enter") { e.preventDefault(); void perform(); } });
-    emptyState(results, "Find a passage", "Search all 66 books with simple text matching. More advanced search comes in a future version.", "search");
+    scope.addEventListener("change", () => { if (input.value.trim().length >= 2) void perform(); });
+    emptyState(results, "Find a passage", "Enter two or more letters, choose a scope, and search the local WEB text.", "search");
+    input.focus();
   }
-  async onClose(): Promise<void> { this.version++; this.contentEl.empty(); }
+  async onClose(): Promise<void> { this.version++; this.activeSearch?.abort(); this.activeSearch = null; this.contentEl.empty(); }
 }

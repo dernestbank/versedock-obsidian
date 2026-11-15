@@ -34,8 +34,13 @@ describe("official WEB content", () => {
     expect(verses).toHaveLength(1);
     expect(verses[0].text).toContain("For God so loved the world");
     expect((await reader.getChapter(parseReference("John 3"))).verses.length).toBeGreaterThan(30);
-    const results = await reader.search("For God so loved the world", 5);
-    expect(results.some(r => r.label === "John 3:16")).toBe(true);
+    const search = await reader.search({
+      phrase: "For God so loved the world",
+      scope: "all",
+      currentBook: parseReference("John 3:16").book,
+      limit: 5
+    });
+    expect(search.results.some(r => r.label === "John 3:16")).toBe(true);
   });
   it("does not expose an absolute resource path when a book cannot be read", async () => {
     const privatePath = "/Users/private/Vault/.obsidian/plugins/versedock/library/webp/JOH.json";
