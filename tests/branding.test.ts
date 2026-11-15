@@ -34,4 +34,11 @@ describe("SwordDock Bible branding and compatibility", () => {
     const styles = readFileSync(path.join(root, "styles.css"), "utf8");
     expect(styles).toMatch(/\.versedock \.vd-search-filter-row label\[hidden\]\s*\{\s*display:\s*none;\s*\}/u);
   });
+
+  it("keeps visible compact-reader controls at least 44 by 44 pixels", () => {
+    const styles = readFileSync(path.join(root, "styles.css"), "utf8");
+    expect(styles).toMatch(/body\.is-mobile \.versedock \.vd-icon-button\s*\{[^}]*min-width:\s*44px;[^}]*min-height:\s*44px;/u);
+    expect(styles).toMatch(/\.vd-toolbar-nav \.vd-text-button\s*\{[^}]*min-width:\s*44px;[^}]*min-height:\s*44px;/u);
+    expect(styles).toMatch(/aria-label="Quick Jump"[^}]*aria-label="Focus Mode"[^}]*display:\s*none;/u);
+  });
 });

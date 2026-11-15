@@ -40,6 +40,7 @@
   padding: 5px 9px; white-space: nowrap; transition: background 150ms ease, border-color 150ms ease;
 }
 .versedock .vd-icon-button { min-width: 34px; padding-inline: 7px; }
+body.is-mobile .versedock .vd-icon-button { min-width: 44px; min-height: 44px; }
 .versedock .vd-icon-button svg { width: 17px; height: 17px; }
 .versedock .vd-icon-button:hover, .versedock .vd-text-button:hover {
   background: var(--background-modifier-hover); border-color: var(--vd-border);
@@ -215,9 +216,11 @@
 }
 @container sworddock-reader (max-width: 420px) {
   .versedock .vd-toolbar-nav { gap: 1px; }
-  .versedock .vd-toolbar-nav .vd-icon-button { min-width: 26px; padding-inline: 3px; }
-  .versedock .vd-toolbar-nav .vd-text-button { padding: 4px; max-width: 86px; overflow: hidden; text-overflow: ellipsis; }
-  /* Keep Quick Jump visible in compact panes; insertion remains in the command palette. */
+  .versedock .vd-toolbar-nav .vd-text-button { min-width: 44px; min-height: 44px; padding: 4px 6px; max-width: 86px; overflow: hidden; text-overflow: ellipsis; }
+  /* Quick Jump remains in Obsidian's view header, while Focus Mode remains in the command palette. */
+  .versedock .vd-toolbar-actions .vd-icon-button[aria-label="Quick Jump"],
+  .versedock .vd-toolbar-actions .vd-icon-button[aria-label="Focus Mode"],
+  .versedock .vd-toolbar-actions .vd-icon-button[aria-label="Leave Focus Mode"] { display: none; }
   .versedock .vd-scroll { padding: 20px 14px 60px; }
   .versedock .vd-reading-column { max-width: 100%; }
   .versedock .vd-chapter-head { margin-bottom: 25px; }
