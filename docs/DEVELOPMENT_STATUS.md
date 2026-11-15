@@ -4,7 +4,7 @@ Updated: 2026-11-15
 
 ## Current state
 
-- Version: `0.1.10` local developer candidate
+- Version: `0.1.11` local developer candidate
 - Branch: `branding/sworddock-bible`
 - Starting commit: `e5f95174c2ad25a825883bf3cf77c44229ed35b0`
 - Verified implementation commit: `5a4f5b2` (`feat: validate MySword cross-reference semantics`)
@@ -14,24 +14,25 @@ Updated: 2026-11-15
 - Verified responsiveness checkpoint commit: `ef63eb2` (`perf: yield during MySword preflight`)
 - Verified workflow checkpoint commit: `7dba619` (`feat: add bounded reading history`)
 - Verified narrow-pane checkpoint commit: `4913dcb` (`feat: improve inspector keyboard navigation`)
+- Verified focus-manager repair commit: `30c7065` (`fix: repair inspector roving focus`)
 - Plugin ID: `versedock` (compatibility contract; unchanged)
 - GitHub: public repository `dernestbank/versedock-obsidian`; branch `branding/sworddock-bible` is pushed and pull request [#1](https://github.com/dernestbank/versedock-obsidian/pull/1) targets `main`. The historical prerelease/tag `0.1.0` remains the only published release.
 - Current accessibility checkpoint: keyboard and accessibility-tree verification complete; actual VoiceOver verification pending
 - Current performance checkpoint: reproducible desktop full-corpus benchmark complete; slow-device/mobile profiling pending
 - Current responsiveness checkpoint: cooperative 1,000-row UI preflight implemented and corpus-simulated; live Obsidian re-verification pending
-- Current workflow checkpoint: bounded reading history is implemented and persisted in live 0.1.9 QA; older-entry activation remains pending
-- Current narrow-pane checkpoint: Inspector tab roving focus and arrow/Home/End navigation implemented; live 0.1.10 verification pending
+- Current workflow checkpoint: bounded reading history navigation, MRU promotion and reload persistence are verified live; destructive clearing remains approval-gated
+- Current narrow-pane checkpoint: Inspector tab roving focus and arrow/Home/End navigation are verified live after the 0.1.11 Obsidian focus-manager repair
 
 ## Verified baseline
 
-- `npm run check`: passed on 2026-11-15 for 0.1.10 (101 tests in 14 files, TypeScript, production build). Deliberate history-cap and Inspector ArrowRight mutations were caught by their focused suites.
+- `npm run check`: passed on 2026-11-15 for 0.1.11 (102 tests in 14 files, TypeScript, production build). Deliberate history-cap and Inspector ArrowRight mutations were caught by their focused suites; the new focused test rejects inactive native tab buttons.
 - `npm audit --json`: 0 known vulnerabilities across 113 dependencies.
-- Package: `dist/SwordDock-Bible-0.1.10-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,753,751 bytes, SHA-256 `51165f4118306a65c54c4ce60304f2badbf0d3c8585bc611d8fc731baf618bed`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed; stable ID `versedock` and version 0.1.10 were deployed to `test-vault` without changing its persisted `Rom.8.28` reference/history.
+- Package: `dist/SwordDock-Bible-0.1.11-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,753,882 bytes, SHA-256 `f7292b1ce94d1bfa8bb6f770d5705e1dc2b4737bc5993f4bd7fc2b1a2e382a43`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed for all 66 books and 31,103 verses. Redeployment preserved stable ID `versedock`, `reference: "Rom.8.28"`, history `['Rom.8.28', 'Rom.8.27']`, bookmarks, highlights and appearance settings.
 - Updated full-corpus evidence: 31,103 WEB verses pass source round-trip enforcement; 71,821 recognized markers, seven inert HTML markers, 424 validated RX markers, zero unresolved markers, 15,866 semantic-ready markup verses, seven opaque events, 1,126 translator notes and 169 titles. Conversion remains blocked.
-- Live GUI: Obsidian 1.15.0 reloaded the 0.1.9 implementation in the isolated repository `test-vault`. The History tab exposed its truthful empty state, Quick Jump opened and recorded Romans 8:28, the populated entry and clear control appeared, and an app reload restored Romans 8:28; `data.json` retained `history: ["Rom.8.28"]`. The earlier 0.1.7 keyboard/preflight check kept hostile HTML literal, blocked conversion/installation and returned focus. Older-history activation, the clear action, 0.1.10 tab-key behavior and actual VoiceOver remain pending.
+- Live GUI: Obsidian 1.15.1 loaded 0.1.11 in the isolated repository `test-vault`. Live 0.1.10 first exposed that Obsidian still tabbed through inactive native buttons despite `tabindex="-1"`; 0.1.11 keeps only the selected tab native. End reached and revealed History, Right wrapped to Commentary, and Tab exited the tab list. Selecting the older Romans 8:28 history entry promoted it ahead of Romans 8:27; the Reader reference and reordered history survived reload. The clear action and actual VoiceOver remain pending because both require explicit approval at action time.
 - Full-corpus performance: a 25-run Node 22/darwin arm64 benchmark of the ignored 5.4 MiB publisher WEB fixture produced 98.873 ms combined median and 126.184 ms p95 after one warm-up, with stable 31,103-verse semantics and unchanged source SHA-256. Post-iteration process RSS was 95.078–99.766 MiB; this is not a mobile, slow-device or in-operation peak profile.
 - Cooperative responsiveness: the same 31,103-verse report matched the synchronous baseline exactly while yielding 31 times. Its 32 measured work segments produced 5.127 ms p95 and 26.795 ms maximum on the tested Mac. This simulation excludes Obsidian rendering and is not a mobile guarantee.
-- GitHub Actions: PR #1 is mergeable and `build-and-test` passed for Inspector keyboard checkpoint commit `4913dcb`. The following documentation-only status commit triggers the same validation again.
+- GitHub Actions: PR #1 is mergeable and `build-and-test` passed for focus-manager repair commit `30c7065` in run `43715770795`. The following documentation-only status commit triggers the same validation again.
 
 ## Completed capabilities
 

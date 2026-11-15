@@ -196,10 +196,11 @@
 - [x] Invalid or user-edited history entries are ignored without changing bookmarks, highlights, appearance or current-reference restoration.
 - [x] The Study Inspector provides truthful recent-reading and empty states with no upload claim.
 - [x] Users can clear reading history without deleting bookmarks, highlights, notes or appearance settings.
-- [ ] Navigation and persistence are re-verified live in a disposable Obsidian vault.
+- [x] Navigation and persistence are re-verified live in a disposable Obsidian vault.
   - [x] 0.1.9 loads after an app reload; Quick Jump records Romans 8:28 and the live History tab exposes the entry and clear control.
   - [x] A second app reload restores Romans 8:28, and the isolated vault's persisted settings retain `history: ["Rom.8.28"]`.
-  - [ ] Activate an older History entry and verify the Reader returns to it; verify the clear action only after the required destructive-UI confirmation.
+  - [x] Activate the older Romans 8:28 entry, verify the Reader returns to it, promotes it ahead of Romans 8:27, and preserves both after reload.
+  - [ ] Verify the clear action only after the required destructive-UI confirmation.
 
 **Verification:**
 - [x] Focused RED/GREEN tests cover canonicalization, deduplication, MRU promotion, storage bounds, migration bounds and immutability.
@@ -218,11 +219,12 @@
 - [x] Left/Right Arrow moves between tabs with wrapping; Home/End moves to the first/last tab.
 - [x] The destination tab becomes selected and focused, and scrolls into view in an overflowing tab strip.
 - [x] Tabs and the shared panel expose explicit, instance-scoped `aria-controls` and `aria-labelledby` relationships without duplicate IDs across restored leaves.
-- [ ] The 0.1.10 tab sequence, focus ring and narrow-pane reveal are re-verified live in Obsidian.
+- [x] The repaired 0.1.11 sequence, selected-tab focus and narrow-pane reveal are re-verified live in Obsidian 1.15.1. Live 0.1.10 exposed that Obsidian still visited inactive native buttons despite `tabindex="-1"`; 0.1.11 keeps only the selected tab as a native button.
 
 **Verification:**
 - [x] Focused RED/GREEN tests cover forward/backward wrapping, Home/End and unrelated-key pass-through.
 - [x] A deliberate ArrowRight mutation is caught by the focused suite.
+- [x] A focused regression test requires inactive tabs to use a non-native ARIA-tab element; live Tab order exits the tab list instead of visiting Lexicon.
 - [x] Duplicate Inspector scopes produce distinct tab/panel IDs.
 
 **Dependencies:** Existing Study Inspector tab strip.
