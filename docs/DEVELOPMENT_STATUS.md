@@ -77,7 +77,7 @@ Updated: 2026-11-15
 
 ## Current implementation priority
 
-Review the proposed [authorized-import specification](specs/authorized-mysword-import.md) and [storage ADR](decisions/0001-imported-module-storage.md). Do not plan or implement Task 7 until the storage root, rights acknowledgement, deletion confirmation and unbenchmarked generated-size cap questions are accepted or revised. The keyboard/accessibility-tree checkpoint is complete; actual VoiceOver verification remains open.
+Review the proposed root-level [offline reading-workflow capability map](../CAPABILITY-MAP-reading-workflows.md) before its catalog, progress or study-session module is specified. Separately review the proposed [authorized-import specification](specs/authorized-mysword-import.md) and [storage ADR](decisions/0001-imported-module-storage.md). Do not plan or implement Task 7 until the storage root, rights acknowledgement, deletion confirmation and unbenchmarked generated-size cap questions are accepted or revised. The keyboard/accessibility-tree checkpoint is complete; actual VoiceOver verification remains open.
 
 ## Known blockers
 
