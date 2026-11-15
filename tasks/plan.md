@@ -7,7 +7,7 @@ Continue the existing SwordDock Bible developer preview from the verified GBF le
 ## Observed baseline
 
 - Local branch `branding/sworddock-bible` entered Phase 2 at verified checkpoint `01f35b8`.
-- `npm run check` passes: 10 test files and 81 tests, strict TypeScript, and the production bundle.
+- `npm run check` passes for 0.1.7: 11 test files and 86 tests, strict TypeScript, and the production bundle.
 - `npm audit --json` reports zero known vulnerabilities.
 - GitHub `dernestbank/versedock-obsidian` is public; PR #1 tracks this pushed branch. Only prerelease/tag `0.1.0` is published.
 - Phase 2 now provides an inert semantic IR and an isolated safe-DOM rendering primitive; neither enables module conversion or installation.
@@ -43,7 +43,8 @@ Continue the existing SwordDock Bible developer preview from the verified GBF le
 
 - [x] Corpus source round-trip remains exact.
 - [x] Unsupported tokens remain visible and conversion remains blocked.
-- [ ] Keyboard and screen-reader behavior is manually verified in a disposable vault.
+- [x] Keyboard order/activation, focus restoration, and accessibility-tree output are manually verified in a disposable vault.
+- [ ] Actual VoiceOver announcement/navigation is manually verified after explicit approval to change the macOS assistive setting.
 
 ### Phase 3: Authorized opt-in import design
 

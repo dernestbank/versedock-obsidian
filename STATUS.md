@@ -1,10 +1,16 @@
 # SwordDock Bible — Development QA Report
 
-Version: **0.1.6 (local developer candidate)** · Date: **2026-11-15** · Internal project directory: `mysword+`
+Version: **0.1.7 (local developer candidate)** · Date: **2026-11-15** · Internal project directory: `mysword+`
 
 This independent project started under the internal name **MySword+**. Its original public name was **VerseDock**; its current preferred name is **SwordDock Bible**, with no affiliation with the original MySword app.
 
 > **Branding update (2026-11-12):** Visible branding changed to **SwordDock Bible** while keeping the installed plugin ID `versedock` and the existing GitHub repository URL stable. The historical GUI checks below were performed before the rename; rerun the GUI check for final verification. Official trademark clearance is pending.
+
+## Inspector keyboard accessibility — 2026-11-15
+
+- The read-only conversion-preflight button now restores keyboard focus on the next animation frame after its asynchronous analysis completes, but only when focus settled on the document. Focus deliberately moved to another control is never reclaimed.
+- Obsidian 1.15.0 verification in the isolated `test-vault` confirmed chooser-to-preflight Tab order, Return activation, retained focus, literal hostile HTML, blocked conversion, and plain accessibility-tree diagnostics.
+- Automated coverage is 86 tests across eleven files. Actual VoiceOver announcement/navigation remains pending because changing the macOS assistive setting requires explicit user approval.
 
 ## Safe GBF semantic inspection — 2026-11-15
 
@@ -78,14 +84,14 @@ This independent project started under the internal name **MySword+**. Its origi
 - **Original 0.1.0 test:** renamed manifest ID and product to VerseDock; reinstalled the plugin in an isolated vault and confirmed **VerseDock (Preview)** commands appeared and Bible Reader opened. That historical GUI test predates the SwordDock Bible rebrand.
 - **Manual preview ZIP:** the archive includes `main.js`, `manifest.json`, `styles.css`, license, README and every offline WEB book, and passed ZIP integrity check.
 
-**Current local package:** `SwordDock-Bible-0.1.6-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced SHA-256 `0cbbb5ab0dbe87e03996a4a09ae3188c19c584b77e584124c552049a40082fa4`; clean-vault ZIP extraction and simulated offline restart reads pass. It is a local developer candidate, **not a published GitHub release**. Live Obsidian 1.15.0 verification in the isolated `test-vault` kept hostile HTML literal, reported zero of one markup verses fully interpreted with one opaque event, and kept conversion/installation blocked. Full release validation (mobile, themes, resource failures, restart and accessibility) remains pending.
+**Current local package:** `SwordDock-Bible-0.1.7-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced 1,752,193-byte archives with SHA-256 `fe42eeabb8d7e3dd6a6f0f312718359c7cf679ff5a9b5cce45360a4dd31fa0ac`; clean-vault ZIP extraction and simulated offline restart reads pass. It is a local developer candidate, **not a published GitHub release**. Live Obsidian 1.15.0 verification in the isolated `test-vault` kept hostile HTML literal, reported zero of one markup verses fully interpreted with one opaque event, kept conversion/installation blocked, and retained keyboard focus after the asynchronous check. Full release validation (mobile, themes, resource failures, restart and actual VoiceOver) remains pending.
 
 ## Test boundaries / not yet verified
 
 - No GUI testing on Windows/Linux or mobile; this preview is marked desktop-only until mobile compatibility is validated.
 - The native dark and light Moonstone schemes were visually verified in Obsidian; community themes remain untested.
 - Fresh 0.1.2 ZIP installation was visually verified in a newly registered GUI vault. A separate fresh first-run and restart check for the updated 0.1.3 ZIP remains to be completed; the 0.1.3 conversion button was verified in the disposable vault after updating it.
-- No automated UI harness, visual regression snapshots or accessibility audit yet.
+- No automated end-to-end UI harness or visual regression snapshots yet; focused unit coverage and a manual keyboard/accessibility-tree checkpoint now pass, while actual VoiceOver remains pending.
 - No public-domain commentary/lexicon installed; Inspector shows honest unavailable states.
 - MySword SQLite **preview inspection** is available; full import/conversion, parallel translations and interlinear tools are not yet implemented.
 - Not listed in the Obsidian Community Plugins directory; release is a **GitHub developer prerelease** only.
@@ -116,7 +122,8 @@ The public installation ZIP contains the source-independent offline WEB library 
 - [x] Verify the 0.1.3 conversion-preflight GUI in an updated disposable vault: markup blocked with explanatory diagnostics.
 - [ ] Repeat a fresh first-run and restart test specifically with 0.1.3; verify upgrade and failure recovery before eventual publication.
 - [ ] Community theme and narrow pane testing; light/dark desktop theme rendering passed.
-- [ ] Robust note insertion when editor selection has changed, keyboard focus and accessibility tests.
+- [x] Robust note insertion guards and inspector keyboard-focus regression tests; manual Tab/Return and accessibility-tree verification pass.
+- [ ] Actual VoiceOver announcement/navigation verification after user-approved assistive-setting change.
 - [x] Preview-only MySword SQLite schema validation with synthetic fixtures and literal-text rendering (37 tests); isolated live GUI and publisher-WEB local CLI checks now pass.
 - [x] Validate read-only inspection of the publisher-hosted WEB MySword module locally without redistributing it.
 - [x] Conservative conversion-readiness preflight rejects markup/unsupported structures without writing data (44 tests).

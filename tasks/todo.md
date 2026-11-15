@@ -125,6 +125,24 @@
 
 **Estimated scope:** Medium.
 
+## Checkpoint: Inspector keyboard accessibility
+
+**Description:** Verify the read-only preflight through the same keyboard and accessibility surfaces used by an Obsidian user, without changing conversion or installation scope.
+
+**Acceptance criteria:**
+- [x] Tab order reaches the module chooser and text-conversion preflight controls.
+- [x] Return activates the asynchronous preflight and focus returns to its button after completion without stealing focus moved elsewhere.
+- [x] Hostile HTML remains literal and blocked diagnostics are present in the accessibility tree.
+- [ ] Actual VoiceOver announcement/navigation is verified after explicit approval to change the macOS assistive setting.
+
+**Verification:**
+- [x] Focused RED/GREEN tests cover keyboard activation, deferred restoration, disconnected targets, and focus moved elsewhere.
+- [x] Obsidian 1.15.0 live verification passes in the isolated `test-vault`.
+
+**Dependencies:** Task 5.
+
+**Estimated scope:** Small.
+
 ## Task 6: Specify authorized, reversible module import
 
 **Description:** Define the provenance, rights acknowledgement, storage, integrity, transaction, rollback, recovery and removal contract that must be accepted before any module writer is implemented.

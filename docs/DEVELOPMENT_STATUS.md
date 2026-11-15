@@ -4,22 +4,22 @@ Updated: 2026-11-15
 
 ## Current state
 
-- Version: `0.1.6` local developer candidate
+- Version: `0.1.7` local developer candidate
 - Branch: `branding/sworddock-bible`
 - Starting commit: `e5f95174c2ad25a825883bf3cf77c44229ed35b0`
 - Verified implementation commit: `5a4f5b2` (`feat: validate MySword cross-reference semantics`)
 - Verified semantic milestone commit: `3a50abb` (`feat: add safe GBF semantic inspection`)
 - Plugin ID: `versedock` (compatibility contract; unchanged)
 - GitHub: public repository `dernestbank/versedock-obsidian`; branch `branding/sworddock-bible` is pushed and pull request [#1](https://github.com/dernestbank/versedock-obsidian/pull/1) targets `main`. The historical prerelease/tag `0.1.0` remains the only published release.
-- Worktree at recovery: clean after the semantic milestone checkpoint
+- Current accessibility checkpoint: keyboard and accessibility-tree verification complete; actual VoiceOver verification pending
 
 ## Verified baseline
 
-- `npm run check`: passed on 2026-11-15 for 0.1.6 (81 tests in 10 files, TypeScript, production build).
+- `npm run check`: passed on 2026-11-15 for 0.1.7 (86 tests in 11 files, TypeScript, production build). A deliberate keyboard-activation mutation was caught by the focused suite and the restored implementation passed.
 - `npm audit --json`: 0 known vulnerabilities across 113 dependencies.
-- Package: `dist/SwordDock-Bible-0.1.6-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,751,999 bytes, SHA-256 `0cbbb5ab0dbe87e03996a4a09ae3188c19c584b77e584124c552049a40082fa4`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed.
+- Package: `dist/SwordDock-Bible-0.1.7-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,752,193 bytes, SHA-256 `fe42eeabb8d7e3dd6a6f0f312718359c7cf679ff5a9b5cce45360a4dd31fa0ac`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed.
 - Updated full-corpus evidence: 31,103 WEB verses pass source round-trip enforcement; 71,821 recognized markers, seven inert HTML markers, 424 validated RX markers, zero unresolved markers, 15,866 semantic-ready markup verses, seven opaque events, 1,126 translator notes and 169 titles. Conversion remains blocked.
-- Live GUI: Obsidian 1.15.0 reloaded 0.1.6 in the isolated repository `test-vault`. The hostile HTML fixture stayed literal; semantic inspection reported zero of one markup verses fully interpreted and one opaque event; conversion/installation remained blocked. The diagnostics were exposed as plain accessibility text, but a full VoiceOver/keyboard audit remains pending.
+- Live GUI: Obsidian 1.15.0 reloaded the 0.1.7 implementation in the isolated repository `test-vault`. Keyboard Tab order and Return activation worked; the hostile HTML fixture stayed literal; semantic inspection reported zero of one markup verses fully interpreted and one opaque event; conversion/installation remained blocked; diagnostics were exposed as plain accessibility text; and focus returned to the preflight button. Actual VoiceOver announcement/navigation remains pending.
 - GitHub Actions: PR #1 `build-and-test` passed for semantic milestone commit `3a50abb`; the documentation checkpoint triggers the same validation again.
 
 ## Completed capabilities
@@ -34,7 +34,7 @@ Updated: 2026-11-15
 
 ## Current implementation priority
 
-Review the proposed [authorized-import specification](specs/authorized-mysword-import.md) and [storage ADR](decisions/0001-imported-module-storage.md). Do not plan or implement Task 7 until the storage root, rights acknowledgement, deletion confirmation and unbenchmarked generated-size cap questions are accepted or revised. The separate VoiceOver/keyboard checkpoint remains open.
+Review the proposed [authorized-import specification](specs/authorized-mysword-import.md) and [storage ADR](decisions/0001-imported-module-storage.md). Do not plan or implement Task 7 until the storage root, rights acknowledgement, deletion confirmation and unbenchmarked generated-size cap questions are accepted or revised. The keyboard/accessibility-tree checkpoint is complete; actual VoiceOver verification remains open.
 
 ## Known blockers
 

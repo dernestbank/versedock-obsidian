@@ -4,6 +4,7 @@ import type { SqlJsStatic } from "sql.js";
 import { inspectMySwordBible, MAX_MY_SWORD_BYTES, type MySwordBiblePreview } from "../core/mysword-preview";
 import { preflightMySwordPlainText, type ConversionPreflight } from "../core/mysword-conversion-preflight";
 import type { SwordDockController } from "../controller";
+import { requestsFocusRestoration, restoreActionFocus } from "./focus";
 
 export class MySwordInspectModal extends Modal {
   private revision = 0;
@@ -86,7 +87,9 @@ export class MySwordInspectModal extends Modal {
       text: "Check text-conversion readiness (no installation)" });
     const summary = safety.createDiv({ cls: "vd-conversion-results",
       attr: { role: "status", "aria-live": "polite" } });
-    button.addEventListener("click", () => {
+    button.addEventListener("click", event => {
+      // Keyboard and assistive-technology activation dispatch click detail 0.
+      const returnFocus = requestsFocusRestoration(event);
       button.disabled = true;
       summary.setText("Analyzing Scripture markup and canonical chapter boundaries locally…");
       window.setTimeout(() => {
@@ -121,6 +124,7 @@ export class MySwordInspectModal extends Modal {
             (error instanceof Error ? error.message : String(error)));
         } finally {
           button.disabled = false;
+          restoreActionFocus(button, returnFocus);
         }
       }, 0);
     });

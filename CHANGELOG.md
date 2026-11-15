@@ -1,6 +1,15 @@
 # Changelog
 
-## Unreleased — 0.1.6 SwordDock Bible developer candidate
+## Unreleased — 0.1.7 SwordDock Bible developer candidate
+
+### Inspector keyboard accessibility (November 15, 2026)
+
+- Preserve keyboard focus on the text-conversion preflight button after its asynchronous read-only analysis completes, while never stealing focus that moved to another control.
+- Defer restoration until the next animation frame so Obsidian/Electron's keyboard click dispatch cannot move focus back to the document afterward.
+- Verify the complete keyboard path in Obsidian 1.15.0 with a hostile HTML fixture: Tab order, Return activation, literal source display, blocked conversion diagnostics, accessibility-tree exposure, and retained button focus.
+- Expand automated coverage to 86 tests. Actual VoiceOver announcement/navigation remains a separate manual checkpoint requiring user-approved OS assistive-setting changes.
+
+## 0.1.6 — Local developer candidate (2026-11-15; unpublished)
 
 ### Safe GBF semantic inspection (November 15, 2026)
 
