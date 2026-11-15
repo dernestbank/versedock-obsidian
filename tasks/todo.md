@@ -164,6 +164,27 @@
 
 **Estimated scope:** Small.
 
+## Checkpoint: Cooperative conversion preflight
+
+**Description:** Replace the inspector's monolithic semantic scan with bounded event-loop work while preserving the exact read-only report and all safety blockers.
+
+**Acceptance criteria:**
+- [x] Synchronous CLI/benchmark and cooperative UI paths share one row scanner and report finalizer.
+- [x] UI work is bounded to 1,000 rows per batch and yields through an injected/default event-loop scheduler.
+- [x] File change or modal close cancels through the existing revision guard before further batches or rendering.
+- [x] Statements and databases close on preparation, scan, yield, cancellation and finalization failures.
+- [x] Cooperative and synchronous reports match exactly for mixed plain, supported, hostile, empty and RX-bearing verses.
+- [x] The ignored 31,103-verse publisher WEB fixture retains exact diagnostics across 31 yields.
+- [ ] The 0.1.8 cooperative build is re-verified live in Obsidian with the full-sized fixture.
+
+**Verification:**
+- [x] Focused RED/GREEN tests cover parity, yield count, cancellation, byte preservation and batch bounds.
+- [x] Desktop corpus simulation reports 32 work segments at 5.127 ms p95 and 26.795 ms maximum.
+
+**Dependencies:** Full-corpus performance QA checkpoint.
+
+**Estimated scope:** Medium.
+
 ## Task 6: Specify authorized, reversible module import
 
 **Description:** Define the provenance, rights acknowledgement, storage, integrity, transaction, rollback, recovery and removal contract that must be accepted before any module writer is implemented.

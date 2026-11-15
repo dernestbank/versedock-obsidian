@@ -1,6 +1,16 @@
 # Changelog
 
-## Unreleased — 0.1.7 SwordDock Bible developer candidate
+## Unreleased — 0.1.8 SwordDock Bible developer candidate
+
+### Cooperative conversion preflight (November 15, 2026)
+
+- Refactor the existing read-only Bible preflight into a shared bounded scan state so synchronous CLI/benchmark results and cooperative UI results remain byte-for-byte equivalent as structured reports.
+- Make the Obsidian inspector yield after each 1,000-row batch and cancel through the existing modal revision guard when the selected file or modal changes.
+- Close sql.js statements and databases on setup, preparation, cancellation, yield, semantic, and finalization failures.
+- Re-run the ignored 31,103-verse publisher WEB fixture: cooperative and synchronous diagnostics match exactly; 31 yields produced 32 work segments with 5.127 ms p95 and 26.795 ms maximum on the tested Mac. This is desktop evidence, not a mobile guarantee.
+- Expand automated coverage to 93 tests across twelve files. Live Obsidian verification of the cooperative build remains pending.
+
+## 0.1.7 — Local developer candidate (2026-11-15; unpublished)
 
 ### Full-corpus performance QA (November 15, 2026)
 

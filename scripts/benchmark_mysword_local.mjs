@@ -136,6 +136,31 @@ try {
       observedMemory[key] = Math.max(observedMemory[key], memory[key]);
   }
 
+  globalThis.gc?.();
+  const cooperativeSegments = [];
+  const cooperativeStart = performance.now();
+  let segmentStart = cooperativeStart;
+  const cooperative = await preflightHelpers.preflightMySwordPlainTextCooperatively(
+    sql,
+    baseName,
+    bytes,
+    {
+      batchSize: 1000,
+      yieldControl: async () => {
+        cooperativeSegments.push(performance.now() - segmentStart);
+        await new Promise(resolve => globalThis.setTimeout(resolve, 0));
+        segmentStart = performance.now();
+      }
+    }
+  );
+  cooperativeSegments.push(performance.now() - segmentStart);
+  const cooperativeEnd = performance.now();
+  if (stableOutcome(warmPreview, cooperative) !== expectedOutcome)
+    throw new Error("Cooperative preflight results differ from the synchronous baseline.");
+  const cooperativeMemory = process.memoryUsage();
+  for (const key of ["rss", "heapUsed", "external", "arrayBuffers"])
+    observedMemory[key] = Math.max(observedMemory[key], cooperativeMemory[key]);
+
   const finalHash = createHash("sha256").update(bytes).digest("hex");
   if (finalHash !== sourceHash)
     throw new Error("Source bytes changed during benchmark execution.");
@@ -156,7 +181,15 @@ try {
     durationMilliseconds: {
       preview: roundedStats(previewDurations),
       conversionPreflight: roundedStats(preflightDurations),
-      combined: roundedStats(combinedDurations)
+      combined: roundedStats(combinedDurations),
+      cooperativeUiSimulation: {
+        batchSize: 1000,
+        yields: cooperativeSegments.length - 1,
+        total: Math.round((cooperativeEnd - cooperativeStart) * 1000) / 1000,
+        workSegments: cooperativeSegments.length >= 3
+          ? roundedStats(cooperativeSegments)
+          : null
+      }
     },
     processMemoryMiB: {
       baseline: {

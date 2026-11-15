@@ -3,7 +3,12 @@ import initSqlJs, { type SqlJsStatic } from "sql.js";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { BOOKS } from "../src/core/books";
-import { CANON_CHAPTERS, preflightMySwordPlainText } from "../src/core/mysword-conversion-preflight";
+import {
+  CANON_CHAPTERS,
+  MySwordPreflightCancelledError,
+  preflightMySwordPlainText,
+  preflightMySwordPlainTextCooperatively
+} from "../src/core/mysword-conversion-preflight";
 
 let sql: SqlJsStatic;
 beforeAll(async () => {
@@ -22,6 +27,16 @@ function fixture({text = "In the beginning.", book = 1, chapter = 1, rtl = false
       [rtl ? 1 : 0, strong ? 1 : 0, verseRules ?? "", customCss ?? ""]);
     db.run("CREATE TABLE Bible (Book INT, Chapter INT, Verse INT, Scripture TEXT)");
     db.run("INSERT INTO Bible VALUES (?, ?, 1, ?)", [book, chapter, text]);
+    return db.export();
+  } finally { db.close(); }
+}
+function fixtureRows(texts: string[]) {
+  const db = new sql.Database();
+  try {
+    db.run("CREATE TABLE Details (Abbreviation TEXT, RightToLeft BOOL, Strong BOOL, VerseRules TEXT, CustomCSS TEXT)");
+    db.run("INSERT INTO Details VALUES ('TEST', 0, 0, '', '')");
+    db.run("CREATE TABLE Bible (Book INT, Chapter INT, Verse INT, Scripture TEXT)");
+    texts.forEach((text, index) => db.run("INSERT INTO Bible VALUES (1, 1, ?, ?)", [index + 1, text]));
     return db.export();
   } finally { db.close(); }
 }
@@ -124,5 +139,52 @@ describe("private MySword text-conversion preflight", () => {
     expect(CANON_CHAPTERS).toHaveLength(BOOKS.length);
     expect(CANON_CHAPTERS).toEqual(m.books.map((book: {chapters: number}) => book.chapters));
     expect(BOOKS).toHaveLength(66);
+  });
+
+  it("cooperatively yields between bounded batches without changing diagnostics", async () => {
+    const bytes = fixtureRows([
+      "Plain text.",
+      "<FI>Italic<Fi>",
+      "<img src=x onerror=alert(1)>",
+      "",
+      "<RX43.3.16>"
+    ]);
+    const expected = preflightMySwordPlainText(sql, "test.bbl.mybible", bytes);
+    let yields = 0;
+
+    const actual = await preflightMySwordPlainTextCooperatively(
+      sql,
+      "test.bbl.mybible",
+      bytes,
+      {batchSize: 2, yieldControl: async () => { yields++; }}
+    );
+
+    expect(actual).toEqual(expected);
+    expect(yields).toBe(2);
+  });
+
+  it("cancels a cooperative scan after a yield without changing source bytes", async () => {
+    const bytes = fixtureRows(["one", "two", "three"]);
+    const snapshot = Uint8Array.from(bytes);
+    let active = true;
+
+    const scan = preflightMySwordPlainTextCooperatively(sql, "test.bbl.mybible", bytes, {
+      batchSize: 1,
+      shouldContinue: () => active,
+      yieldControl: async () => { active = false; }
+    });
+
+    await expect(scan).rejects.toBeInstanceOf(MySwordPreflightCancelledError);
+    expect(bytes).toEqual(snapshot);
+  });
+
+  it("rejects invalid cooperative batch limits", async () => {
+    const bytes = fixture();
+    await expect(preflightMySwordPlainTextCooperatively(
+      sql, "test.bbl.mybible", bytes, {batchSize: 0}
+    )).rejects.toThrow(/between 1 and 5,000/i);
+    await expect(preflightMySwordPlainTextCooperatively(
+      sql, "test.bbl.mybible", bytes, {batchSize: 5001}
+    )).rejects.toThrow(/between 1 and 5,000/i);
   });
 });

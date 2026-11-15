@@ -1,10 +1,17 @@
 # SwordDock Bible — Development QA Report
 
-Version: **0.1.7 (local developer candidate)** · Date: **2026-11-15** · Internal project directory: `mysword+`
+Version: **0.1.8 (local developer candidate)** · Date: **2026-11-15** · Internal project directory: `mysword+`
 
 This independent project started under the internal name **MySword+**. Its original public name was **VerseDock**; its current preferred name is **SwordDock Bible**, with no affiliation with the original MySword app.
 
 > **Branding update (2026-11-12):** Visible branding changed to **SwordDock Bible** while keeping the installed plugin ID `versedock` and the existing GitHub repository URL stable. The historical GUI checks below were performed before the rename; rerun the GUI check for final verification. Official trademark clearance is pending.
+
+## Cooperative conversion preflight — 2026-11-15
+
+- The Obsidian inspector now runs the existing read-only semantic scan in 1,000-row batches, yielding to the event loop between batches and cancelling through the modal revision guard when the file or modal changes.
+- Synchronous CLI/benchmark and cooperative UI paths share one scan state and finalizer. Tests prove identical reports, bounded yield counts, cancellation, source-byte preservation and rejected batch sizes; statements/databases close through every failure path.
+- The ignored 31,103-verse publisher WEB fixture produced identical cooperative and synchronous diagnostics. On Node 22/darwin arm64, the cooperative simulation yielded 31 times; its 32 work segments measured 5.127 ms p95 and 26.795 ms maximum, including the initial preview-validation segment.
+- Automated coverage is 93 tests across twelve files. Live Obsidian GUI verification, slow-device/mobile profiling and actual UI long-task tracing remain pending; no conversion or installation was enabled.
 
 ## Inspector keyboard accessibility — 2026-11-15
 
@@ -91,7 +98,7 @@ This independent project started under the internal name **MySword+**. Its origi
 - **Original 0.1.0 test:** renamed manifest ID and product to VerseDock; reinstalled the plugin in an isolated vault and confirmed **VerseDock (Preview)** commands appeared and Bible Reader opened. That historical GUI test predates the SwordDock Bible rebrand.
 - **Manual preview ZIP:** the archive includes `main.js`, `manifest.json`, `styles.css`, license, README and every offline WEB book, and passed ZIP integrity check.
 
-**Current local package:** `SwordDock-Bible-0.1.7-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced 1,752,430-byte archives with SHA-256 `7a629c4e987df0175ffce35a0eabc869dde770990c0f9df7ba5608b41bcb2b25`; clean-vault ZIP extraction and simulated offline restart reads pass. It is a local developer candidate, **not a published GitHub release**. Live Obsidian 1.15.0 verification in the isolated `test-vault` kept hostile HTML literal, reported zero of one markup verses fully interpreted with one opaque event, kept conversion/installation blocked, and retained keyboard focus after the asynchronous check. Full release validation (mobile, themes, resource failures, restart and actual VoiceOver) remains pending.
+**Current local package:** `SwordDock-Bible-0.1.8-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced 1,752,904-byte archives with SHA-256 `24bf14a7d1094c5b59524f7a21a945fc2c6f50dbc662b71a5bd0385d5bd3ed99`; clean-vault ZIP extraction and simulated offline restart reads pass. It is a local developer candidate, **not a published GitHub release**. The 0.1.8 files are deployed to the isolated `test-vault`, but live Obsidian verification of the cooperative scan remains pending. Prior 0.1.7 live verification kept hostile HTML literal, blocked conversion/installation and retained keyboard focus. Full release validation (mobile, themes, resource failures, restart and actual VoiceOver) remains pending.
 
 ## Test boundaries / not yet verified
 
