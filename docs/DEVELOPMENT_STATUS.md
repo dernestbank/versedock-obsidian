@@ -9,6 +9,7 @@ Updated: 2026-11-15
 - Starting commit: `e5f95174c2ad25a825883bf3cf77c44229ed35b0`
 - Verified implementation commit: `5a4f5b2` (`feat: validate MySword cross-reference semantics`)
 - Verified semantic milestone commit: `3a50abb` (`feat: add safe GBF semantic inspection`)
+- Verified accessibility checkpoint commit: `f4bae5a` (`fix: preserve inspector keyboard focus`)
 - Plugin ID: `versedock` (compatibility contract; unchanged)
 - GitHub: public repository `dernestbank/versedock-obsidian`; branch `branding/sworddock-bible` is pushed and pull request [#1](https://github.com/dernestbank/versedock-obsidian/pull/1) targets `main`. The historical prerelease/tag `0.1.0` remains the only published release.
 - Current accessibility checkpoint: keyboard and accessibility-tree verification complete; actual VoiceOver verification pending
@@ -20,7 +21,7 @@ Updated: 2026-11-15
 - Package: `dist/SwordDock-Bible-0.1.7-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,752,193 bytes, SHA-256 `fe42eeabb8d7e3dd6a6f0f312718359c7cf679ff5a9b5cce45360a4dd31fa0ac`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed.
 - Updated full-corpus evidence: 31,103 WEB verses pass source round-trip enforcement; 71,821 recognized markers, seven inert HTML markers, 424 validated RX markers, zero unresolved markers, 15,866 semantic-ready markup verses, seven opaque events, 1,126 translator notes and 169 titles. Conversion remains blocked.
 - Live GUI: Obsidian 1.15.0 reloaded the 0.1.7 implementation in the isolated repository `test-vault`. Keyboard Tab order and Return activation worked; the hostile HTML fixture stayed literal; semantic inspection reported zero of one markup verses fully interpreted and one opaque event; conversion/installation remained blocked; diagnostics were exposed as plain accessibility text; and focus returned to the preflight button. Actual VoiceOver announcement/navigation remains pending.
-- GitHub Actions: PR #1 `build-and-test` passed for semantic milestone commit `3a50abb`; the documentation checkpoint triggers the same validation again.
+- GitHub Actions: PR #1 is mergeable and `build-and-test` passed for accessibility checkpoint commit `f4bae5a`. The following documentation-only status commit triggers the same validation again.
 
 ## Completed capabilities
 
