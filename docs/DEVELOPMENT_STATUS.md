@@ -4,7 +4,7 @@ Updated: 2026-11-15
 
 ## Current state
 
-- Version: `0.1.9` local developer candidate
+- Version: `0.1.10` local developer candidate
 - Branch: `branding/sworddock-bible`
 - Starting commit: `e5f95174c2ad25a825883bf3cf77c44229ed35b0`
 - Verified implementation commit: `5a4f5b2` (`feat: validate MySword cross-reference semantics`)
@@ -18,15 +18,16 @@ Updated: 2026-11-15
 - Current accessibility checkpoint: keyboard and accessibility-tree verification complete; actual VoiceOver verification pending
 - Current performance checkpoint: reproducible desktop full-corpus benchmark complete; slow-device/mobile profiling pending
 - Current responsiveness checkpoint: cooperative 1,000-row UI preflight implemented and corpus-simulated; live Obsidian re-verification pending
-- Current workflow checkpoint: bounded reading history implemented and migration-tested; live Inspector verification pending
+- Current workflow checkpoint: bounded reading history is implemented and persisted in live 0.1.9 QA; older-entry activation remains pending
+- Current narrow-pane checkpoint: Inspector tab roving focus and arrow/Home/End navigation implemented; live 0.1.10 verification pending
 
 ## Verified baseline
 
-- `npm run check`: passed on 2026-11-15 for 0.1.9 (97 tests in 13 files, TypeScript, production build). A deliberate 51-entry-cap mutation was caught by the focused history suite.
+- `npm run check`: passed on 2026-11-15 for 0.1.10 (101 tests in 14 files, TypeScript, production build). Deliberate history-cap and Inspector ArrowRight mutations were caught by their focused suites.
 - `npm audit --json`: 0 known vulnerabilities across 113 dependencies.
-- Package: `dist/SwordDock-Bible-0.1.9-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,753,388 bytes, SHA-256 `9f9abd18122758fecfc29b7b97e1bfc1e2910ca6317c0d6d2dd210b6a80e5e41`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed; stable ID `versedock` and version 0.1.9 were deployed to `test-vault`.
+- Package: `dist/SwordDock-Bible-0.1.10-offline-preview.zip` (local/unpublished), 76 allowlisted files, 1,753,751 bytes, SHA-256 `51165f4118306a65c54c4ce60304f2badbf0d3c8585bc611d8fc731baf618bed`. Two consecutive builds matched; clean-vault extraction and simulated offline restart passed; stable ID `versedock` and version 0.1.10 were deployed to `test-vault` without changing its persisted `Rom.8.28` reference/history.
 - Updated full-corpus evidence: 31,103 WEB verses pass source round-trip enforcement; 71,821 recognized markers, seven inert HTML markers, 424 validated RX markers, zero unresolved markers, 15,866 semantic-ready markup verses, seven opaque events, 1,126 translator notes and 169 titles. Conversion remains blocked.
-- Live GUI: Obsidian 1.15.0 reloaded the 0.1.7 implementation in the isolated repository `test-vault`. Keyboard Tab order and Return activation worked; the hostile HTML fixture stayed literal; semantic inspection reported zero of one markup verses fully interpreted and one opaque event; conversion/installation remained blocked; diagnostics were exposed as plain accessibility text; and focus returned to the preflight button. Actual VoiceOver announcement/navigation remains pending.
+- Live GUI: Obsidian 1.15.0 reloaded the 0.1.9 implementation in the isolated repository `test-vault`. The History tab exposed its truthful empty state, Quick Jump opened and recorded Romans 8:28, the populated entry and clear control appeared, and an app reload restored Romans 8:28; `data.json` retained `history: ["Rom.8.28"]`. The earlier 0.1.7 keyboard/preflight check kept hostile HTML literal, blocked conversion/installation and returned focus. Older-history activation, the clear action, 0.1.10 tab-key behavior and actual VoiceOver remain pending.
 - Full-corpus performance: a 25-run Node 22/darwin arm64 benchmark of the ignored 5.4 MiB publisher WEB fixture produced 98.873 ms combined median and 126.184 ms p95 after one warm-up, with stable 31,103-verse semantics and unchanged source SHA-256. Post-iteration process RSS was 95.078–99.766 MiB; this is not a mobile, slow-device or in-operation peak profile.
 - Cooperative responsiveness: the same 31,103-verse report matched the synchronous baseline exactly while yielding 31 times. Its 32 measured work segments produced 5.127 ms p95 and 26.795 ms maximum on the tested Mac. This simulation excludes Obsidian rendering and is not a mobile guarantee.
 - GitHub Actions: PR #1 is mergeable and `build-and-test` passed for reading-history checkpoint commit `7dba619`. The following documentation-only status commit triggers the same validation again.
@@ -42,6 +43,7 @@ Updated: 2026-11-15
 - Deterministic offline preview packaging and clean-install filesystem smoke tests.
 - Bounded, non-writing full-corpus performance benchmark with stable-output and source-hash enforcement.
 - Bounded canonical reading history with migration-safe settings normalization and Inspector navigation.
+- Roving, WAI-ARIA-linked Inspector tabs with Arrow/Home/End navigation and narrow-pane reveal.
 
 ## Current implementation priority
 

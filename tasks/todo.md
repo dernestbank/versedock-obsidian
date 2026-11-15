@@ -197,12 +197,35 @@
 - [x] The Study Inspector provides truthful recent-reading and empty states with no upload claim.
 - [x] Users can clear reading history without deleting bookmarks, highlights, notes or appearance settings.
 - [ ] Navigation and persistence are re-verified live in a disposable Obsidian vault.
+  - [x] 0.1.9 loads after an app reload; Quick Jump records Romans 8:28 and the live History tab exposes the entry and clear control.
+  - [x] A second app reload restores Romans 8:28, and the isolated vault's persisted settings retain `history: ["Rom.8.28"]`.
+  - [ ] Activate an older History entry and verify the Reader returns to it; verify the clear action only after the required destructive-UI confirmation.
 
 **Verification:**
 - [x] Focused RED/GREEN tests cover canonicalization, deduplication, MRU promotion, storage bounds, migration bounds and immutability.
 - [x] Strict TypeScript and production build pass.
 
 **Dependencies:** Existing settings and reference parser.
+
+**Estimated scope:** Small.
+
+## Checkpoint: Inspector tab keyboard navigation
+
+**Description:** Keep all six Study Inspector resources discoverable and keyboard-operable when the pane is too narrow to show every tab at once.
+
+**Acceptance criteria:**
+- [x] Only the selected Inspector tab is in normal Tab order.
+- [x] Left/Right Arrow moves between tabs with wrapping; Home/End moves to the first/last tab.
+- [x] The destination tab becomes selected and focused, and scrolls into view in an overflowing tab strip.
+- [x] Tabs and the shared panel expose explicit, instance-scoped `aria-controls` and `aria-labelledby` relationships without duplicate IDs across restored leaves.
+- [ ] The 0.1.10 tab sequence, focus ring and narrow-pane reveal are re-verified live in Obsidian.
+
+**Verification:**
+- [x] Focused RED/GREEN tests cover forward/backward wrapping, Home/End and unrelated-key pass-through.
+- [x] A deliberate ArrowRight mutation is caught by the focused suite.
+- [x] Duplicate Inspector scopes produce distinct tab/panel IDs.
+
+**Dependencies:** Existing Study Inspector tab strip.
 
 **Estimated scope:** Small.
 

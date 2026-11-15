@@ -1,17 +1,25 @@
 # SwordDock Bible — Development QA Report
 
-Version: **0.1.9 (local developer candidate)** · Date: **2026-11-15** · Internal project directory: `mysword+`
+Version: **0.1.10 (local developer candidate)** · Date: **2026-11-15** · Internal project directory: `mysword+`
 
 This independent project started under the internal name **MySword+**. Its original public name was **VerseDock**; its current preferred name is **SwordDock Bible**, with no affiliation with the original MySword app.
 
 > **Branding update (2026-11-12):** Visible branding changed to **SwordDock Bible** while keeping the installed plugin ID `versedock` and the existing GitHub repository URL stable. The historical GUI checks below were performed before the rename; rerun the GUI check for final verification. Official trademark clearance is pending.
+
+## Inspector tab keyboard navigation — 2026-11-15
+
+- Added a roving tab stop for the six Study Inspector tabs. Left/Right Arrow wraps, Home/End moves to the edge, and unrelated keys remain available to the tab button or Obsidian.
+- Selecting a tab by pointer or keyboard rebuilds the panel with the destination tab focused and scrolled into view, addressing narrow-pane overflow without forcing the tab strip to wrap.
+- Each tab now owns an instance-scoped ID and `aria-controls` relationship; the shared `tabpanel` names its active tab through `aria-labelledby` without duplicate IDs if Obsidian restores more than one Inspector leaf.
+- Focused RED/GREEN tests and a deliberate ArrowRight mutation cover the navigation policy and duplicate-view IDs. Full verification passes at 101 tests across fourteen files; live 0.1.10 keyboard verification remains pending.
+- Live 0.1.9 QA in the isolated Obsidian 1.15.0 vault confirmed the truthful empty History state, Romans 8:28 recording through Quick Jump, the populated entry and clear control, and persisted `Rom.8.28` reference/history after reload. Older-entry activation and destructive clear-button execution remain unverified.
 
 ## Bounded reading history — 2026-11-15
 
 - Added a migration-safe, most-recent-first reading history with a hard 50-reference storage cap, 500-entry migration scan cap and 64-character per-entry bound. Stored values are canonical OSIS; invalid, duplicate and user-edited legacy values are ignored without touching other settings.
 - Every valid Reader selection records the passage through the same settings save used by current-reference restoration. Existing bookmark, highlight, appearance and stable plugin-ID contracts are unchanged.
 - Added a Study Inspector History tab with truthful empty state and local-settings privacy language. Selecting an item reopens it in the Reader and promotes it to most recent; an explicit clear action erases only reading history.
-- Automated coverage is 97 tests across thirteen files. Live Obsidian, sync-tool and mobile behavior remain pending.
+- Automated coverage at this checkpoint was 97 tests across thirteen files. The 0.1.9 History surface and persistence were subsequently verified live as described above; older-entry activation, sync-tool and mobile behavior remain pending.
 
 ## Cooperative conversion preflight — 2026-11-15
 
@@ -94,7 +102,7 @@ This independent project started under the internal name **MySword+**. Its origi
 ## Verified on macOS / Obsidian 1.15.0
 
 - **Build:** strict TypeScript `tsc --noEmit` passed, esbuild `main.js` generated successfully.
-- **Original QA tests:** 18/18 passed (book references, OSIS IDs, 66-book WEB dataset, local chapter reading and search). **Current developer candidate:** 55 automated tests cover naming compatibility, offline reading, captured editor selection safety, content hashing and whole-library file verification.
+- **Original QA tests:** 18/18 passed (book references, OSIS IDs, 66-book WEB dataset, local chapter reading and search). **Current developer candidate:** 101 automated tests across fourteen files cover those foundations plus input safety, module inspection, semantic interpretation, performance statistics, persistence bounds and Inspector keyboard navigation.
 - **Data:** 66 public-domain ENGWEBP book files, 31,103 verses, exact text preserved; provenance and checksum documented.
 - **Actual GUI:** opened an isolated test vault in Obsidian; enabled the plugin; opened its Bible Reader from the native command palette.
 - **Reader:** John 3:16 appeared with styled passage text, contextual actions, book/chapter controls and theme-aware dark UI.
@@ -105,7 +113,7 @@ This independent project started under the internal name **MySword+**. Its origi
 - **Original 0.1.0 test:** renamed manifest ID and product to VerseDock; reinstalled the plugin in an isolated vault and confirmed **VerseDock (Preview)** commands appeared and Bible Reader opened. That historical GUI test predates the SwordDock Bible rebrand.
 - **Manual preview ZIP:** the archive includes `main.js`, `manifest.json`, `styles.css`, license, README and every offline WEB book, and passed ZIP integrity check.
 
-**Current local package:** `SwordDock-Bible-0.1.9-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced 1,753,388-byte archives with SHA-256 `9f9abd18122758fecfc29b7b97e1bfc1e2910ca6317c0d6d2dd210b6a80e5e41`; clean-vault ZIP extraction and simulated offline restart reads pass. It is a local developer candidate, **not a published GitHub release**. The 0.1.9 files are deployed to the isolated `test-vault`, but live Obsidian verification of cooperative preflight and reading history remains pending. Prior 0.1.7 live verification kept hostile HTML literal, blocked conversion/installation and retained keyboard focus. Full release validation (mobile, themes, resource failures, restart and actual VoiceOver) remains pending.
+**Current local package:** `SwordDock-Bible-0.1.10-offline-preview.zip` contains 76 approved files, the independent offline library, SQLite WebAssembly engine, third-party license, and brand documentation. Two consecutive builds produced 1,753,751-byte archives with SHA-256 `51165f4118306a65c54c4ce60304f2badbf0d3c8585bc611d8fc731baf618bed`; clean-vault ZIP extraction and simulated offline restart reads pass. It is a local developer candidate, **not a published GitHub release**. Deploying 0.1.10 to the isolated `test-vault` preserved the stable ID, `Rom.8.28` current reference and `history: ["Rom.8.28"]`; live 0.1.10 keyboard and cooperative-preflight verification remain pending. Prior live checks kept hostile HTML literal, blocked conversion/installation and retained keyboard focus. Full release validation (mobile, themes, resource failures, restart and actual VoiceOver) remains pending.
 
 ## Test boundaries / not yet verified
 

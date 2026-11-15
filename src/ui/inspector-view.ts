@@ -2,18 +2,27 @@ import { ItemView, type WorkspaceLeaf } from "obsidian";
 import type { SwordDockController } from "../controller";
 import { refLabel, parseOsis } from "../core/references";
 import { emptyState, iconButton, textButton } from "./components";
+import { INSPECTOR_TABS, inspectorTabDomIds, inspectorTabForKey, type InspectorTab } from "./inspector-tabs";
 
 export const INSPECTOR_VIEW = "versedock-inspector";
-type InspectorTab = "commentary" | "lexicon" | "notes" | "references" | "bookmarks" | "history";
+let inspectorViewSequence = 0;
 export class InspectorView extends ItemView {
   private unsubscribe: (() => void) | null = null;
   private tab: InspectorTab = "commentary";
+  private readonly domScope = `versedock-inspector-${++inspectorViewSequence}`;
   constructor(leaf: WorkspaceLeaf, private readonly plugin: SwordDockController) { super(leaf); }
   getViewType(): string { return INSPECTOR_VIEW; }
   getDisplayText(): string { return "SwordDock Bible Study Inspector"; }
   getIcon(): string { return "book-open-check"; }
   async onOpen(): Promise<void> { this.unsubscribe = this.plugin.subscribe(() => this.render()); this.render(); }
   async onClose(): Promise<void> { this.unsubscribe?.(); this.unsubscribe = null; this.contentEl.empty(); }
+  private activateTab(tab: InspectorTab): void {
+    this.tab = tab;
+    this.render();
+    const activeTab = this.contentEl.querySelector<HTMLButtonElement>(`[data-vd-inspector-tab="${tab}"]`);
+    activeTab?.focus({ preventScroll: true });
+    activeTab?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }
   private render(): void {
     const root = this.contentEl;
     root.empty(); root.addClass("versedock", "vd-inspector");
@@ -21,12 +30,30 @@ export class InspectorView extends ItemView {
     top.createEl("strong", { text: "Study Inspector" });
     top.createSpan({ cls: "vd-pill", text: "Follow · " + refLabel(this.plugin.currentRef) });
     const tabs = root.createDiv({ cls: "vd-inspector-tabs", attr: { role: "tablist", "aria-label": "Study resources" } });
-    (["commentary","lexicon","references","notes","bookmarks","history"] as InspectorTab[]).forEach(tab => {
+    INSPECTOR_TABS.forEach(tab => {
       const label = tab === "references" ? "References" : tab[0].toUpperCase() + tab.slice(1);
-      const btn = textButton(tabs, label, () => { this.tab = tab; this.render(); }, this.tab === tab ? "is-active" : "");
-      btn.setAttribute("role", "tab"); btn.setAttribute("aria-selected", String(this.tab === tab));
+      const selected = this.tab === tab;
+      const ids = inspectorTabDomIds(this.domScope, tab);
+      const btn = textButton(tabs, label, () => this.activateTab(tab), selected ? "is-active" : "");
+      btn.id = ids.tabId;
+      btn.dataset.vdInspectorTab = tab;
+      btn.setAttribute("role", "tab");
+      btn.setAttribute("aria-controls", ids.panelId);
+      btn.setAttribute("aria-selected", String(selected));
+      btn.tabIndex = selected ? 0 : -1;
+      btn.addEventListener("keydown", event => {
+        const destination = inspectorTabForKey(tab, event.key);
+        if (!destination) return;
+        event.preventDefault();
+        this.activateTab(destination);
+      });
     });
-    const body = root.createDiv({ cls: "vd-inspector-body" });
+    const activeIds = inspectorTabDomIds(this.domScope, this.tab);
+    const body = root.createDiv({ cls: "vd-inspector-body", attr: {
+      id: activeIds.panelId,
+      role: "tabpanel",
+      "aria-labelledby": activeIds.tabId
+    } });
     const ref = this.plugin.currentRef;
     body.createDiv({ cls: "vd-resource-heading", text: refLabel(ref) });
     if (this.tab === "history") {

@@ -1,6 +1,16 @@
 # Changelog
 
-## Unreleased — 0.1.9 SwordDock Bible developer candidate
+## Unreleased — 0.1.10 SwordDock Bible developer candidate
+
+### Inspector tab keyboard navigation (November 15, 2026)
+
+- Give the Study Inspector a roving tab stop: only the selected resource tab participates in normal Tab order.
+- Support Left/Right Arrow wrapping plus Home/End movement across Commentary, Lexicon, References, Notes, Bookmarks and History.
+- Keep the newly selected tab focused and scroll it into view in narrow Inspector panes; connect each tab to its panel with explicit, instance-scoped ARIA relationships that remain unique if Obsidian restores duplicate Inspector leaves.
+- Live-load 0.1.9 in the isolated Obsidian vault, verify the truthful empty History state, record Romans 8:28 through Quick Jump, observe the new entry and clear control, and confirm the reference/history values persisted across an app reload. Older-entry activation and the clear action remain separate live checks.
+- Expand automated coverage to 101 tests across fourteen files. Live Obsidian verification of the 0.1.10 keyboard behavior remains pending.
+
+## 0.1.9 — Local developer candidate (2026-11-15; unpublished)
 
 ### Bounded reading history (November 15, 2026)
 
