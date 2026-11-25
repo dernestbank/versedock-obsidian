@@ -1,3 +1,5 @@
+> Historical task sequence. The active full-scope continuation is [completion-2026-11-18.md](completion-2026-11-18.md), with current verification in [STATUS.md](../STATUS.md). Earlier read-only phase restrictions below are superseded by the user-authorized implementation scope recorded there.
+
 # SwordDock Bible continuation tasks
 
 ## Task 1: Parse validated MySword RX references

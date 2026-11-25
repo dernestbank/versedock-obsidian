@@ -1,3 +1,5 @@
+> Historical implementation checkpoint. For the current authorized installation/import/management scope and release evidence, use [STATUS.md](../STATUS.md) and the [full completion ledger](../tasks/completion-2026-11-18.md). Earlier read-only boundaries below are retained history.
+
 # SwordDock Bible development checkpoint
 
 Updated: 2026-11-15

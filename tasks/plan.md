@@ -96,3 +96,11 @@ Continue the existing SwordDock Bible developer preview from the verified GBF le
 - What storage root and migration policy should imported modules use outside the plugin folder?
 - Which HTML subset, if any, can be represented safely without changing Scripture semantics?
 
+
+## Active continuation — 2026-11-18
+
+The user has authorized completion of design recovery, all module types, general
+local import, management, interlinear, richer content and release verification.
+See [the full completion ledger](completion-2026-11-18.md). Historical approval
+checkboxes above do not override this current authorization. Implement vertical
+slices in the ledger order; preserve the full goal until its final audit passes.
