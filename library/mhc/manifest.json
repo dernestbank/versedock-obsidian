@@ -1,0 +1,431 @@
+{
+  "id": "mhc",
+  "schemaVersion": 2,
+  "title": "Matthew Henry's Commentary",
+  "fullTitle": "Matthew Henry's Complete Commentary on the Whole Bible",
+  "edition": "2.2 (2022-08-29)",
+  "sourcePage": "https://www.crosswire.org/sword/modules/ModInfo.jsp?modName=MHC",
+  "source": "https://www.crosswire.org/ftpmirror/pub/sword/packages/rawzip/MHC.zip",
+  "sourceSha256": "6bcb936873ca144e317805e5c1677940fd86e2403f7c14517752e44f25c8882b",
+  "license": "Public Domain",
+  "versification": "KJV",
+  "conversion": {
+    "coveredVerses": 31096,
+    "entries": 4249,
+    "versesWithoutCommentary": 4,
+    "unavailableCoordinates": 3
+  },
+  "omissions": {
+    "unavailableCoordinates": [
+      "Rom.14.24",
+      "Rom.14.25",
+      "Rom.14.26"
+    ],
+    "versesWithoutCommentary": [
+      "Josh.18.1",
+      "1Sam.25.1",
+      "2Sam.22.1",
+      "Prov.11.20"
+    ]
+  },
+  "entryCount": 4249,
+  "books": [
+    {
+      "code": "GEN",
+      "entries": 239,
+      "bytes": 1825413,
+      "sha256": "311fd304a693c257f3b0125653ae9553e7850b147a35e291d45b18a0ba0f2455"
+    },
+    {
+      "code": "EXO",
+      "entries": 136,
+      "bytes": 1188890,
+      "sha256": "17000403b411b4bc8d53b21c9defbc9f416eae6fc32895b23ac5dd64b5c02575"
+    },
+    {
+      "code": "LEV",
+      "entries": 88,
+      "bytes": 768071,
+      "sha256": "0189fd67805ead8415367c25a52b429d2711b3e861743734ff682b6db708160d"
+    },
+    {
+      "code": "NUM",
+      "entries": 107,
+      "bytes": 1064028,
+      "sha256": "510b34c0bda70f37c3d0dda12854dcfa9501b81470ac450897bf4277a13b6f29"
+    },
+    {
+      "code": "DEU",
+      "entries": 101,
+      "bytes": 1095173,
+      "sha256": "8b1ad2d97f89b21c7d7727842d1667a47b88af587df86750bfab6d8b6c901995"
+    },
+    {
+      "code": "JOS",
+      "entries": 74,
+      "bytes": 794561,
+      "sha256": "8c3f7e4d5e2a61fbeab5be2470e2943b8a1081a769015f49fb6a2e587d8b23b4"
+    },
+    {
+      "code": "JDG",
+      "entries": 72,
+      "bytes": 855928,
+      "sha256": "ba8a9d44d6ea02f72f9a9edefcc27370955b78903133658500f64dd7ff1ec612"
+    },
+    {
+      "code": "RUT",
+      "entries": 12,
+      "bytes": 152751,
+      "sha256": "1a33070f38fa9855c3536a2c9e54712d20b2bfca197b3e0ad563e5104fc40c08"
+    },
+    {
+      "code": "1SA",
+      "entries": 102,
+      "bytes": 1117946,
+      "sha256": "020bbb25e04c0bfc768abb128d2ed21799791c772a898af23dc20929c117d258"
+    },
+    {
+      "code": "2SA",
+      "entries": 76,
+      "bytes": 843509,
+      "sha256": "9d687e2a6bcc8ba1538f14b2284c5dad13b0de148d8a33b3bb1e38fb998f9f50"
+    },
+    {
+      "code": "1KI",
+      "entries": 74,
+      "bytes": 859292,
+      "sha256": "b69a524b88254a9abbc84746b178b4cc3cbba49e6f90988f081deee9bca336ec"
+    },
+    {
+      "code": "2KI",
+      "entries": 82,
+      "bytes": 842033,
+      "sha256": "c8e168bf997ca8e2ec15b9d6bca34b78e4ca6ee6ab0f6096b5f7d3cb819cfbb6"
+    },
+    {
+      "code": "1CH",
+      "entries": 66,
+      "bytes": 505508,
+      "sha256": "046eafdc969a149e959a73c7b1bf43481f52e74beab979f2680a4fd7d1b40182"
+    },
+    {
+      "code": "2CH",
+      "entries": 83,
+      "bytes": 738051,
+      "sha256": "d6ca9d03d45dfdf55fe4588eb773a7b1c0b339fe9ce1db71013286c0f3021eef"
+    },
+    {
+      "code": "EZR",
+      "entries": 26,
+      "bytes": 253358,
+      "sha256": "9205c1fdc4888259926424fac8b1923e36a5a27f0b44480aa82ce70a51b4729e"
+    },
+    {
+      "code": "NEH",
+      "entries": 32,
+      "bytes": 349735,
+      "sha256": "dad69f5bf1b0840fb62ee0205f041b51c078ecba55cd53c962cb5098ff52e883"
+    },
+    {
+      "code": "EST",
+      "entries": 21,
+      "bytes": 211908,
+      "sha256": "41d220687996f36d24472e4d48f497982b53f76fa322fc088b8e4082b1e8ffca"
+    },
+    {
+      "code": "JOB",
+      "entries": 134,
+      "bytes": 1657964,
+      "sha256": "38c87b9314d821f0a1fa0f584c7e7839f09d0fd262c77f7b06a32dba1b2b1859"
+    },
+    {
+      "code": "PSA",
+      "entries": 445,
+      "bytes": 3844856,
+      "sha256": "e2d7502564faabebf825fd7f155744e3e4df343c9510e317145a849575af28ca"
+    },
+    {
+      "code": "PRO",
+      "entries": 536,
+      "bytes": 1401996,
+      "sha256": "cde10776c55c59b6e19c09d701d6f03bfb0922e2bbb6aed53135e6a3cb2b77e4"
+    },
+    {
+      "code": "ECC",
+      "entries": 42,
+      "bytes": 521077,
+      "sha256": "a1418b5fb00f1c7bc95477d24fda98dec91843b48ab3cc9cbfecc582e0a4f1d4"
+    },
+    {
+      "code": "SOL",
+      "entries": 26,
+      "bytes": 366537,
+      "sha256": "47ddf3c056ada220eca6f3a70cd44bd8dc662d02e22e694e6191ee12e51c54d0"
+    },
+    {
+      "code": "ISA",
+      "entries": 192,
+      "bytes": 2741803,
+      "sha256": "88ee8e3627fa147a7bb24ccca7296b98269de280e1fd251d367d15ae7e105e78"
+    },
+    {
+      "code": "JER",
+      "entries": 148,
+      "bytes": 2114632,
+      "sha256": "a251c7a53397f3f6a1de0ec133db655681e64c5ceae47100c9671c2b934b38d2"
+    },
+    {
+      "code": "LAM",
+      "entries": 14,
+      "bytes": 248024,
+      "sha256": "0cd8314910c9b929f3c2a3fee1fef51be5691d7f2b67b70aa2f59d4ac08fabe8"
+    },
+    {
+      "code": "EZE",
+      "entries": 133,
+      "bytes": 1857570,
+      "sha256": "17e308fd1cc5ece0031cbf9fc6cbb340a8892c8b0a65985de06620271210b441"
+    },
+    {
+      "code": "DAN",
+      "entries": 40,
+      "bytes": 685825,
+      "sha256": "1d000e5b4c9fa0bd80527e97423d978b7dc79a331b5571a3e9703f3e07d265cf"
+    },
+    {
+      "code": "HOS",
+      "entries": 33,
+      "bytes": 602846,
+      "sha256": "6dc15fa349dfa52824eb175213eb01c2ba1bd369a0b3106622bf335297077a14"
+    },
+    {
+      "code": "JOE",
+      "entries": 10,
+      "bytes": 154198,
+      "sha256": "927e3a5d4d79f157e8645d6bf191bfb745e7246da36578ac81ca48f804ecf21e"
+    },
+    {
+      "code": "AMO",
+      "entries": 21,
+      "bytes": 318492,
+      "sha256": "0fe5a34c4a9c4900bfdb5d412973df54c36522ae5008644b4a46d1fcfb574cd7"
+    },
+    {
+      "code": "OBA",
+      "entries": 3,
+      "bytes": 52178,
+      "sha256": "39529f9ceef016dc6cc9103f39cb28651e6d5900531b289428d3837befeaaf0f"
+    },
+    {
+      "code": "JON",
+      "entries": 9,
+      "bytes": 162994,
+      "sha256": "a58ed3b96a514c5c88999973c4228711813feb36a87e9bcf98cf47af00597ea0"
+    },
+    {
+      "code": "MIC",
+      "entries": 17,
+      "bytes": 254028,
+      "sha256": "22c5b7f3e7f5fc6e587ffa5ceb8e9fd6d105ae231dfd7ce177b06f9a482e9286"
+    },
+    {
+      "code": "NAH",
+      "entries": 7,
+      "bytes": 84893,
+      "sha256": "6c3915762f32b1e8c8ea8c1ee5764205e4215763d58df039b976af2c724f0b7d"
+    },
+    {
+      "code": "HAB",
+      "entries": 9,
+      "bytes": 136774,
+      "sha256": "cffd2044f142110df680e5488fbdd38067ee03b775643f0a1afb609dcbd990fa"
+    },
+    {
+      "code": "ZEP",
+      "entries": 10,
+      "bytes": 118668,
+      "sha256": "d5a1af6ff7d750cf0dd7d83fff1280b8d1845cb41368c6d193de586f19e9549f"
+    },
+    {
+      "code": "HAG",
+      "entries": 5,
+      "bytes": 81163,
+      "sha256": "6a884d4f15e37d10655b731714861a3583acbe3ccd3fc933cd270129f625e42c"
+    },
+    {
+      "code": "ZEC",
+      "entries": 34,
+      "bytes": 521243,
+      "sha256": "21728f9f3d6f2de91e80f51d22e2a00166be01225fddd24635a8bbc79cf5d4aa"
+    },
+    {
+      "code": "MAL",
+      "entries": 9,
+      "bytes": 219067,
+      "sha256": "80fa6157a5cc632da846212a880d6d77b191cfdecfe11262873bc086c350586d"
+    },
+    {
+      "code": "MAT",
+      "entries": 131,
+      "bytes": 3310343,
+      "sha256": "bbdb85ec2bb19741d043d374c207260fbaec35314de01f55b08f9005cb9419b7"
+    },
+    {
+      "code": "MAR",
+      "entries": 69,
+      "bytes": 916089,
+      "sha256": "dc20ed6d672e2d4846ad92bcc9da1a40903aa9522db803c5e98a6adb8718d70a"
+    },
+    {
+      "code": "LUK",
+      "entries": 109,
+      "bytes": 2008717,
+      "sha256": "13ddd6d40151de9d0338cf465910a0cbb421c6df2c2265f006589192fb67da40"
+    },
+    {
+      "code": "JOH",
+      "entries": 96,
+      "bytes": 2869862,
+      "sha256": "3b77cbd1f008e833cc2eb09e5b6129cb799795565ab508b9e85d604159ea28f7"
+    },
+    {
+      "code": "ACT",
+      "entries": 109,
+      "bytes": 2452568,
+      "sha256": "f821256c2d833321f8275c072eec896d0369125d65560dff5d7723c42a1341e6"
+    },
+    {
+      "code": "ROM",
+      "entries": 48,
+      "bytes": 939737,
+      "sha256": "2f95482dbedf84a0cb74988baef3876364091a8ee862f3da1e15c4d24ce99d15"
+    },
+    {
+      "code": "1CO",
+      "entries": 67,
+      "bytes": 661389,
+      "sha256": "b6ac2dfd4835543b9729e9f434ca74e7db66a015c27ca77746adae42d49de88b"
+    },
+    {
+      "code": "2CO",
+      "entries": 38,
+      "bytes": 274470,
+      "sha256": "be50a21b20ff56feafcb9153058570dfea5d426bc288dd9c47b75e495287ca9c"
+    },
+    {
+      "code": "GAL",
+      "entries": 18,
+      "bytes": 244901,
+      "sha256": "0aed2079d5f2bcac428cb465b0a0f35d782c11df191eb642a2ec3aade59a524d"
+    },
+    {
+      "code": "EPH",
+      "entries": 18,
+      "bytes": 244802,
+      "sha256": "7cb3dee05efc2b4b259ed8fee7eb8f49759f614b7250716941527126c3b045e7"
+    },
+    {
+      "code": "PHI",
+      "entries": 19,
+      "bytes": 178253,
+      "sha256": "bb02531d85f34a194546f2847369afdc8c8075937c981bee619ccb934840dc48"
+    },
+    {
+      "code": "COL",
+      "entries": 17,
+      "bytes": 159348,
+      "sha256": "83ff179f62efa65767a9a7f1d5685122a0d784019cb3b7e5f51c231ef612b15a"
+    },
+    {
+      "code": "1TH",
+      "entries": 18,
+      "bytes": 145710,
+      "sha256": "53a819bcc68befdd2c35420c70f9d8297e2f8b76245a8e2e3d9074952b2eea64"
+    },
+    {
+      "code": "2TH",
+      "entries": 9,
+      "bytes": 73010,
+      "sha256": "2a6ccab03966dd15baffa4c12187892f4ad98381a13897408f32e9b4f4df7980"
+    },
+    {
+      "code": "1TI",
+      "entries": 17,
+      "bytes": 175522,
+      "sha256": "516af1d4f7593d79141549d1ec062dab2c48a1fe6916bc30e6e0436f16c123a2"
+    },
+    {
+      "code": "2TI",
+      "entries": 13,
+      "bytes": 136264,
+      "sha256": "d03c5e22e2429a5adab18fa45d167a59f0aee13a3069ae6e4b8dc73bc669f9b3"
+    },
+    {
+      "code": "TIT",
+      "entries": 8,
+      "bytes": 173271,
+      "sha256": "933d19340f3b3a879d2364a2267b695ccf92953b0e3acf9059d9d1fca91a80ef"
+    },
+    {
+      "code": "PHM",
+      "entries": 2,
+      "bytes": 67916,
+      "sha256": "ea4e8db584c8a3709702a2961960338d397b9c5935fc0b9c7f4a9840a2b0a068"
+    },
+    {
+      "code": "HEB",
+      "entries": 33,
+      "bytes": 509874,
+      "sha256": "5dbc16a292475a38285fe074672f37f05966f89e818419db9726584d9805c249"
+    },
+    {
+      "code": "JAM",
+      "entries": 13,
+      "bytes": 228532,
+      "sha256": "bf35761c55ec54b0c5fe7689999e8575059d468f6fec2e28f0702ddd265e456b"
+    },
+    {
+      "code": "1PE",
+      "entries": 22,
+      "bytes": 238012,
+      "sha256": "8513753194a1daaa4db3b4c65c7b1dd32c8e0abd6793f3bfac152c73dd3fc84d"
+    },
+    {
+      "code": "2PE",
+      "entries": 13,
+      "bytes": 142947,
+      "sha256": "61bc3d18a713b919907a9eec57b8d6ba82cb2391542353c7e0d19a28464a743d"
+    },
+    {
+      "code": "1JO",
+      "entries": 26,
+      "bytes": 273212,
+      "sha256": "e643ac3ce8da0dc62d4f445ff56ee15f404bc3238291b06b690748ab586f12b6"
+    },
+    {
+      "code": "2JO",
+      "entries": 5,
+      "bytes": 26958,
+      "sha256": "95a670f105e9d8d6ce2e88b9945e476fd902360e1e9c653cacaac1072a750092"
+    },
+    {
+      "code": "3JO",
+      "entries": 4,
+      "bytes": 23398,
+      "sha256": "7c70700ef23d76aad2b17c5ed1c7888464ff9433c28b81f9a6728af41d226c8f"
+    },
+    {
+      "code": "JUD",
+      "entries": 4,
+      "bytes": 75991,
+      "sha256": "dbdef397dbf6f796ae5e0a2321271043bfd429446fece711e3f40c9369984ae0"
+    },
+    {
+      "code": "REV",
+      "entries": 55,
+      "bytes": 442209,
+      "sha256": "2ded131102088d92ef775b3e43a369953cb7ce159cf8015d3b0eb470fa71fe58"
+    }
+  ],
+  "notice": "Public Domain—Copy Freely. CrossWire's MHC 2.2 was prepared from CCEL text supplied by Logos Research. This is the complete commentary edition, including continuations. SwordDock queries the SWORD engine for each available WEB coordinate, groups identical adjacent entries within a chapter, and retains each section's exact original OSIS. Bounded inert rendering preserves headings, paragraphs, source quotations and supported emphasis. Qualified source references open an edition-labelled offline preview; missing or invalid addresses are not guessed. Separate book/chapter introduction keys are not exported. The source uses KJV versification; coordinates are not remapped."
+}
