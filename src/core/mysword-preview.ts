@@ -19,6 +19,7 @@ export interface MySwordBiblePreview {
   hasNT: boolean;
   strongTags: boolean;
   books: number;
+  chapters: number;
   verses: number;
   samples: MySwordVersePreview[];
   warnings: string[];
@@ -60,11 +61,11 @@ function readSamples(db: Database): MySwordVersePreview[] {
 }
 export function validateMySwordModuleHeader(filename: string, bytes: Uint8Array): void {
   if (!/^[^/\\]+\.bbl\.mybible$/i.test(filename))
-    throw new Error("Select an uncompressed .bbl.mybible Bible module. Other module types are not supported yet.");
+    throw new Error("Select an uncompressed .bbl.mybible Bible module. Use Import local file for other compatible module types.");
   if (bytes.byteLength < 100 || bytes.byteLength > MAX_MY_SWORD_BYTES)
     throw new Error("Module must be an SQLite file between 100 bytes and 24 MiB.");
   if (!SQLITE_MAGIC.every((byte, index) => bytes[index] === byte))
-    throw new Error("Not an unencrypted SQLite database; compressed, encrypted and renamed files are not supported.");
+    throw new Error("Not an unencrypted SQLite database; this inspection requires an uncompressed, unencrypted Bible file. Use Import local file for compatible gzip modules.");
 }
 /** Preview a user-provided file in memory. Never writes to the vault or renders HTML. */
 export function inspectMySwordBible(
@@ -100,6 +101,7 @@ export function inspectMySwordBible(
       GROUP BY Book,Chapter,Verse HAVING COUNT(*)>1 LIMIT 1`);
     if (duplicates.length) throw new Error("Duplicate Book/Chapter/Verse records detected.");
     const books = Number(single(db, "SELECT COUNT(DISTINCT Book) FROM Bible")[0]);
+    const chapters = Number(single(db, "SELECT COUNT(DISTINCT Book * 1000 + Chapter) FROM Bible")[0]);
     const emptyVerses = Number(single(db, "SELECT COUNT(*) FROM Bible WHERE length(Scripture) = 0")[0]);
     const samples = readSamples(db);
     const hasFormatting = samples.some(s => /<[^>]+>|\\[A-Za-z]+/.test(s.scripture));
@@ -121,7 +123,7 @@ export function inspectMySwordBible(
       hasOT: Number(metadata.ot) === 1,
       hasNT: Number(metadata.nt) === 1,
       strongTags: Number(metadata.strong) === 1,
-      books, verses: count, samples, warnings
+      books, chapters, verses: count, samples, warnings
     };
   } catch (cause) {
     throw new Error("MySword module inspection failed: " +

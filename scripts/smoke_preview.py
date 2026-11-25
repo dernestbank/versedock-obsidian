@@ -11,6 +11,7 @@ import socket
 import stat
 from tempfile import TemporaryDirectory
 from zipfile import ZipFile
+from build_commentary import CommentaryParser
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -18,7 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 def validate_package(archive: Path) -> None:
     with ZipFile(archive) as zf:
         names = zf.namelist()
-        assert len(names) == len(set(names)) == 76, "Unexpected or duplicate ZIP entries"
+        assert len(names) == len(set(names)) == 1475, "Unexpected or duplicate ZIP entries"
         assert zf.testzip() is None, "Corrupt ZIP entry"
         for entry in zf.infolist():
             name = PurePosixPath(entry.filename)
@@ -50,6 +51,10 @@ def validate_package(archive: Path) -> None:
             license_text = (plugin_dir / "assets" / "LICENSE-sql.js.txt").read_text()
             assert "MIT" in license_text or "Permission is hereby granted" in license_text
             assert inspect_offline_books(plugin_dir / "library" / "webp") == 31103
+            inspect_cross_references(plugin_dir / "library")
+            inspect_commentary(plugin_dir / "library/mhc")
+            inspect_tagged_resources(plugin_dir / "library")
+            inspect_interlinear(plugin_dir / 'library/interlinear')
 
             # A restart can only use files already extracted into this new vault.
             # Explicitly disallow socket use during the simulated second read.
@@ -59,6 +64,10 @@ def validate_package(archive: Path) -> None:
                     AssertionError("Unexpected network access")
                 )
                 assert inspect_offline_books(plugin_dir / "library" / "webp") == 31103
+                inspect_cross_references(plugin_dir / "library")
+                inspect_commentary(plugin_dir / "library/mhc")
+                inspect_tagged_resources(plugin_dir / "library")
+                inspect_interlinear(plugin_dir / 'library/interlinear')
             finally:
                 socket.socket = original_socket
             print("CLEAN-INSTALL PASS:", plugin["name"], plugin["version"],
@@ -94,6 +103,97 @@ def inspect_offline_books(folder: Path) -> int:
     assert "For God so loved the world" in verse["text"]
     assert total == 31103
     return total
+
+
+def inspect_cross_references(library: Path) -> None:
+    folder = library / "crossrefs"
+    manifest = json.loads((folder / "manifest.json").read_text())
+    assert manifest["id"] == "openbible-crossrefs" and manifest["license"] == "CC BY 4.0"
+    assert manifest["recordCount"] == 344016 and len(manifest["books"]) == 66
+    assert "OpenBible.info" in (folder / "SOURCE-LICENSE.md").read_text()
+    assert len(list(folder.iterdir())) == 68
+    count = 0
+    for book in manifest["books"]:
+        raw = (folder / (book["code"] + ".json")).read_bytes()
+        assert len(raw) == book["bytes"] and hashlib.sha256(raw).hexdigest() == book["sha256"]
+        data = json.loads(raw)
+        assert data["code"] == book["code"]
+        records = sum(len(values) for values in data["references"].values())
+        assert records == book["records"]
+        count += records
+    assert count == manifest["recordCount"]
+
+
+def inspect_commentary(folder: Path) -> None:
+    manifest = json.loads((folder / "manifest.json").read_text())
+    assert manifest["id"] == "mhc" and manifest["license"] == "Public Domain" and manifest["schemaVersion"] == 2
+    assert manifest["entryCount"] == 4249 and len(manifest["books"]) == 66
+    assert len(list(folder.iterdir())) == 68
+    assert "Public Domain" in (folder / "SOURCE-LICENSE.md").read_text()
+    count = 0
+    for book in manifest["books"]:
+        raw = (folder / (book["code"] + ".json")).read_bytes()
+        assert len(raw) == book["bytes"] and hashlib.sha256(raw).hexdigest() == book["sha256"]
+        data = json.loads(raw)
+        assert data["code"] == book["code"] and len(data["entries"]) == book["entries"]
+        count += len(data["entries"])
+        if book["code"] == "JOH":
+            john = next(entry for entry in data["entries"] if entry["chapter"] == 3 and entry["verse"] <= 16 <= entry["endVerse"])
+            assert john["verse"] == 1 and john["endVerse"] == 21
+            parser = CommentaryParser()
+            parser.feed(john["source"])
+            parser.close()
+            parser.flush()
+            assert any("God so loved the world" in block["text"] for block in parser.blocks)
+            assert parser.emphasis["italic"] > 0 and len(parser.references) > 0
+    assert count == manifest["entryCount"]
+
+
+def inspect_tagged_resources(library: Path) -> None:
+    folder = library / "kjv"
+    manifest = json.loads((folder / "manifest.json").read_text())
+    assert manifest["id"] == "kjv" and manifest["verseCount"] == 31102
+    assert len(list(folder.iterdir())) == 68 and len(manifest["books"]) == 66
+    count = 0
+    for book in manifest["books"]:
+        raw = (folder / (book["code"] + ".json")).read_bytes()
+        assert len(raw) == book["bytes"] and hashlib.sha256(raw).hexdigest() == book["sha256"]
+        data = json.loads(raw)
+        for chapter in data["chapters"]:
+            for verse in chapter["verses"]:
+                count += 1
+                assert "".join(token["text"] for token in verse["tokens"]) == verse["text"]
+                if book["code"] == "JOH" and chapter["chapter"] == 3 and verse["verse"] == 16:
+                    loved = next(token for token in verse["tokens"] if token["text"] == "loved")
+                    assert loved["strongs"] == ["G25"] and loved["redLetter"]
+    assert count == 31102
+    assert "Crown of England" in (folder / "SOURCE-LICENSE.md").read_text()
+    lexicon = library / "strongs"
+    manifest = json.loads((lexicon / "manifest.json").read_text())
+    assert manifest["id"] == "strongs" and manifest["license"] == "Public Domain"
+    assert len(list(lexicon.iterdir())) == 4
+    for file in manifest["files"]:
+        raw = (lexicon / file["file"]).read_bytes()
+        assert len(raw) == file["bytes"] and hashlib.sha256(raw).hexdigest() == file["sha256"]
+        assert len(json.loads(raw)) == file["entries"]
+    assert json.loads((lexicon / "G.json").read_text())["G25"]["lemma"] == "ἀγαπάω"
+
+
+def inspect_interlinear(folder: Path) -> None:
+    manifest = json.loads((folder / 'manifest.json').read_text())
+    assert manifest['id'] == 'bsb-interlinear' and len(manifest['chapters']) == 1189
+    assert len(list(folder.iterdir())) == 1191
+    words = verses = 0
+    for chapter in manifest['chapters']:
+        assert chapter['file'] == chapter['book'] + '-' + str(chapter['chapter']) + '.json'
+        raw = (folder / chapter['file']).read_bytes()
+        assert len(raw) == chapter['bytes'] and hashlib.sha256(raw).hexdigest() == chapter['sha256']
+        data = json.loads(raw)
+        assert data['book'] == chapter['book'] and data['chapter'] == chapter['chapter']
+        assert [v[0] for v in data['verses']] == chapter['verses']
+        words += sum(len(v[1]) for v in data['verses'])
+        verses += len(data['verses'])
+    assert words == manifest['wordCount'] == 443625 and verses == manifest['verseCount'] == 31102
 
 
 if __name__ == "__main__":

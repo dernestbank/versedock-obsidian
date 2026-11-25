@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { BOOKS, BOOK_BY_VPL, bookByName } from "../src/core/books";
-import { osisId, parseReference, refLabel, parseOsis } from "../src/core/references";
+import { extendReferenceInDirection, extendReferenceToVerse, osisId, parseReference, refLabel, parseOsis, referenceContainsVerse, referenceId, storedReferencesContainVerse } from "../src/core/references";
 
 describe("canonical books", () => {
   it("covers each of 66 unique books", () => {
@@ -33,12 +33,29 @@ describe("reference parsing", () => {
     const ref = parseReference("1co 13:4-7");
     expect(ref.endVerse).toBe(7);
     expect(refLabel(ref)).toBe("1 Corinthians 13:4-7");
+    expect(referenceContainsVerse(ref, 4)).toBe(true);
+    expect(referenceContainsVerse(ref, 7)).toBe(true);
+    expect(referenceContainsVerse(ref, 8)).toBe(false);
+    expect(referenceId(ref)).toBe("1Cor.13.4-7");
+    expect(storedReferencesContainVerse(["1Cor.13.4-7"], parseReference("1 Cor 13:6"))).toBe(true);
+    expect(storedReferencesContainVerse(["1Cor.13.4-7"], parseReference("1 Cor 13:8"))).toBe(false);
+  });
+  it("extends Reader selections from the starting verse", () => {
+    const start = parseReference("John 3:16");
+    expect(referenceId(extendReferenceToVerse(start, 18))).toBe("John.3.16-18");
+    expect(referenceId(extendReferenceToVerse(start, 14))).toBe("John.3.14-16");
+    expect(referenceId(extendReferenceToVerse(parseReference("John 3:16-18"), 21))).toBe("John.3.16-21");
+    expect(referenceId(extendReferenceToVerse(start, 16))).toBe("John.3.16");
+    expect(referenceId(extendReferenceInDirection(parseReference("John 3:16-18"), 19, "forward"))).toBe("John.3.16-19");
+    expect(referenceId(extendReferenceInDirection(parseReference("John 3:16-18"), 15, "backward"))).toBe("John.3.15-18");
   });
   it("roundtrips OSIS", () => {
     expect(osisId(parseOsis("John.3.16"))).toBe("John.3.16");
     expect(osisId(parseOsis("1Cor.13.4"))).toBe("1Cor.13.4");
+    expect(parseOsis("1Cor.13.4-7").endVerse).toBe(7);
+    expect(referenceId(parseOsis("1Cor.13.4-7"))).toBe("1Cor.13.4-7");
   });
-  it.each(["John 0", "John 3:0", "John 3:19-17", "John 3:16-200", "notabook 3:16"])("rejects %s", input => {
+  it.each(["John 0", "John 3:0", "John 3:19-17", "John 3:16-201", "notabook 3:16"])("rejects %s", input => {
     expect(() => parseReference(input)).toThrow();
   });
 });

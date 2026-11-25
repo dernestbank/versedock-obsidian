@@ -1,4 +1,4 @@
-import {osisId, parseOsis, type PassageReference} from "./references";
+import { parseOsis, referenceId, type PassageReference } from "./references";
 
 export const MAX_READING_HISTORY = 50;
 const MAX_PERSISTED_HISTORY_SCAN = 500;
@@ -17,7 +17,7 @@ export function normalizeReadingHistory(value: unknown): string[] {
     const item = value[index];
     if (typeof item !== "string" || item.length > MAX_PERSISTED_REFERENCE_LENGTH) continue;
     try {
-      const canonical = osisId(parseOsis(item));
+      const canonical = referenceId(parseOsis(item));
       if (!seen.has(canonical)) {
         seen.add(canonical);
         normalized.push(canonical);
@@ -33,5 +33,5 @@ export function recordReadingHistory(
   previous: readonly string[],
   reference: PassageReference
 ): string[] {
-  return normalizeReadingHistory([osisId(reference), ...previous]);
+  return normalizeReadingHistory([referenceId(reference), ...previous]);
 }

@@ -1,9 +1,19 @@
-import { osisId, parseOsis, parseReference, refLabel, type PassageReference } from "./references";
+import { parseOsis, parseReference, refLabel, referenceId, type PassageReference } from "./references";
 
 export const MAX_SCRIPTURE_NOTE_SCAN = 5_000;
 export const MAX_SCRIPTURE_NOTE_RESULTS = 50;
 export const MAX_SCRIPTURE_NOTE_REFERENCES = 16;
 const MAX_SCRIPTURE_NOTE_REFERENCE_LENGTH = 64;
+const DEFAULT_STUDY_NOTE_FOLDER = "Bible Study";
+
+/** Keeps the user-configured note destination inside the vault and fails closed on unsafe segments. */
+export function normalizeStudyNoteFolder(input: unknown): string {
+  if (typeof input !== "string") return DEFAULT_STUDY_NOTE_FOLDER;
+  const segments = input.trim().replace(/\\/g, "/").split("/").map(segment => segment.trim());
+  if (!segments.length || segments.some(segment => !segment || segment === "." || segment === ".." || /[\\:*?"<>|\[\]]/.test(segment)))
+    return DEFAULT_STUDY_NOTE_FOLDER;
+  return segments.join("/");
+}
 
 export interface IndexedScriptureNote {
   path: string;
@@ -36,8 +46,7 @@ function linksToReference(value: unknown, target: string): boolean {
 }
 
 export function scriptureNoteReferenceId(reference: PassageReference): string {
-  const start = osisId(reference);
-  return reference.endVerse === undefined ? start : start + "-" + reference.endVerse;
+  return referenceId(reference);
 }
 
 export function parseScriptureNoteReference(input: string): PassageReference {
@@ -68,29 +77,29 @@ export function discoverScriptureNotes(
   };
 }
 
-function studyNotePathBase(reference: PassageReference, includeEnd: boolean): string {
+function studyNotePathBase(reference: PassageReference, includeEnd: boolean, folder: string): string {
   const book = reference.book.name.replace(/[\/:*?"<>|]/g, "");
-  return "Bible Study/" + book + "/" + book + " " + reference.chapter +
+  return normalizeStudyNoteFolder(folder) + "/" + book + "/" + book + " " + reference.chapter +
     (reference.verse ? "-" + reference.verse : "") +
     (includeEnd && reference.endVerse ? "-" + reference.endVerse : "") + ".md";
 }
 
 /** Preferred path; ranges include both endpoints so they cannot collide with a single verse. */
-export function studyNotePath(reference: PassageReference): string {
-  return studyNotePathBase(reference, true);
+export function studyNotePath(reference: PassageReference, folder = DEFAULT_STUDY_NOTE_FOLDER): string {
+  return studyNotePathBase(reference, true, folder);
 }
 
 /** Start-only path used by previews through 0.1.11; retained for legacy range-note recovery. */
-export function legacyStudyNotePath(reference: PassageReference): string {
-  return studyNotePathBase(reference, false);
+export function legacyStudyNotePath(reference: PassageReference, folder = DEFAULT_STUDY_NOTE_FOLDER): string {
+  return studyNotePathBase(reference, false, folder);
 }
 
-export function newStudyNoteMarkdown(reference: PassageReference): string {
+export function newStudyNoteMarkdown(reference: PassageReference, edition: string = "WEB"): string {
   return [
     "---",
     "type: scripture-study",
     'scripture: "' + scriptureNoteReferenceId(reference) + '"',
-    'translation: "WEB"',
+    'translation: ' + JSON.stringify(edition),
     "---", "",
     "# " + refLabel(reference), "",
     "## Observations", "", "## Questions", "", "## Reflections", ""

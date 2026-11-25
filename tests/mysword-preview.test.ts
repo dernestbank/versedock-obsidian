@@ -35,6 +35,7 @@ describe("MySword SQLite preview", () => {
     const preview = inspectMySwordBible(sql, filename, makeDb());
     expect(preview.abbreviation).toBe("TEST");
     expect(preview.books).toBe(1);
+    expect(preview.chapters).toBe(1);
     expect(preview.verses).toBe(1);
     expect(preview.samples[0].scripture).toContain("<script>alert('x')</script>");
     expect(preview.warnings.join(" ")).toContain("nothing was installed");
@@ -95,6 +96,7 @@ describe("MySword SQLite preview", () => {
       const inspected = inspectMySwordBible(sql, "generated-fixture.bbl.mybible", bytes);
       expect(inspected.verses).toBe(31103);
       expect(inspected.books).toBe(66);
+      expect(inspected.chapters).toBeGreaterThan(1000);
       expect(inspected.samples.length).toBe(4);
       expect(inspected.warnings.join(" ")).toContain("5 empty verse record(s)");
     } finally { db.close(); }

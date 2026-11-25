@@ -8,7 +8,7 @@ const config = {
   format: "cjs",
   target: "es2022",
   platform: "browser",
-  external: ["obsidian", "electron", "@codemirror/*", "@lezer/*"],
+  external: ["obsidian", "electron", "node:*", "@codemirror/*", "@lezer/*"],
   sourcemap: production ? false : "inline",
   minify: production,
   logLevel: "info",

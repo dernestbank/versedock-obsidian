@@ -32,7 +32,7 @@ export interface ConversionPreflight {
   partialBooks: boolean;
   blockers: string[];
   notes: string[];
-  /** Explicitly false until a separate license-aware, opt-in writer exists. */
+  /** Always false: this advanced inspection never creates or installs content. */
   installsModule: false;
 }
 
@@ -170,7 +170,7 @@ function finishPreflight(
   if (typeof metadata.customcss === "string" && metadata.customcss.trim())
     blockers.push("Module CustomCSS is present; its display behavior requires safe rendering review.");
   const notes = [
-    "Supported GBF semantics were analyzed without changing source text; conversion and installation remain unavailable.",
+    "Supported GBF semantics were analyzed without changing source text. This advanced inspection does not install content; use Import local file to review a compatible module for installation.",
     "Read-only preflight: no files were created, modified, uploaded or installed.",
     "Technical preflight cannot verify copyright, licensing, provenance or translation accuracy.",
     "Verse mappings must be compared to the edition's published versification before any conversion."

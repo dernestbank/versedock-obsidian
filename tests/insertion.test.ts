@@ -46,4 +46,14 @@ describe("safe Scripture insertion", () => {
     expect(formatPassageMarkdown("quote", "John 3:16 (WEB)", v)).toBe(
       "> 16 First line\n> second line\n> — John 3:16 (WEB)");
   });
+  it("formats a reference link to the deterministic study-note path", () => {
+    expect(formatPassageMarkdown("reference", "John 3:16 (WEB)", [], "Bible Study/John/John 3-16.md"))
+      .toBe("[[Bible Study/John/John 3-16.md|John 3:16 (WEB)]]");
+  });
+  it('keeps imported source text inert when inserting Markdown',()=>{
+    const result=formatPassageMarkdown('quote','Local <img src=x>\n![label](https://example.test)',[{verse:1,text:'<img src="https://example.test"> ![image](https://example.test)\n# Heading'}]);
+    expect(result).toContain('\\<img');expect(result).toContain('\\!\\[image\\]');expect(result).toContain('> \\# Heading');
+    expect(result.split('\n').every(line=>line.startsWith('> '))).toBe(true);
+    expect(formatPassageMarkdown('reference','Title ]] ![image](remote)',[],'Notes/John.md')).not.toContain('Title ]]');
+  });
 });

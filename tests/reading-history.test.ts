@@ -28,6 +28,11 @@ describe("reading history", () => {
     expect(previous).toEqual(["Ps.23", "John.3.16", "Gen.1"]);
   });
 
+  it("persists both endpoints for a selected verse range", () => {
+    expect(recordReadingHistory([], parseReference("John 3:16-18"))).toEqual(["John.3.16-18"]);
+    expect(normalizeReadingHistory(["John.3.16-18"])).toEqual(["John.3.16-18"]);
+  });
+
   it("keeps only the fifty most recent canonical references", () => {
     const previous = Array.from({length: MAX_READING_HISTORY}, (_, index) =>
       `John.3.${index + 1}`);

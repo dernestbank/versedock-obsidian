@@ -6,6 +6,7 @@ import {
   MAX_SCRIPTURE_NOTE_SCAN,
   discoverScriptureNotes,
   legacyStudyNotePath,
+  normalizeStudyNoteFolder,
   newStudyNoteMarkdown,
   parseScriptureNoteReference,
   scriptureNoteReferenceId,
@@ -22,6 +23,19 @@ function note(
 }
 
 describe("Scripture-linked note discovery", () => {
+  it("attributes newly created notes to the selected Bible edition", () => {
+    expect(newStudyNoteMarkdown(parseReference("John 3:16"), "KJV")).toContain('translation: "KJV"');
+    expect(newStudyNoteMarkdown(parseReference("John 3:16"))).toContain('translation: "WEB"');
+    expect(newStudyNoteMarkdown(parseReference("John 3:16"), 'Edition "A"\n---\ntype: other'))
+      .toContain('translation: "Edition \\"A\\"\\n---\\ntype: other"');
+  });
+  it("normalizes configurable note folders without allowing traversal", () => {
+    expect(normalizeStudyNoteFolder("  Research\\Scripture / Notes  ")).toBe("Research/Scripture/Notes");
+    expect(normalizeStudyNoteFolder("../outside/<vault>")).toBe("Bible Study");
+    expect(normalizeStudyNoteFolder("Research/[unsafe]")).toBe("Bible Study");
+    expect(normalizeStudyNoteFolder("../../")).toBe("Bible Study");
+    expect(studyNotePath(parseReference("John 3:16"), "Research/Scripture")).toBe("Research/Scripture/John/John 3-16.md");
+  });
   it("finds exact scalar and array references in recent-first order without mutating input", () => {
     const entries = [
       note("Older.md", "John.3.16", 10),

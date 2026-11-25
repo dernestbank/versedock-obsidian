@@ -1,4 +1,5 @@
 import { setIcon } from "obsidian";
+import type { StudyLinkAssignment } from "../controller";
 
 export function iconButton(parent: HTMLElement, icon: string, title: string, action: () => void, cls = ""): HTMLButtonElement {
   const button = parent.createEl("button", {
@@ -13,6 +14,22 @@ export function textButton(parent: HTMLElement, title: string, action: () => voi
     cls: "vd-text-button " + cls, text: title, attr: { type: "button" }
   });
   button.addEventListener("click", action);
+  return button;
+}
+export function linkButton(parent: HTMLElement, assignment: StudyLinkAssignment, action: () => void): HTMLButtonElement {
+  const label = assignment.group === "unlinked"
+    ? "Links · Unlinked"
+    : "Link " + assignment.group + " · " + (assignment.mode === "follow" ? "Follow" : "Pinned");
+  const button = textButton(parent, label, action, "vd-link-selector");
+  button.dataset.linkGroup = assignment.group;
+  button.dataset.linkMode = assignment.mode;
+  button.setAttribute("aria-label", label);
+  if (assignment.group !== "unlinked") {
+    button.empty();
+    button.createSpan({ cls: "vd-link-dot", attr: { "aria-hidden": "true" } });
+    button.createSpan({ text: "Link " + assignment.group });
+    button.createSpan({ cls: "vd-link-mode", text: "· " + (assignment.mode === "follow" ? "Follow" : "Pinned") });
+  }
   return button;
 }
 export function pill(parent: HTMLElement, value: string, cls = ""): HTMLElement {

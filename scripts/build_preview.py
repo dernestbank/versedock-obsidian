@@ -21,6 +21,37 @@ actual = {p.name for p in library_dir.iterdir()}
 assert actual == allowed_books, "Unexpected/missing library resources: " + str(actual ^ allowed_books)
 
 paths = assets + ["library/webp/" + name for name in sorted(allowed_books)]
+references_dir = ROOT / "library/crossrefs"
+references = json.loads((references_dir / "manifest.json").read_text())
+assert references["id"] == "openbible-crossrefs" and references["license"] == "CC BY 4.0"
+assert {book["code"] for book in references["books"]} == {book["code"] for book in web["books"]}
+reference_files = allowed_books
+assert {p.name for p in references_dir.iterdir()} == reference_files, "Unexpected cross-reference files"
+paths += ["library/crossrefs/" + name for name in sorted(reference_files)]
+commentary_dir = ROOT / "library/mhc"
+commentary = json.loads((commentary_dir / "manifest.json").read_text())
+assert commentary["id"] == "mhc" and commentary["license"] == "Public Domain" and len(commentary["books"]) == 66
+assert {book["code"] for book in commentary["books"]} == {book["code"] for book in web["books"]}
+assert {p.name for p in commentary_dir.iterdir()} == allowed_books, "Unexpected commentary files"
+paths += ["library/mhc/" + name for name in sorted(allowed_books)]
+tagged_dir = ROOT / "library/kjv"
+tagged = json.loads((tagged_dir / "manifest.json").read_text())
+assert tagged["id"] == "kjv" and tagged["verseCount"] == 31102 and len(tagged["books"]) == 66
+assert {p.name for p in tagged_dir.iterdir()} == allowed_books, "Unexpected tagged Bible files"
+paths += ["library/kjv/" + name for name in sorted(allowed_books)]
+lexicon_dir = ROOT / "library/strongs"
+lexicon = json.loads((lexicon_dir / "manifest.json").read_text())
+lexicon_files = {"manifest.json", "SOURCE-LICENSE.md", "G.json", "H.json"}
+assert lexicon["id"] == "strongs" and lexicon["license"] == "Public Domain"
+assert {p.name for p in lexicon_dir.iterdir()} == lexicon_files, "Unexpected dictionary files"
+paths += ["library/strongs/" + name for name in sorted(lexicon_files)]
+interlinear_dir = ROOT / "library/interlinear"
+interlinear = json.loads((interlinear_dir / "manifest.json").read_text())
+assert interlinear['id'] == 'bsb-interlinear' and interlinear['wordCount'] == 443625
+interlinear_files = {entry['file'] for entry in interlinear['chapters']} | {'manifest.json', 'SOURCE-LICENSE.md'}
+assert len(interlinear_files) == 1191
+assert {p.name for p in interlinear_dir.iterdir()} == interlinear_files, 'Unexpected interlinear files'
+paths += ['library/interlinear/' + name for name in sorted(interlinear_files)]
 for name in paths:
     assert (ROOT / name).is_file(), "Missing package asset: " + name
 target = ROOT / "dist" / f"SwordDock-Bible-{version}-offline-preview.zip"

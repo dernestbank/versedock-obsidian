@@ -1,6 +1,8 @@
 import { Modal, MarkdownView, Notice } from "obsidian";
+import type { BibleResource } from "../core/library";
 import { BOOKS } from "../core/books";
 import { parseReference, refLabel, type PassageReference } from "../core/references";
+import { studyNotePath } from "../core/scripture-notes";
 import type { SwordDockController } from "../controller";
 import { iconButton, textButton, emptyState } from "./components";
 import { captureInsertionSnapshot, insertAtSnapshot, formatPassageMarkdown, type InsertionSnapshot, type InsertFormat } from "../core/insertion";
@@ -15,6 +17,8 @@ export class ReferenceModal extends Modal {
   private readonly editorPath: string | null;
   private readonly targetSnapshot: InsertionSnapshot | null;
   private inserting = false;
+  private previewBible: BibleResource | null = null;
+  private unsubscribe: (() => void) | null = null;
 
   constructor(private readonly plugin: SwordDockController, private readonly mode: "jump" | "insert") {
     super(plugin.app);
@@ -26,6 +30,16 @@ export class ReferenceModal extends Modal {
   onOpen(): void {
     const root = this.contentEl;
     root.empty(); root.addClass("versedock", "vd-reference-modal");
+    // Keep modal actions from reaching an underlying Reader row after the
+    // modal closes. Obsidian keeps the native workspace event surface alive
+    // while a Modal is being dismissed, so this boundary is important for
+    // preserving range endpoints.
+    root.addEventListener("click", event => event.stopPropagation());
+    root.addEventListener("keydown", event => {
+      // Keep the modal's Enter action from leaking into a focused Reader row;
+      // let Escape continue to reach Obsidian's native modal close handling.
+      if ((event as KeyboardEvent).key === "Enter") event.stopPropagation();
+    });
     const head = root.createDiv({ cls: "vd-modal-header" });
     head.createEl("h2", { text: this.mode === "jump" ? "Quick Jump" : "Quick Verse Insert" });
     head.createEl("p", { text: this.mode === "jump" ? "Go directly to a passage" : "Preview and insert Scripture in Markdown" });
@@ -42,12 +56,22 @@ export class ReferenceModal extends Modal {
     this.input.value = refLabel(this.plugin.currentRef);
     void this.update();
     this.input.focus(); this.input.select();
-    root.createEl("p", { cls: "vd-modal-tip", text: this.mode === "insert"
-      ? "Insertion uses the original Markdown selection. If your note or selection changes, Scripture is copied instead. WEB edition · Offline."
-      : "Examples: John 3:16, Ps 23, 1 Cor 13:4-7. Preview: installed WEB edition." });
+    const tip = root.createEl("p", { cls: "vd-modal-tip", text: this.previewHint() });
+    this.unsubscribe = this.plugin.subscribe(() => {
+      if (this.previewBible === this.plugin.readerBible) return;
+      tip.setText(this.previewHint());
+      void this.update();
+    });
+  }
+  private previewHint(): string {
+    const edition = this.plugin.readerBible.metadata?.abbreviation;
+    return this.mode === "insert"
+      ? "Insertion uses the original Markdown selection. If your note or selection changes, Scripture is copied instead. Edition: " + edition + " · Offline."
+      : "Examples: John 3:16, Ps 23, 1 Cor 13:4-7. Preview: " + edition + " edition.";
   }
   private async update(): Promise<void> {
     const version = ++this.revision;
+    const bible = this.plugin.readerBible; this.previewBible = bible;
     this.preview.empty(); this.actions.empty(); this.current = null;
     let ref: PassageReference;
     try {
@@ -56,13 +80,15 @@ export class ReferenceModal extends Modal {
       if (this.input.value.trim()) emptyState(this.preview, "Enter a Scripture reference", "Try John 3:16, Romans 8:28, or Psalms 23.", "search");
       return;
     }
+    this.preview.createEl("p", { cls: "vd-modal-tip vd-modal-loading", text: "Loading offline Bible preview…" });
     try {
-      const verses = await this.plugin.library.getPassage(ref);
+      const verses = await bible.getPassage(ref);
       if (version !== this.revision) return;
+      this.preview.empty();
       this.current = ref;
       const heading = this.preview.createDiv({ cls: "vd-preview-heading" });
       heading.createEl("strong", { text: refLabel(ref) });
-      heading.createSpan({ cls: "vd-pill", text: "WEB · Offline" });
+      heading.createSpan({ cls: "vd-pill", text: bible.metadata?.abbreviation + " · Offline" });
       const content = this.preview.createDiv({ cls: "vd-preview-verse" });
       const max = ref.verse === undefined ? Math.min(verses.length, 4) : verses.length;
       verses.slice(0, max).forEach(v => {
@@ -76,19 +102,33 @@ export class ReferenceModal extends Modal {
       } else {
         textButton(this.actions, "Insert callout", () => { void this.insert("callout"); }, "mod-cta");
         textButton(this.actions, "Insert quote", () => { void this.insert("quote"); });
+        textButton(this.actions, "Insert reference link", () => { void this.insert("reference"); });
+        textButton(this.actions, "Create study note", () => {
+          const current = this.current;
+          if (!current) return;
+          void this.plugin.openStudyNote(current);
+          this.close();
+        });
         textButton(this.actions, "Copy", () => { void this.plugin.copyPassage(ref); });
       }
     } catch (error) {
       if (version !== this.revision) return;
+      this.preview.empty();
       emptyState(this.preview, "Passage unavailable", String(error instanceof Error ? error.message : error), "alert-circle");
     }
   }
   private activate(): void {
     if (!this.current) { new Notice("Choose a valid passage first."); return; }
     if (this.mode === "jump") {
-      this.plugin.selectReference(this.current);
-      void this.plugin.openReader();
+      // Close before applying the reference. Obsidian's modal event plumbing
+      // can otherwise let the same Enter/click reach the underlying Reader,
+      // collapsing a range back to its first verse.
+      const target = this.current;
       this.close();
+      window.setTimeout(() => {
+        this.plugin.selectReference(target);
+        void this.plugin.openReader();
+      }, 0);
     } else {
       void this.insert("callout");
     }
@@ -108,10 +148,11 @@ export class ReferenceModal extends Modal {
     const version = this.revision;
     this.inserting = true;
     try {
-      const verses = await this.plugin.library.getPassage(ref);
+      const bible = this.plugin.readerBible;
+      const verses = await bible.getPassage(ref);
       if (this.revision !== version) return;
-      const referenceLabel = refLabel(ref) + " (WEB)";
-      const markdown = formatPassageMarkdown(format, referenceLabel, verses);
+      const referenceLabel = refLabel(ref) + " (" + bible.metadata?.abbreviation + ")";
+      const markdown = formatPassageMarkdown(format, referenceLabel, verses, studyNotePath(ref, this.plugin.settings.studyNoteFolder));
       const viewStillOpen = this.editorView !== null &&
         this.plugin.app.workspace.getLeavesOfType("markdown").some(leaf => leaf.view === this.editorView);
       if (!viewStillOpen || !this.editorView || !this.targetSnapshot ||
@@ -132,5 +173,5 @@ export class ReferenceModal extends Modal {
       this.inserting = false;
     }
   }
-  onClose(): void { this.revision++; this.contentEl.empty(); }
+  onClose(): void { this.revision++; this.unsubscribe?.(); this.unsubscribe = null; this.previewBible = null; this.contentEl.empty(); }
 }

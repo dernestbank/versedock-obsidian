@@ -25,8 +25,8 @@ export function parseReference(input: string): PassageReference {
   if (verse !== undefined && (!Number.isSafeInteger(verse) || verse < 1 || verse > 200)) {
     throw new ReferenceError("Verse number is out of range.");
   }
-  if (endVerse !== undefined && (endVerse < verse! || endVerse > 200 || endVerse - verse! > 100)) {
-    throw new ReferenceError("Verse range must be ascending and contain at most 101 verses.");
+  if (endVerse !== undefined && (endVerse < verse! || endVerse > 200)) {
+    throw new ReferenceError("Verse range must be ascending and stay within verses 1–200.");
   }
   return { book: result.book, chapter, verse, endVerse };
 }
@@ -41,10 +41,55 @@ export function osisId(ref: PassageReference): string {
   if (ref.verse !== undefined) id += "." + ref.verse;
   return id;
 }
+
+/** Returns the persisted identifier, retaining a same-chapter verse range. */
+export function referenceId(ref: PassageReference): string {
+  return osisId(ref) + (ref.endVerse === undefined ? "" : "-" + ref.endVerse);
+}
+
+/** True when a verse is inside the selected reference's same-chapter range. */
+export function referenceContainsVerse(ref: PassageReference, verse: number): boolean {
+  if (ref.verse === undefined) return false;
+  return verse >= ref.verse && verse <= (ref.endVerse ?? ref.verse);
+}
+
+/** Extends a same-chapter Reader selection from its starting verse. */
+export function extendReferenceToVerse(ref: PassageReference, verse: number): PassageReference {
+  if (ref.verse === undefined) return { book: ref.book, chapter: ref.chapter, verse };
+  const start = Math.min(ref.verse, verse);
+  const end = Math.max(ref.verse, verse);
+  return end === start
+    ? { book: ref.book, chapter: ref.chapter, verse: start }
+    : { book: ref.book, chapter: ref.chapter, verse: start, endVerse: end };
+}
+
+/** Extends an existing Reader range at the requested keyboard edge. */
+export function extendReferenceInDirection(ref: PassageReference, verse: number, direction: "forward" | "backward"): PassageReference {
+  if (ref.verse === undefined) return { book: ref.book, chapter: ref.chapter, verse };
+  const currentEnd = ref.endVerse ?? ref.verse;
+  const start = direction === "backward" ? Math.min(ref.verse, verse) : ref.verse;
+  const end = direction === "forward" ? Math.max(currentEnd, verse) : currentEnd;
+  return start === end
+    ? { book: ref.book, chapter: ref.chapter, verse: start }
+    : { book: ref.book, chapter: ref.chapter, verse: start, endVerse: end };
+}
+
+/** Checks a persisted bookmark/highlight list without treating malformed entries as fatal. */
+export function storedReferencesContainVerse(ids: readonly string[], target: PassageReference): boolean {
+  if (target.verse === undefined) return false;
+  return ids.some(id => {
+    try {
+      const stored = parseOsis(id);
+      return stored.book.osis === target.book.osis && stored.chapter === target.chapter && referenceContainsVerse(stored, target.verse!);
+    } catch {
+      return false;
+    }
+  });
+}
 export function parseOsis(input: string): PassageReference {
-  const match = /^([1-3]?[A-Za-z]+)\.(\d+)(?:\.(\d+))?$/.exec(input);
+  const match = /^([1-3]?[A-Za-z]+)\.(\d+)(?:\.(\d+)(?:-(\d+))?)?$/.exec(input);
   if (!match) throw new ReferenceError("Invalid OSIS reference.");
   const book = BOOK_BY_OSIS.get(match[1]);
   if (!book) throw new ReferenceError("Unsupported OSIS book.");
-  return parseReference(book.name + " " + match[2] + (match[3] ? ":" + match[3] : ""));
+  return parseReference(book.name + " " + match[2] + (match[3] ? ":" + match[3] + (match[4] ? "-" + match[4] : "") : ""));
 }

@@ -4,6 +4,7 @@ import {
   MAX_SCRIPTURE_NOTE_SCAN,
   discoverScriptureNotes,
   legacyStudyNotePath,
+  normalizeStudyNoteFolder,
   parseScriptureNoteReference,
   scriptureNoteReferenceId,
   studyNotePath,
@@ -55,12 +56,13 @@ export interface StudyNoteTarget {
 }
 
 /** Chooses a non-colliding range path while recovering only positively identified legacy range notes. */
-export function resolveStudyNoteTarget(app: App, reference: PassageReference): StudyNoteTarget {
-  const preferredPath = studyNotePath(reference);
+export function resolveStudyNoteTarget(app: App, reference: PassageReference, folder = "Bible Study"): StudyNoteTarget {
+  const normalizedFolder = normalizeStudyNoteFolder(folder);
+  const preferredPath = studyNotePath(reference, normalizedFolder);
   const preferred = app.vault.getFileByPath(preferredPath);
   if (preferred) return {path: preferredPath, file: preferred};
   if (reference.endVerse !== undefined) {
-    const legacyPath = legacyStudyNotePath(reference);
+    const legacyPath = legacyStudyNotePath(reference, normalizedFolder);
     const legacy = app.vault.getFileByPath(legacyPath);
     if (legacy && isRecognizedLegacyRange(app, legacy, reference)) return {path: legacyPath, file: legacy};
   }
@@ -68,9 +70,10 @@ export function resolveStudyNoteTarget(app: App, reference: PassageReference): S
 }
 
 /** Uses Obsidian's existing metadata index; no Markdown file content is read. */
-export function discoverVaultScriptureNotes(app: App, reference: PassageReference): ScriptureNoteDiscovery {
+export function discoverVaultScriptureNotes(app: App, reference: PassageReference, folder = "Bible Study"): ScriptureNoteDiscovery {
   const files = app.vault.getMarkdownFiles();
-  const primaryTarget = resolveStudyNoteTarget(app, reference);
+  const normalizedFolder = normalizeStudyNoteFolder(folder);
+  const primaryTarget = resolveStudyNoteTarget(app, reference, normalizedFolder);
   const primary = primaryTarget.file;
   const selected: TFile[] = [];
   if (primary) selected.push(primary);
@@ -78,7 +81,7 @@ export function discoverVaultScriptureNotes(app: App, reference: PassageReferenc
     if (selected.length >= MAX_SCRIPTURE_NOTE_SCAN) break;
     if (file.path !== primary?.path) selected.push(file);
   }
-  const legacyRange = reference.endVerse !== undefined && primary?.path === legacyStudyNotePath(reference);
+  const legacyRange = reference.endVerse !== undefined && primary?.path === legacyStudyNotePath(reference, normalizedFolder);
   const discovery = discoverScriptureNotes(selected.map(file => {
     const isPrimary = file.path === primary?.path;
     return indexedNote(app, file, {

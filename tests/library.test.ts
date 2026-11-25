@@ -43,6 +43,29 @@ describe("official WEB content", () => {
     });
     expect(search.results.some(r => r.label === "John 3:16")).toBe(true);
   });
+  it("rejects a range whose requested endpoint is outside the chapter", async () => {
+    const app = { vault: {
+      configDir: ".obsidian",
+      adapter: {
+        read: async (name: string) => readFileSync(path.join(libraryPath, path.basename(name)), "utf-8")
+      }
+    }} as unknown as App;
+    const reader = new OfflineBibleLibrary(app, "versedock");
+    expect(await reader.initialize()).toBe(true);
+    await expect(reader.getPassage(parseReference("John 3:16-52"))).rejects.toThrow("No complete passage found");
+  });
+  it("measures installed manifest and book files without exposing adapter paths", async () => {
+    const app = { vault: {
+      configDir: ".obsidian",
+      adapter: {
+        read: async (name: string) => readFileSync(path.join(libraryPath, path.basename(name)), "utf-8"),
+        stat: async (name: string) => ({ type: "file", size: name.endsWith("manifest.json") ? 12 : 7 })
+      }
+    }} as unknown as App;
+    const reader = new OfflineBibleLibrary(app, "versedock");
+    expect(await reader.initialize()).toBe(true);
+    expect(await reader.getStorageSummary()).toEqual({ bytes: 12 + 66 * 7, files: 67, missing: 0 });
+  });
   it("does not expose an absolute resource path when a book cannot be read", async () => {
     const privatePath = "/Users/private/Vault/.obsidian/plugins/versedock/library/webp/JOH.json";
     const app = { vault: {
