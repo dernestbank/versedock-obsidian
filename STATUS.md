@@ -2006,3 +2006,7 @@ its own vault and profile and retains the restarted Reader capture. Network
 isolation is supplied by the caller. Windows CI now builds and exercises the
 native application from a digest-pinned installer. LF checkout rules preserve
 the bytes of packaged text even when Git's Windows newline conversion is enabled.
+
+## Theme contrast, screen reader and Windows — November 26, 2026
+
+KJV red-letter contrast now reaches at least 4.93:1 across the 20 measured Mac samples. Native Reader, Study, Resources and Library captures cover five themes, two appearances and narrow and wide docks. Orca announced Library navigation and Greek word details in the Linux application. Windows passed the 500-test suite, packaging, fresh native startup and full application restart on the preceding stylesheet. Current matrix results, package identity and curated captures are in [native desktop verification](docs/specs/native-desktop-2026-11-26.md).

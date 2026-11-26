@@ -82,6 +82,28 @@ async function observeCompanion(page) {
   await reader.locator('.vd-interlinear-word').first().waitFor();
   assert.match(await reader.locator('.vd-interlinear-head').innerText(), /Berean interlinear companion\s+John 3:16/);
   assert.match(await reader.locator('.vd-verse[data-verse="16"]').innerText(), /only begotten Son/i);
+  const contrast = await reader.locator('.vd-verse.is-selected .vd-red-letter').first().evaluate(word => {
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = 1;
+    const ctx = canvas.getContext('2d');
+    const fill = color => { ctx.fillStyle = color; ctx.fillRect(0, 0, 1, 1); };
+    const luminance = () => {
+      const [r, g, b] = Array.from(ctx.getImageData(0, 0, 1, 1).data, v => {
+        const channel = v / 255;
+        return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const layers = [];
+    for (let el = word; el; el = el.parentElement) layers.push(getComputedStyle(el).backgroundColor);
+    fill('white');
+    layers.reverse().forEach(fill);
+    const background = luminance();
+    fill(getComputedStyle(word).color);
+    const foreground = luminance();
+    return (Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05);
+  });
+  assert.ok(contrast >= 4.5, 'Selected red-letter verse contrast: ' + contrast.toFixed(2));
   const words = reader.locator('.vd-interlinear-word');
   assert.equal(await words.count(), 25);
   await words.first().click();

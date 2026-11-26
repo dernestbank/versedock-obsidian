@@ -275,7 +275,10 @@ body.is-mobile .versedock .vd-icon-button { min-width: 44px; min-height: 44px; }
   font: inherit; line-height: inherit; color: inherit; white-space: normal;
   cursor: pointer; user-select: text; -webkit-user-select: text;
 }
-.versedock .vd-red-letter, .versedock button.vd-tagged-word.vd-red-letter { color: var(--text-error, #c45959); }
+.versedock .vd-red-letter, .versedock button.vd-tagged-word.vd-red-letter {
+  color: var(--text-normal);
+  color: color-mix(in srgb, var(--text-error, #c45959) 50%, var(--text-normal));
+}
 .versedock .vd-added-word { font-style: italic; }
 .versedock button.vd-tagged-word:hover { background: var(--background-modifier-hover); }
 .versedock button.vd-tagged-word[aria-pressed="true"] { background: var(--text-highlight-bg); text-decoration: underline; text-underline-offset: 3px; }
