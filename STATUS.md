@@ -2009,7 +2009,7 @@ the bytes of packaged text even when Git's Windows newline conversion is enabled
 
 ## Theme contrast, screen reader and Windows — November 26, 2026
 
-KJV red-letter contrast now reaches at least 4.93:1 across the 20 measured Mac samples. Native Reader, Study, Resources and Library captures cover five themes, two appearances and narrow and wide docks. Orca announced Library navigation and Greek word details in the Linux application. Windows passed the 500-test suite, packaging, fresh native startup and full application restart on the preceding stylesheet. Current matrix results, package identity and curated captures are in [native desktop verification](docs/specs/native-desktop-2026-11-26.md).
+The first stylesheet adjustment reached 4.461:1 across the 20 measured Mac samples after correcting for the display profile. The subsequent stylesheet reached 4.998:1 for red-letter text and 5.719:1 for the measured Library controls. Current native captures cover Reader, Study, Resources and Library across five themes, two appearances and narrow and wide docks. Orca announced Library navigation and Greek word details in the Linux application. Package identity, publisher update and rollback, source checks and curated captures are in [native desktop verification](docs/specs/native-desktop-2026-11-26.md).
 
 ## November 26 — Native publisher interruption and retry
 

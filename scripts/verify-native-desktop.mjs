@@ -77,12 +77,8 @@ async function command(page, id) {
   const executed = await page.evaluate(id => app.commands.executeCommandById('versedock:' + id), id);
   assert.ok(executed, 'Missing native command ' + id);
 }
-async function observeCompanion(page) {
-  const reader = page.locator('.vd-reader:visible');
-  await reader.locator('.vd-interlinear-word').first().waitFor();
-  assert.match(await reader.locator('.vd-interlinear-head').innerText(), /Berean interlinear companion\s+John 3:16/);
-  assert.match(await reader.locator('.vd-verse[data-verse="16"]').innerText(), /only begotten Son/i);
-  const contrast = await reader.locator('.vd-verse.is-selected .vd-red-letter').first().evaluate(word => {
+async function textContrast(locator) {
+  return locator.evaluate(element => {
     const canvas = document.createElement('canvas');
     canvas.width = canvas.height = 1;
     const ctx = canvas.getContext('2d');
@@ -95,14 +91,62 @@ async function observeCompanion(page) {
       return 0.2126 * r + 0.7152 * g + 0.0722 * b;
     };
     const layers = [];
-    for (let el = word; el; el = el.parentElement) layers.push(getComputedStyle(el).backgroundColor);
+    for (let el = element; el; el = el.parentElement) layers.push(getComputedStyle(el).backgroundColor);
     fill('white');
     layers.reverse().forEach(fill);
     const background = luminance();
-    fill(getComputedStyle(word).color);
+    fill(getComputedStyle(element).color);
     const foreground = luminance();
     return (Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05);
   });
+}
+
+async function checkLibraryContrast(page, library) {
+  const importButton = library.getByRole('button', { name: 'Import local file', exact: true });
+  const selectedTab = library.getByRole('tab', { name: 'My library', selected: true, exact: true });
+  assert.ok(await importButton.isEnabled());
+  assert.ok(await selectedTab.isEnabled());
+  // Catppuccin Latte tokens and its competing button selector. :where() scopes
+  // the fixture to the Library without changing the theme rule's specificity.
+  const palette = await page.addStyleTag({ content: `
+    .vd-library {
+      --background-primary: #eff1f5;
+      --text-normal: #4c4f69;
+      --text-on-accent: #e6e9ef;
+      --text-accent: #7287fd;
+      --interactive-accent: var(--text-accent);
+      --interactive-accent-hover: var(--text-accent);
+      --interactive-normal: #ccd0da;
+      --interactive-hover: #bcc0cc;
+      --background-modifier-hover: #e0e2e8;
+    }
+    :where(.vd-library) button.mod-cta:not(.clickable-icon) { background-color: var(--interactive-normal); }
+    :where(.vd-library) button.mod-cta:hover { background-color: var(--interactive-hover); }
+    .vd-library .vd-text-button { transition: none !important; }
+  ` });
+  try {
+    const samples = {};
+    for (const [label, control] of [['Import', importButton], ['My library', selectedTab]]) {
+      // Move the pointer outside the controls before each normal-state reading.
+      await library.getByRole('heading', { name: 'Module Library', exact: true }).hover();
+      samples[label] = await textContrast(control);
+      await control.hover();
+      samples[label + ' hover'] = await textContrast(control);
+    }
+    assert.ok(Object.values(samples).every(ratio => ratio >= 4.5),
+      'Library text requires 4.5:1 contrast. Measured ' + JSON.stringify(samples));
+    return samples;
+  } finally {
+    await palette.evaluate(style => style.remove());
+  }
+}
+
+async function observeCompanion(page) {
+  const reader = page.locator('.vd-reader:visible');
+  await reader.locator('.vd-interlinear-word').first().waitFor();
+  assert.match(await reader.locator('.vd-interlinear-head').innerText(), /Berean interlinear companion\s+John 3:16/);
+  assert.match(await reader.locator('.vd-verse[data-verse="16"]').innerText(), /only begotten Son/i);
+  const contrast = await textContrast(reader.locator('.vd-verse.is-selected .vd-red-letter').first());
   assert.ok(contrast >= 4.5, 'Selected red-letter verse contrast: ' + contrast.toFixed(2));
   const words = reader.locator('.vd-interlinear-word');
   assert.equal(await words.count(), 25);
@@ -137,6 +181,7 @@ await runDesktop(async (page, context) => {
   await command(page, 'open-library');
   const library = page.locator('.vd-library:visible');
   await library.getByText('6 installed resources', {exact: true}).waitFor();
+  result.libraryContrast = await checkLibraryContrast(page, library);
   await library.getByRole('button', {name: 'Read KJV with companion'}).click();
   const order = await observeCompanion(page);
   await order.selectOption('english');

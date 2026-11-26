@@ -277,7 +277,7 @@ body.is-mobile .versedock .vd-icon-button { min-width: 44px; min-height: 44px; }
 }
 .versedock .vd-red-letter, .versedock button.vd-tagged-word.vd-red-letter {
   color: var(--text-normal);
-  color: color-mix(in srgb, var(--text-error, #c45959) 50%, var(--text-normal));
+  color: color-mix(in srgb, var(--text-error, #c45959) 40%, var(--text-normal));
 }
 .versedock .vd-added-word { font-style: italic; }
 .versedock button.vd-tagged-word:hover { background: var(--background-modifier-hover); }
@@ -477,8 +477,15 @@ body.is-mobile .versedock .vd-icon-button { min-width: 44px; min-height: 44px; }
 .versedock .vd-preview-verse sup { color: var(--vd-muted); font-family: var(--font-interface); font-size: 11px; }
 .versedock .vd-modal-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 .versedock .vd-modal-actions .vd-text-button { border-color: var(--vd-border); }
-.versedock .vd-modal-actions .mod-cta, .versedock button.mod-cta { background: var(--interactive-accent); color: var(--text-on-accent); border-color: transparent; }
-.versedock .vd-modal-actions .mod-cta:not(:disabled):not([aria-disabled="true"]):hover, .versedock .mod-cta:not(:disabled):not([aria-disabled="true"]):hover { background: var(--interactive-accent-hover); }
+.versedock button.vd-text-button.mod-cta,
+.versedock .vd-library-tabs .vd-text-button.is-active {
+  background: color-mix(in srgb, var(--text-accent) 14%, var(--background-primary));
+  color: var(--text-normal);
+  border: 1px solid var(--text-accent);
+}
+.versedock button.vd-text-button.mod-cta:not(:disabled):not([aria-disabled="true"]):hover {
+  background: color-mix(in srgb, var(--text-accent) 22%, var(--background-primary));
+}
 .versedock .vd-modal-tip { font-size: 11px; color: var(--vd-muted); line-height: 1.5; }
 /* Book picker */
 .versedock.vd-picker-modal h2 { margin-top: 3px; }
@@ -949,7 +956,6 @@ body.is-mobile .versedock .vd-icon-button { min-width: 44px; min-height: 44px; }
 .versedock .vd-library-import { min-height: 42px; padding-inline: 18px; }
 .versedock .vd-library-tabs { display: flex; gap: 6px; margin: 26px 0 18px; }
 .versedock .vd-library-tabs .vd-text-button { border-color: var(--vd-border); background: var(--vd-panel); }
-.versedock .vd-library-tabs .is-active { border-color: transparent; color: var(--text-on-accent); background: var(--interactive-accent); }
 .versedock .vd-library-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);

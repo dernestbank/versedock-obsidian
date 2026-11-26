@@ -59,6 +59,7 @@ target.parent.mkdir(parents=True, exist_ok=True)
 with ZipFile(target, "w", compression=ZIP_DEFLATED, compresslevel=8) as out:
     for name in paths:
         info = ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))
+        info.create_system = 3  # Unix permissions are encoded identically on all build hosts.
         info.compress_type = ZIP_DEFLATED
         info.external_attr = 0o100644 << 16
         out.writestr(info, (ROOT / name).read_bytes(), compress_type=ZIP_DEFLATED, compresslevel=8)
