@@ -40,7 +40,7 @@ def validate_package(archive: Path) -> None:
             (vault / "Smoke Test.md").write_text(
                 "# SwordDock clean-vault smoke test\n", encoding="utf-8"
             )
-            plugin = json.loads((plugin_dir / "manifest.json").read_text())
+            plugin = json.loads((plugin_dir / "manifest.json").read_text(encoding="utf-8"))
             assert plugin["id"] == "versedock", "Existing plugin ID must remain stable"
             assert plugin["name"] == "SwordDock Bible", "Unexpected public display name"
             assert plugin["version"] == archive.name.split("SwordDock-Bible-")[1].split("-offline")[0]
@@ -48,7 +48,7 @@ def validate_package(archive: Path) -> None:
             assert (plugin_dir / "styles.css").is_file()
             wasm = (plugin_dir / "assets" / "sql-wasm.wasm").read_bytes()
             assert wasm[:4] == bytes([0, 97, 115, 109]) and len(wasm) > 500000
-            license_text = (plugin_dir / "assets" / "LICENSE-sql.js.txt").read_text()
+            license_text = (plugin_dir / "assets" / "LICENSE-sql.js.txt").read_text(encoding="utf-8")
             assert "MIT" in license_text or "Permission is hereby granted" in license_text
             assert inspect_offline_books(plugin_dir / "library" / "webp") == 31103
             inspect_cross_references(plugin_dir / "library")
@@ -107,10 +107,10 @@ def inspect_offline_books(folder: Path) -> int:
 
 def inspect_cross_references(library: Path) -> None:
     folder = library / "crossrefs"
-    manifest = json.loads((folder / "manifest.json").read_text())
+    manifest = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["id"] == "openbible-crossrefs" and manifest["license"] == "CC BY 4.0"
     assert manifest["recordCount"] == 344016 and len(manifest["books"]) == 66
-    assert "OpenBible.info" in (folder / "SOURCE-LICENSE.md").read_text()
+    assert "OpenBible.info" in (folder / "SOURCE-LICENSE.md").read_text(encoding="utf-8")
     assert len(list(folder.iterdir())) == 68
     count = 0
     for book in manifest["books"]:
@@ -125,11 +125,11 @@ def inspect_cross_references(library: Path) -> None:
 
 
 def inspect_commentary(folder: Path) -> None:
-    manifest = json.loads((folder / "manifest.json").read_text())
+    manifest = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["id"] == "mhc" and manifest["license"] == "Public Domain" and manifest["schemaVersion"] == 2
     assert manifest["entryCount"] == 4249 and len(manifest["books"]) == 66
     assert len(list(folder.iterdir())) == 68
-    assert "Public Domain" in (folder / "SOURCE-LICENSE.md").read_text()
+    assert "Public Domain" in (folder / "SOURCE-LICENSE.md").read_text(encoding="utf-8")
     count = 0
     for book in manifest["books"]:
         raw = (folder / (book["code"] + ".json")).read_bytes()
@@ -151,7 +151,7 @@ def inspect_commentary(folder: Path) -> None:
 
 def inspect_tagged_resources(library: Path) -> None:
     folder = library / "kjv"
-    manifest = json.loads((folder / "manifest.json").read_text())
+    manifest = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["id"] == "kjv" and manifest["verseCount"] == 31102
     assert len(list(folder.iterdir())) == 68 and len(manifest["books"]) == 66
     count = 0
@@ -167,20 +167,20 @@ def inspect_tagged_resources(library: Path) -> None:
                     loved = next(token for token in verse["tokens"] if token["text"] == "loved")
                     assert loved["strongs"] == ["G25"] and loved["redLetter"]
     assert count == 31102
-    assert "Crown of England" in (folder / "SOURCE-LICENSE.md").read_text()
+    assert "Crown of England" in (folder / "SOURCE-LICENSE.md").read_text(encoding="utf-8")
     lexicon = library / "strongs"
-    manifest = json.loads((lexicon / "manifest.json").read_text())
+    manifest = json.loads((lexicon / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["id"] == "strongs" and manifest["license"] == "Public Domain"
     assert len(list(lexicon.iterdir())) == 4
     for file in manifest["files"]:
         raw = (lexicon / file["file"]).read_bytes()
         assert len(raw) == file["bytes"] and hashlib.sha256(raw).hexdigest() == file["sha256"]
         assert len(json.loads(raw)) == file["entries"]
-    assert json.loads((lexicon / "G.json").read_text())["G25"]["lemma"] == "ἀγαπάω"
+    assert json.loads((lexicon / "G.json").read_text(encoding="utf-8"))["G25"]["lemma"] == "ἀγαπάω"
 
 
 def inspect_interlinear(folder: Path) -> None:
-    manifest = json.loads((folder / 'manifest.json').read_text())
+    manifest = json.loads((folder / 'manifest.json').read_text(encoding="utf-8"))
     assert manifest['id'] == 'bsb-interlinear' and len(manifest['chapters']) == 1189
     assert len(list(folder.iterdir())) == 1191
     words = verses = 0
@@ -197,6 +197,6 @@ def inspect_interlinear(folder: Path) -> None:
 
 
 if __name__ == "__main__":
-    manifest = json.loads((ROOT / "manifest.json").read_text())
+    manifest = json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))
     version = manifest["version"]
     validate_package(ROOT / "dist" / f"SwordDock-Bible-{version}-offline-preview.zip")
