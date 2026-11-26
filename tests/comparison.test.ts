@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { comparisonNumberingNotice, restoredComparisonState } from "../src/core/comparison";
 import { parseReference, referenceId } from "../src/core/references";
 
@@ -34,7 +34,11 @@ describe("parallel source selection and numbering", () => {
     expect(notice).toContain("KJV only: 2");
     expect(notice).toContain("No verse remapping is applied.");
   });
-  it("warns for the actual Romans 14 source difference", () => {
+  it("chooses a ready second Bible when the legacy KJV is absent", () => {
+    expect(restoredComparisonState(null, "webp", fallback, ["webp", "local-book"])).toMatchObject({rightEdition:"local-book"});
+    expect(restoredComparisonState(null, "webp", fallback, ["webp"])).toMatchObject({rightEdition:"webp"});
+  });
+  it.skipIf(!existsSync("library/kjv/ROM.json"))("warns for the actual Romans 14 source difference", () => {
     const numbers = (edition: string): number[] => {
       const book = JSON.parse(readFileSync(`library/${edition}/ROM.json`, "utf8"));
       return book.chapters.find((chapter: { chapter: number }) => chapter.chapter === 14).verses.map((verse: { verse: number }) => verse.verse);

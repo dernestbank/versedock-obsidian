@@ -63,7 +63,7 @@ export class InterlinearPanel {
     const previous = iconButton(navigation, "chevron-left", "Previous companion verse", () => move(-1)); previous.disabled = this.ref.verse === 1;
     const next = iconButton(navigation, "chevron-right", "Next companion verse", () => move(1)); next.disabled = this.ref.verse! >= this.lastVerse;
     previous.dataset.interlinearControl = "previous"; next.dataset.interlinearControl = "next";
-    root.createEl("p", { cls: "vd-interlinear-source", text: "Original words with Berean English glosses. KJV Scripture is shown above." });
+    root.createEl("p", { cls: "vd-interlinear-source", text: `Original words with Berean English glosses. ${this.plugin.settings.bibleEdition === "kjv" ? "KJV" : "WEB"} Scripture is shown above.` });
     const controls = root.createDiv({ cls: "vd-interlinear-controls" });
     const orderLabel = controls.createEl("label", { text: "Word order " });
     const order = orderLabel.createEl("select", { attr: { "aria-label": "Interlinear word order", "data-interlinear-control": "order" } });
@@ -90,7 +90,7 @@ export class InterlinearPanel {
       return;
     }
     const words = interlinearWordsForOrder(this.verse.words, prefs.order);
-    if (!words.length) root.createEl("p", { cls: "vd-interlinear-empty", text: "The Berean source supplies no original words at this reference. The KJV verse remains above; no words from another verse are substituted.", attr: { role: "status" } });
+    if (!words.length) root.createEl("p", { cls: "vd-interlinear-empty", text: "The Berean source supplies no original words at this reference. The selected Scripture verse is shown above.", attr: { role: "status" } });
     const rtl = prefs.order === "source" && words.every(word => word.language !== "greek");
     const grid = root.createDiv({ cls: "vd-interlinear-words", attr: { dir: rtl ? "rtl" : "ltr", role: "group", "aria-label": "Original words in " + (prefs.order === "source" ? "source" : "Berean English") + " order" } });
     const detail = root.createDiv({ cls: "vd-interlinear-detail", attr: { role: "status", "aria-live": "polite", "aria-atomic": "true" } });
@@ -126,7 +126,7 @@ export class InterlinearPanel {
     const credit = root.createEl("details", { cls: "vd-interlinear-credit" });
     credit.createEl("summary", { text: "Source and row guide" });
     credit.createEl("p", { text: "Berean Standard Bible interlinear tables · Public domain. Free Use Bible API format adaptation. Source and Berean English ranks are preserved per word; repeated Strong’s numbers remain separate. A dash means the source did not supply that row. Word selection opens the bundled Strong’s dictionary." });
-    credit.createEl("p", { text: "Berean gloss order is supplied by the source. It does not align these words to KJV English wording." });
+    credit.createEl("p", { text: "English order follows the Berean glosses. Scripture above follows the selected edition." });
     credit.createEl("a", { text: "Berean source and terms", attr: { href: "https://berean.bible/terms.htm", target: "_blank", rel: "noreferrer" } });
     if (focusControl && restoreFocus) {
       const control = focusControl === "previous" ? previous : focusControl === "next" ? next : order;

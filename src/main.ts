@@ -1,3 +1,6 @@
+import { addIcon } from "obsidian";
+import ribbonSvg from "../assets/brand/ribbon.svg?raw";
+import { bundledLibraryFolder } from "./core/bundled-library-files";
 import { Plugin, PluginSettingTab, Setting, Modal, Notice, TFile, type WorkspaceLeaf } from "obsidian";
 import { createReadingInstaller } from "./obsidian/reading-installer";
 import type { ReadingInstallService } from "./core/reading-install-service";
@@ -54,7 +57,7 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
   private editionSelectionRevision=0;
   get readerBible(): BibleResource { return this.importedBibles.get(this.settings.bibleEdition) ?? (this.settings.bibleEdition === "kjv" ? this.kjv : this.library); }
   availableBibleEditions(): Array<{id:string;title:string;ready:boolean}> {
-    return [{id:"webp",title:"World English Bible",ready:!!this.library.metadata},{id:"kjv",title:"KJV · CrossWire tagged edition",ready:!!this.kjv.metadata},
+    return [{id:"webp",title:"World English Bible",ready:!!this.library.metadata}, ...(this.kjv.metadata ? [{id:"kjv",title:"KJV · CrossWire tagged edition",ready:true}] : []),
       ...this.modules.installed.filter(module=>module.kind==="bible").map(module=>({id:module.id,title:module.title+" · "+(isLocalModuleId(module.id)?"Local file":"MySword")+" "+module.version,ready:true}))];
   }
   async getBibleResource(edition:string):Promise<BibleResource|null> {
@@ -110,34 +113,22 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     const available = await this.library.initialize();
     this.kjv = new OfflineBibleLibrary(this.app, this.manifest.id, "kjv");
     await this.kjv.initialize();
-    const lexiconFolder = this.app.vault.configDir + "/plugins/" + this.manifest.id + "/library/strongs/";
-    this.lexicon = new StrongsLexicon(file => this.app.vault.adapter.read(lexiconFolder + file), async file => {
-      const stat = await this.app.vault.adapter.stat(lexiconFolder + file);
-      return stat?.type === "file" ? stat.size : null;
-    });
+    const pluginDir = this.app.vault.configDir + "/plugins/" + this.manifest.id;
+    if (this.settings.bibleEdition === "kjv" && !this.kjv.metadata && available) this.settings.bibleEdition = "webp";
+    const lexiconFiles = bundledLibraryFolder(this.app.vault.adapter, pluginDir, "strongs");
+    this.lexicon = new StrongsLexicon(lexiconFiles.read, lexiconFiles.size);
     await this.lexicon.initialize();
-    const interlinearFolder = this.app.vault.configDir + "/plugins/" + this.manifest.id + "/library/interlinear/";
-    this.interlinear = new InterlinearLibrary(file => this.app.vault.adapter.read(interlinearFolder + file), async file => {
-      const stat = await this.app.vault.adapter.stat(interlinearFolder + file);
-      return stat?.type === "file" ? stat.size : null;
-    });
+    const interlinearFiles = bundledLibraryFolder(this.app.vault.adapter, pluginDir, "interlinear");
+    this.interlinear = new InterlinearLibrary(interlinearFiles.read, interlinearFiles.size);
     await this.interlinear.initialize();
-    const referencesFolder = this.app.vault.configDir + "/plugins/" + this.manifest.id + "/library/crossrefs/";
-    this.crossReferences = new CrossReferenceLibrary(file => this.app.vault.adapter.read(referencesFolder + file),
-      async file => {
-        const stat = await this.app.vault.adapter.stat(referencesFolder + file);
-        return stat?.type === "file" ? stat.size : null;
-      });
+    const crossReferencesFiles = bundledLibraryFolder(this.app.vault.adapter, pluginDir, "crossrefs");
+    this.crossReferences = new CrossReferenceLibrary(crossReferencesFiles.read, crossReferencesFiles.size);
     await this.crossReferences.initialize();
-    const commentaryFolder = this.app.vault.configDir + "/plugins/" + this.manifest.id + "/library/mhc/";
-    this.commentary = new CommentaryLibrary(file => this.app.vault.adapter.read(commentaryFolder + file),
-      async file => {
-        const stat = await this.app.vault.adapter.stat(commentaryFolder + file);
-        return stat?.type === "file" ? stat.size : null;
-      });
+    const commentaryFiles = bundledLibraryFolder(this.app.vault.adapter, pluginDir, "mhc");
+    this.commentary = new CommentaryLibrary(commentaryFiles.read, commentaryFiles.size);
     await this.commentary.initialize();
 
-    this.modules = await createReadingInstaller(this.app, this.manifest.id,()=>[this.settings.bibleEdition]);
+    this.modules = await createReadingInstaller(this.app, ()=>[this.settings.bibleEdition]);
     if(this.settings.bibleEdition!=="webp"&&this.settings.bibleEdition!=="kjv") {
       try {if(!await this.getBibleResource(this.settings.bibleEdition))throw new Error("Unavailable Bible");}
       catch {this.settings.bibleEdition="webp";new Notice("The previously selected Bible is unavailable. WEB has been selected; check Module Library.");}
@@ -172,7 +163,8 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     this.registerEvent(this.app.workspace.on("active-leaf-change", () => this.synchronizeFocusDocks()));
     this.app.workspace.onLayoutReady(() => this.synchronizeFocusDocks());
 
-    this.addRibbonIcon("book-open", "SwordDock Bible Reader", () => { void this.openReader(); });
+    addIcon("sworddock-bookmark", ribbonSvg.slice(ribbonSvg.indexOf(">") + 1, ribbonSvg.lastIndexOf("</svg>")));
+    this.addRibbonIcon("sworddock-bookmark", "SwordDock Bible Reader", () => { void this.openReader(); });
     this.addCommand({ id: "open-reader", name: "Open Bible Reader", callback: () => { void this.openReader(); } });
     this.addCommand({ id: "open-study-desk", name: "Open Bible Study Desk", callback: () => { void this.openStudyDesk(); } });
     this.addCommand({ id: "open-navigation", name: "Open Bible navigation dock", callback: () => { void this.openNavigation(); } });
@@ -454,7 +446,7 @@ class SwordDockSettingsTab extends PluginSettingTab {
   renderInto(containerEl: HTMLElement): void {
     containerEl.empty();
     containerEl.createEl("h2", { text: "SwordDock Bible · Settings" });
-    containerEl.createEl("p", { text: "This development build follows your Obsidian theme. Read WEB or tagged KJV entirely offline." });
+    containerEl.createEl("p", { text: "SwordDock follows your Obsidian theme. WEB, the Berean companion and your installed resources are available offline." });
     containerEl.createEl("h3", { text: "Reading & appearance" });
     new Setting(containerEl).setName("Reading typeface").setDesc("Changes only Scripture, not Obsidian notes.")
       .addDropdown(dropdown => dropdown
@@ -482,8 +474,8 @@ class SwordDockSettingsTab extends PluginSettingTab {
         for(const edition of this.plugin.availableBibleEditions().filter(edition=>edition.ready)) dropdown.addOption(edition.id,edition.title);
         dropdown.setValue(this.plugin.settings.bibleEdition).onChange(value => this.plugin.setBibleEdition(value));
       });
-    new Setting(containerEl).setName("KJV reading display")
-      .setDesc("Reading, tagged KJV word study, or KJV with a labelled Berean original-language companion. Companion glosses follow Berean wording.")
+    new Setting(containerEl).setName("Scripture study display")
+      .setDesc("Read Scripture or open its labelled Berean companion. Tagged word study is available for an existing tagged KJV. Companion glosses follow Berean wording.")
       .addDropdown(dropdown => dropdown.addOption("reading", "Reading").addOption("word-study", "Word study").addOption("interlinear", "Berean interlinear companion")
         .setValue(this.plugin.settings.kjvDisplayMode)
         .onChange(async value => { await this.plugin.setKjvDisplayMode(restoredKjvDisplayMode(value)); }));

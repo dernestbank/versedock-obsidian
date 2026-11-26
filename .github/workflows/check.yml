@@ -20,12 +20,19 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
+      - name: Prepare legacy 0.1.11 KJV compatibility fixtures for tests only
+        shell: bash
+        run: |
+          git fetch --depth=1 origin refs/tags/0.1.11
+          test "$(git rev-parse FETCH_HEAD^{commit})" = 3eca71aac0497332151b147c684c29dc949d4dc7
+          git archive FETCH_HEAD library/kjv | tar -xf -
       - uses: actions/setup-node@v7
         with:
           node-version: '22'
           cache: npm
       - run: npm ci --legacy-peer-deps
       - run: npm run check
+      - run: npm run package:community
       - run: npm run package:preview
       - name: Verify independent offline fresh installation
         run: npm run smoke:preview
@@ -44,10 +51,10 @@ jobs:
           trap 'sudo ip netns delete "$namespace"' EXIT
           sudo ip -n "$namespace" link set lo up
           sudo ip -n "$namespace" link show
-          previews=(dist/*-offline-preview.zip)
+          previews=(dist/*-offline.zip)
           test "${#previews[@]}" = 1
           sudo ip netns exec "$namespace" sudo -u "$(id -un)" -H -- xvfb-run -a -s '-screen 0 1440x960x24' \
-            dbus-run-session -- "$(command -v node)" scripts/verify-native-desktop.mjs "$(command -v obsidian)" "${previews[0]}"
+            dbus-run-session -- "$(command -v node)" scripts/verify-native-desktop.mjs "$(command -v obsidian)" dist/community
       - name: Open the packaged plugin and restart native Obsidian
         if: runner.os == 'Windows'
         shell: pwsh
@@ -66,6 +73,6 @@ jobs:
           if (!$payload) { throw 'Missing x64 application payload.' }
           7z x $payload.FullName "-o$app" -y | Out-Null
           if ($LASTEXITCODE) { throw 'Could not unpack the application.' }
-          $previews = @(Get-ChildItem dist -Filter '*-offline-preview.zip')
+          $previews = @(Get-ChildItem dist -Filter '*-offline.zip')
           if ($previews.Count -ne 1) { throw 'Expected one freshly built preview.' }
-          node scripts/verify-native-desktop.mjs (Join-Path $app 'Obsidian.exe') $previews[0].FullName
+          node scripts/verify-native-desktop.mjs (Join-Path $app 'Obsidian.exe') dist/community

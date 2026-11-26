@@ -1,5 +1,5 @@
 import { requestUrl, Platform, type App } from 'obsidian';
-import initSqlJs, {type SqlJsStatic} from 'sql.js';
+import { loadBundledSqlite } from '../core/bundled-sqlite';
 import { ReadingInstallService, type ModuleDownloader } from '../core/reading-install-service';
 import { checkCancelled } from '../core/reading-modules';
 import {createResourceStore} from './resource-store';
@@ -26,9 +26,7 @@ const download:ModuleDownloader=async(source,signal,progress)=>{
  if(bytes.length>Math.max(source.compressedBytes,source.databaseBytes))throw new Error('Download exceeds the supported size limit.');
  progress(bytes.length);return bytes;
 };
-export async function createReadingInstaller(app:App,pluginId:string,protectedIds:()=>readonly string[]=()=>[]):Promise<ReadingInstallService>{
- const adapter=app.vault.adapter;const store=await createResourceStore(app);
- let sqlPromise:Promise<SqlJsStatic>|null=null;
- const sql=():Promise<SqlJsStatic>=>sqlPromise??=adapter.readBinary(app.vault.configDir+'/plugins/'+pluginId+'/assets/sql-wasm.wasm').then(wasm=>initSqlJs({wasmBinary:wasm})).catch(error=>{sqlPromise=null;throw error;});
- const service=new ReadingInstallService(store,sql,Platform.isDesktopApp?createDesktopModuleDownloader(store):download,protectedIds);await service.initialize();return service;
+export async function createReadingInstaller(app:App,protectedIds:()=>readonly string[]=()=>[]):Promise<ReadingInstallService>{
+ const store=await createResourceStore(app);
+ const service=new ReadingInstallService(store,loadBundledSqlite,Platform.isDesktopApp?createDesktopModuleDownloader(store):download,protectedIds);await service.initialize();return service;
 }

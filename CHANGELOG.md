@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased — 0.1.11 SwordDock Bible developer candidate
+## 0.1.12 — Community installation
+
+- The three Obsidian release assets carry the offline WEB library, Berean interlinear, dictionaries, cross-references, commentary and SQLite engine.
+- The worldwide release omits the full tagged KJV. The Reader can show the Berean companion with WEB. Upgrades preserve existing user-installed editions, settings and notes.
+- Added the SwordDock folio and bookmark identity, theme-aware ribbon icon and downloadable brand artwork.
+
+## 0.1.11 — Developer Preview
 
 ### Live search and linked-note workflow verification (November 15, 2026)
 

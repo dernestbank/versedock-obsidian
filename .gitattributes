@@ -3,4 +3,8 @@
 *.md text eol=lf
 *.txt text eol=lf
 *.css text eol=lf
+*.svg text eol=lf
 /LICENSE text eol=lf
+
+# Source archives for the worldwide release omit the legacy tagged KJV corpus.
+/library/kjv export-ignore

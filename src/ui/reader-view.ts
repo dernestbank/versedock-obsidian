@@ -280,18 +280,20 @@ export class ReaderView extends ItemView {
     editionButton.setAttribute("aria-label", "Bible edition: " + (this.plugin.readerBible.metadata?.abbreviation ?? "unavailable"));
     editionButton.setAttribute("aria-haspopup", "menu");
     editionButton.title = (this.plugin.readerBible.metadata?.title ?? "Unavailable") + " · Offline";
-    if (this.plugin.settings.bibleEdition === "kjv") {
-      const study = app.createDiv({ cls: "vd-study-display-bar", attr: { "aria-label": "KJV study display" } });
+    const tagged = this.plugin.settings.bibleEdition === "kjv";
+    if (tagged || this.plugin.settings.bibleEdition === "webp") {
+      const study = app.createDiv({ cls: "vd-study-display-bar", attr: { "aria-label": "Scripture study display" } });
       const modes = study.createDiv({ cls: "vd-study-display-modes", attr: { role: "group", "aria-label": "Bible display mode" } });
       for (const [mode, label] of [["reading", "Reading"], ["word-study", "Word study"], ["interlinear", "Interlinear"]] as const) {
+        if (!tagged && mode === "word-study") continue;
         const control = textButton(modes, label, () => {
           void this.plugin.setKjvDisplayMode(mode).then(() =>
             this.contentEl.querySelector<HTMLElement>('[data-kjv-mode="' + mode + '"]')?.focus({ preventScroll: true }));
         }, "vd-study-mode");
         control.dataset.kjvMode = mode;
-        control.setAttribute("aria-pressed", String(this.plugin.settings.kjvDisplayMode === mode));
+        control.setAttribute("aria-pressed", String((!tagged && this.plugin.settings.kjvDisplayMode === "word-study" ? "reading" : this.plugin.settings.kjvDisplayMode) === mode));
       }
-      if (this.plugin.settings.kjvDisplayMode === "word-study") {
+      if (tagged && this.plugin.settings.kjvDisplayMode === "word-study") {
         const identifiers = textButton(study, "Numbers", () => {
           void this.plugin.setKjvInlineStrongs(!this.plugin.settings.kjvInlineStrongs).then(() =>
             this.contentEl.querySelector<HTMLElement>(".vd-strongs-toggle")?.focus({ preventScroll: true }));
@@ -300,7 +302,7 @@ export class ReaderView extends ItemView {
         identifiers.setAttribute("aria-pressed", String(this.plugin.settings.kjvInlineStrongs));
       }
       iconButton(study, "info", "About the Berean interlinear companion", () => {
-        new Notice("KJV Scripture with a Berean original-language companion. Hebrew, Aramaic and Greek words retain the source’s Berean glosses, grammar and word order. Select a verse to study it below.");
+        new Notice("Scripture with a Berean original-language companion. Hebrew, Aramaic and Greek words retain the source’s Berean glosses, grammar and word order. Select a verse to study it below.");
       });
     }
     linkButton(tools, this.plugin.getStudyLinkAssignment("reader"), () => this.openLinkPopover(tools)).addClass("vd-primary-secondary");
@@ -493,7 +495,7 @@ export class ReaderView extends ItemView {
     if (ref.verse !== undefined && (this.plugin.settings.bibleEdition !== "kjv" || this.plugin.settings.kjvDisplayMode === "word-study"))
       this.renderReaderInstantDetails(app);
     let companionReadyContext: { scrollTop: number; active: Element | null } | null = null;
-    if (this.plugin.settings.bibleEdition === "kjv" && this.plugin.settings.kjvDisplayMode === "interlinear") {
+    if ((this.plugin.settings.bibleEdition === "kjv" || this.plugin.settings.bibleEdition === "webp") && this.plugin.settings.kjvDisplayMode === "interlinear") {
       const companion = app.createDiv();
       this.interlinearPanel = new InterlinearPanel(companion, this.plugin,
         { book: ref.book, chapter: ref.chapter, verse: ref.verse ?? chapter.verses[0]?.verse ?? 1 },

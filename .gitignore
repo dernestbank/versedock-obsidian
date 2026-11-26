@@ -9,3 +9,6 @@ library/private/
 library/imported/
 
 dist/
+
+# Optional real-source legacy compatibility fixtures from the 0.1.11 tag.
+library/kjv/

@@ -1,8 +1,8 @@
 ---
 title: SwordDock Bible Brand & UI Guidelines
 type: brand-guidelines
-status: provisional-pending-trademark-clearance
-date: 2026-11-15
+status: production-artwork-complete
+date: 2026-11-26
 ---
 
 # SwordDock Bible — brand and product language
@@ -10,7 +10,7 @@ date: 2026-11-15
 **Product name:** SwordDock Bible
 **Short brand:** SwordDock
 **Category:** Bible Study Studio
-**Tagline:** Read deeply. Study intelligently. Connect every insight.
+**Product descriptor:** Offline Bible study for Obsidian.
 **Developer:** QuantGist
 **Positioning:** An independent, offline-first Bible study workspace inside Obsidian.
 
@@ -34,7 +34,7 @@ date: 2026-11-15
 
 ## Icon direction
 
-An open book that forms an abstract upright blade through its central spine or bookmark shape. The sword symbolism should remain subtle and nonviolent; avoid imitating MySword logos or CrossWire SWORD trademarks. Icon remains provisional pending brand/IP review. Use SVG/vector geometry for final production rather than baking a raster image into the Obsidian ribbon.
+The final mark uses two solid pages and a notched bookmark. The open gutter stays visible at ribbon size. The plugin uses the monochrome SVG with the host’s text color. The release wordmark uses outlined Newsreader lettering. Master vectors, export sizes, palette values and clear-space rules are in the [brand pack](assets/brand/README.md).
 
 ## Compatibility and migration
 
@@ -53,4 +53,4 @@ The following reproducible checks found no exact `SwordDock` name collision:
 
 These are narrow exact-name checks, not a comprehensive clearance search. They do not cover unregistered/common-law use, confusingly similar spellings or meanings, state registrations, international registers, app stores, domains, social handles, logos, or design marks. Search results can change after the date above. The USPTO itself recommends searching similar marks and coordinated classes, not only exact terms. Professional trademark counsel should review the name and icon before a stable/public-directory launch.
 
-**Decision status:** keep `SwordDock Bible` provisional for developer previews while preserving the legacy `versedock` ID. Do not describe the name or icon as cleared, registered, exclusive, or legally available. This document records product research, not legal advice or a legal clearance opinion.
+**Review scope.** The earlier exact-name screen and November 26 public-web recheck inform the product decision. No professional legal clearance opinion is recorded. The stable artwork and the historical installation ID `versedock` are documented above.

@@ -137,7 +137,7 @@ export class LibraryView extends ItemView {
     const intro = collection.createDiv({ cls: "vd-library-intro" });
     intro.createSpan({ cls: "vd-overline", text: "VERIFIED BUNDLED RESOURCE" });
     intro.createEl("h3", { text: "World English Bible (WEB)" });
-    intro.createEl("p", { cls: "vd-subtle", text: "SwordDock bundles WEB, tagged KJV, Strong’s dictionaries, OpenBible cross-references and Matthew Henry's Commentary for offline study. Install additional Bibles, commentaries, dictionaries, books, devotionals and maps below." });
+    intro.createEl("p", { cls: "vd-subtle", text: "SwordDock bundles WEB, the Berean interlinear, Strong’s dictionaries, OpenBible cross-references and Matthew Henry's Commentary for offline study. Install additional Bibles, commentaries, dictionaries, books, devotionals and maps below." });
     const card = collection.createDiv({ cls: "vd-module-card vd-module-card-discover" });
     const top = card.createDiv({ cls: "vd-module-card-top" });
     const identity = top.createDiv({ cls: "vd-module-identity" });
@@ -315,6 +315,7 @@ export class LibraryView extends ItemView {
         "James Strong, 1890 · Public domain · CrossWire Greek 2.0 / Hebrew 1.2. 5,489 Greek and 8,673 Hebrew entries. Select tagged KJV words for definitions and source-linked occurrences. Numeric gaps in the source remain gaps.",
         () => { void this.plugin.openInspector("lexicon"); }, "Open Word Study"]
     ] as const) {
+      if (abbreviation === "KJV" && !ready) continue;
       const card = parent.createDiv({ cls: "vd-module-card" });
       const top = card.createDiv({ cls: "vd-module-card-top" });
       const identity = top.createDiv({ cls: "vd-module-identity" });
@@ -331,12 +332,13 @@ export class LibraryView extends ItemView {
     const companion = parent.createDiv({ cls: "vd-module-card" });
     companion.createEl("h3", { text: "Berean interlinear companion" });
     pill(companion, this.plugin.interlinear.available ? "Installed · Offline" : "Unavailable", "vd-installed");
-    companion.createEl("p", { cls: "vd-module-license", text: "66 books · 31,102 source verse records · 443,625 Hebrew, Aramaic and Greek words with Berean English glosses, transliteration, Strong’s identifiers and supplied grammar. Seventeen source verse records have no words; those remain explicitly empty. KJV Scripture is displayed separately. Public domain · Free Use Bible API format adaptation." });
+    companion.createEl("p", { cls: "vd-module-license", text: "66 books · 31,102 source verse records · 443,625 Hebrew, Aramaic and Greek words with Berean English glosses, transliteration, Strong’s identifiers and supplied grammar. Seventeen source verse records have no words; those remain explicitly empty. The selected Scripture edition is displayed separately. Public domain · Free Use Bible API format adaptation." });
     companion.createEl("a", { text: "Berean source and terms", attr: { href: "https://berean.bible/terms.htm", target: "_blank", rel: "noreferrer" } });
-    const openCompanion = textButton(companion.createDiv({ cls: "vd-action-row" }), "Read KJV with companion", () => {
-      void this.plugin.setBibleEdition("kjv").then(() => this.plugin.setKjvDisplayMode("interlinear")).then(() => this.plugin.openReader());
+    const companionEdition = this.plugin.kjv.metadata ? "kjv" : "webp";
+    const openCompanion = textButton(companion.createDiv({ cls: "vd-action-row" }), `Read ${companionEdition === "kjv" ? "KJV" : "WEB"} with companion`, () => {
+      void this.plugin.setBibleEdition(companionEdition).then(() => this.plugin.setKjvDisplayMode("interlinear")).then(() => this.plugin.openReader());
     }, "mod-cta");
-    openCompanion.disabled = !this.plugin.interlinear.available || !this.plugin.kjv.metadata;
+    openCompanion.disabled = !this.plugin.interlinear.available || !(this.plugin.kjv.metadata || this.plugin.library.metadata);
   }
 
   private renderCommentaryResource(parent: HTMLElement): void {

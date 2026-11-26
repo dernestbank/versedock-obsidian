@@ -89,8 +89,8 @@ export class StorageManagementModal extends Modal {
     const facts = root.createDiv({ cls: "vd-storage-facts" });
     for (const [label, value] of [
       ["Installed resources", String(Number(!!installed) + Number(!!referencesInstalled) + Number(!!commentaryInstalled) + Number(!!this.plugin.kjv.metadata) + Number(!!this.plugin.lexicon.metadata) + Number(this.plugin.interlinear.available) + this.plugin.modules.installed.length)],
-      ["Active resource files", String(summary.files + references.files + commentary.files + kjv.files + lexicon.files + interlinear.files + reading.files)],
-      ["Active resource size", formatStorageBytes(summary.bytes + references.bytes + commentary.bytes + kjv.bytes + lexicon.bytes + interlinear.bytes + reading.bytes)],
+      ["Active resource entries", String(summary.files + references.files + commentary.files + kjv.files + lexicon.files + interlinear.files + reading.files)],
+      ["Uncompressed resource size", formatStorageBytes(summary.bytes + references.bytes + commentary.bytes + kjv.bytes + lexicon.bytes + interlinear.bytes + reading.bytes)],
       ["Missing files", String(summary.missing + references.missing + commentary.missing + kjv.missing + lexicon.missing + interlinear.missing)]
     ]) {
       const row = facts.createDiv();

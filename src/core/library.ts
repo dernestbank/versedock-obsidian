@@ -1,3 +1,4 @@
+import { bundledLibraryFolder } from "./bundled-library-files";
 import type { App } from "obsidian";
 import { BOOKS, type BookInfo } from "./books";
 import type { PassageReference } from "./references";
@@ -43,13 +44,13 @@ export interface BibleResource {
 }
 
 export class OfflineBibleLibrary {
-  private readonly folder: string;
+  private readonly files: ReturnType<typeof bundledLibraryFolder>;
   private manifest: LibraryManifest | null = null;
   private cache = new Map<string, BookData>();
   private occurrenceCache = new Map<string, readonly {book:BookInfo;chapter:number;verse:number}[]>();
   private generation = 0;
-  constructor(private app: App, pluginId: string, readonly edition: "webp" | "kjv" = "webp") {
-    this.folder = app.vault.configDir + "/plugins/" + pluginId + "/library/" + edition;
+  constructor(app: App, pluginId: string, readonly edition: "webp" | "kjv" = "webp") {
+    this.files = bundledLibraryFolder(app.vault.adapter, app.vault.configDir + "/plugins/" + pluginId, edition);
   }
   get metadata(): LibraryManifest | null { return this.manifest; }
   async initialize(): Promise<boolean> {
@@ -58,7 +59,7 @@ export class OfflineBibleLibrary {
     this.occurrenceCache.clear();
     this.manifest = null;
     try {
-      const content = await this.app.vault.adapter.read(this.folder + "/manifest.json");
+      const content = await this.files.read("manifest.json");
       const data = JSON.parse(content) as LibraryManifest;
       if (content.length > 30000 || data.id !== this.edition || !Array.isArray(data.books) || data.books.length !== 66
         || data.verseCount !== (this.edition === "webp" ? 31103 : 31102)
@@ -84,8 +85,8 @@ export class OfflineBibleLibrary {
     const files = ["manifest.json", ...(this.edition === "kjv" ? ["SOURCE-LICENSE.md"] : []), ...this.manifest.books.map(book => book.code + ".json")];
     const measurements = await Promise.all(files.map(async file => {
       try {
-        const stat = await this.app.vault.adapter.stat(this.folder + "/" + file);
-        return stat?.type === "file" ? { bytes: stat.size, present: 1, missing: 0 } : { bytes: 0, present: 0, missing: 1 };
+        const size = await this.files.size(file);
+        return size !== null ? { bytes: size, present: 1, missing: 0 } : { bytes: 0, present: 0, missing: 1 };
       } catch {
         return { bytes: 0, present: 0, missing: 1 };
       }
@@ -109,7 +110,7 @@ export class OfflineBibleLibrary {
         if (!BOOKS.some(known => known.vpl === book.code)) {
           issues.push({ code: book.code, problem: "Unexpected book identifier in manifest" });
         } else {
-          const raw = await this.app.vault.adapter.read(this.folder + "/" + book.code + ".json");
+          const raw = await this.files.read(book.code + ".json");
           for (const problem of await checkBookIntegrity(book, raw))
             issues.push({ code: book.code, problem });
         }
@@ -126,15 +127,14 @@ export class OfflineBibleLibrary {
     const cached = this.cache.get(book.vpl);
     if (cached) { this.cache.delete(book.vpl); this.cache.set(book.vpl, cached); return cached; }
     if (!this.manifest) throw new Error("Offline " + (this.edition === "kjv" ? "KJV" : "WEB") + " module not installed.");
-    const file = this.folder + "/" + book.vpl + ".json";
+    const file = book.vpl + ".json";
     let data: BookData;
     try {
       if (this.edition === "kjv") {
         const expected = this.manifest.books.find(entry => entry.code === book.vpl)!;
-        const stat = await this.app.vault.adapter.stat(file);
-        if (stat?.type !== "file" || stat.size !== expected.bytes) throw new Error("Length mismatch");
+        if (await this.files.size(file) !== expected.bytes) throw new Error("Length mismatch");
       }
-      const raw = await this.app.vault.adapter.read(file);
+      const raw = await this.files.read(file);
       if (this.edition === "kjv") {
         const fingerprint = this.manifest.books.find(entry => entry.code === book.vpl);
         if (!fingerprint || raw.length > 5000000 || (await checkBookIntegrity(fingerprint, raw)).length)

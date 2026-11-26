@@ -15,7 +15,9 @@ export function restoredComparisonState(value: unknown, preferred: ComparisonEdi
     ? value as Record<string, unknown> : {};
   const defaultEdition = isComparisonEdition(preferred, installed) ? preferred : "webp";
   const leftEdition = isComparisonEdition(state.leftEdition, installed) ? state.leftEdition : defaultEdition;
-  const rightEdition = isComparisonEdition(state.rightEdition, installed) ? state.rightEdition : leftEdition === "kjv" ? "webp" : "kjv";
+  const partner = leftEdition === "kjv" ? "webp" : "kjv";
+  const defaultRight = installed.includes(partner) ? partner : installed.find(id => id !== leftEdition) ?? leftEdition;
+  const rightEdition = isComparisonEdition(state.rightEdition, installed) ? state.rightEdition : defaultRight;
   let reference = fallback;
   if (typeof state.reference === "string") {
     try { reference = parseOsis(state.reference); } catch { /* Keep the current Reader reference. */ }
