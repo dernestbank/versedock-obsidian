@@ -7,7 +7,17 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            name: build-and-test
+          - os: windows-2025
+            name: Windows desktop
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -19,3 +29,24 @@ jobs:
       - run: npm run package:preview
       - name: Verify independent offline fresh installation
         run: npm run smoke:preview
+      - name: Open the packaged plugin and restart native Obsidian
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $installer = Join-Path $env:RUNNER_TEMP 'Obsidian-1.15.1.exe'
+          $outer = Join-Path $env:RUNNER_TEMP 'sworddock-installer'
+          $app = Join-Path $env:RUNNER_TEMP 'sworddock-app'
+          Invoke-WebRequest 'https://github.com/obsidianmd/obsidian-releases/releases/download/v1.15.1/Obsidian-1.15.1.exe' -OutFile $installer
+          if ((Get-FileHash $installer).Hash -ne '218c7d30acc065355ce94719dd996d5e2a2347cde3811ea5dc29380583f02b58') {
+            throw 'Obsidian installer digest mismatch.'
+          }
+          7z x $installer "-o$outer" -y | Out-Null
+          if ($LASTEXITCODE) { throw 'Could not unpack the installer.' }
+          $payload = Get-ChildItem $outer -Recurse -Filter 'app-64.7z' | Select-Object -First 1
+          if (!$payload) { throw 'Missing x64 application payload.' }
+          7z x $payload.FullName "-o$app" -y | Out-Null
+          if ($LASTEXITCODE) { throw 'Could not unpack the application.' }
+          $previews = @(Get-ChildItem dist -Filter '*-offline-preview.zip')
+          if ($previews.Count -ne 1) { throw 'Expected one freshly built preview.' }
+          node scripts/verify-native-desktop.mjs (Join-Path $app 'Obsidian.exe') $previews[0].FullName

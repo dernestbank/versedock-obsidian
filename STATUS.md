@@ -1979,3 +1979,30 @@ smoke check. Its SHA-256 is
 The earlier package opened in an isolated Obsidian 1.15.1 profile on macOS
 26.6.2 and reached its first-run vault trust prompt. Exact-build plugin startup,
 native focus and the remaining release criteria still need verification.
+
+## Native desktop package verification — November 26, 2026
+
+The same 94481577 preview opened in Obsidian 1.15.1 on macOS 26.6.2
+and Debian 12 ARM64. On macOS, all six local files reached review without
+changing the installed count, then installed with 31,102 Bible verses, 21,114
+commentary records, 3,965 dictionary entries, 22 book entries, 745 devotional
+entries and 36 graphics entries. Open resource selected the matching installed
+ID every time. Both controlled invalid inputs showed a rejection before install.
+All original fixture hashes were unchanged. The chooser was driven through
+Electron’s file-selection event. Other native picker and restart checks are separate.
+
+On Debian, the official ARM64 Obsidian ran with its Chromium sandbox inside a
+fresh VM. A kernel network namespace with only loopback and no external route
+covered both native launches. In a fresh vault the trust prompt and plugin switch
+worked, WEB rendered John 3:16, and Library listed six bundled resources.
+The KJV action opened a separate labelled Berean companion with 25 Greek words.
+Word selection opened the offline Strong’s definition. After terminating and
+starting a new application process, KJV, the companion, the definition and the
+chosen Berean English order were available. The full 68-criterion matrix remains open.
+
+Run `node scripts/verify-native-desktop.mjs <obsidian-executable> <preview-zip>`
+in a desktop session to repeat that startup and restart check. The script creates
+its own vault and profile and retains the restarted Reader capture. Network
+isolation is supplied by the caller. Windows CI now builds and exercises the
+native application from a digest-pinned installer. LF checkout rules preserve
+the bytes of packaged text even when Git's Windows newline conversion is enabled.
