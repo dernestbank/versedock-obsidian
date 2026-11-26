@@ -24,7 +24,7 @@ fs.cpSync(references, path.join(pluginDir, "library", "crossrefs"), { recursive:
 const commentary = path.join(root, "library", "mhc");
 if (!fs.existsSync(path.join(commentary, "manifest.json"))) throw new Error("Missing bundled commentary data");
 fs.cpSync(commentary, path.join(pluginDir, "library", "mhc"), { recursive: true, force: true });
-for (const resource of ["kjv", "strongs", "interlinear"]) {
+for (const resource of ["strongs", "interlinear"]) {
   const resourceSource = path.join(root, "library", resource);
   if (!fs.existsSync(path.join(resourceSource, "manifest.json"))) throw new Error("Missing bundled " + resource + " data");
   fs.cpSync(resourceSource, path.join(pluginDir, "library", resource), { recursive: true, force: true });

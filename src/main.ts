@@ -57,7 +57,7 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
   private editionSelectionRevision=0;
   get readerBible(): BibleResource { return this.importedBibles.get(this.settings.bibleEdition) ?? (this.settings.bibleEdition === "kjv" ? this.kjv : this.library); }
   availableBibleEditions(): Array<{id:string;title:string;ready:boolean}> {
-    return [{id:"webp",title:"World English Bible",ready:!!this.library.metadata},{id:"kjv",title:"KJV · CrossWire tagged edition",ready:!!this.kjv.metadata},
+    return [{id:"webp",title:"World English Bible",ready:!!this.library.metadata}, ...(this.kjv.metadata ? [{id:"kjv",title:"KJV · CrossWire tagged edition",ready:true}] : []),
       ...this.modules.installed.filter(module=>module.kind==="bible").map(module=>({id:module.id,title:module.title+" · "+(isLocalModuleId(module.id)?"Local file":"MySword")+" "+module.version,ready:true}))];
   }
   async getBibleResource(edition:string):Promise<BibleResource|null> {
@@ -446,7 +446,7 @@ class SwordDockSettingsTab extends PluginSettingTab {
   renderInto(containerEl: HTMLElement): void {
     containerEl.empty();
     containerEl.createEl("h2", { text: "SwordDock Bible · Settings" });
-    containerEl.createEl("p", { text: "This development build follows your Obsidian theme. Read WEB or tagged KJV entirely offline." });
+    containerEl.createEl("p", { text: "SwordDock follows your Obsidian theme. WEB, the Berean companion and your installed resources are available offline." });
     containerEl.createEl("h3", { text: "Reading & appearance" });
     new Setting(containerEl).setName("Reading typeface").setDesc("Changes only Scripture, not Obsidian notes.")
       .addDropdown(dropdown => dropdown
@@ -474,8 +474,8 @@ class SwordDockSettingsTab extends PluginSettingTab {
         for(const edition of this.plugin.availableBibleEditions().filter(edition=>edition.ready)) dropdown.addOption(edition.id,edition.title);
         dropdown.setValue(this.plugin.settings.bibleEdition).onChange(value => this.plugin.setBibleEdition(value));
       });
-    new Setting(containerEl).setName("KJV reading display")
-      .setDesc("Reading, tagged KJV word study, or KJV with a labelled Berean original-language companion. Companion glosses follow Berean wording.")
+    new Setting(containerEl).setName("Scripture study display")
+      .setDesc("Read Scripture or open its labelled Berean companion. Tagged word study is available for an existing tagged KJV. Companion glosses follow Berean wording.")
       .addDropdown(dropdown => dropdown.addOption("reading", "Reading").addOption("word-study", "Word study").addOption("interlinear", "Berean interlinear companion")
         .setValue(this.plugin.settings.kjvDisplayMode)
         .onChange(async value => { await this.plugin.setKjvDisplayMode(restoredKjvDisplayMode(value)); }));

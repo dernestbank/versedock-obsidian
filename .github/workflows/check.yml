@@ -20,6 +20,12 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
+      - name: Prepare legacy 0.1.11 KJV compatibility fixtures for tests only
+        shell: bash
+        run: |
+          git fetch --depth=1 origin refs/tags/0.1.11
+          test "$(git rev-parse FETCH_HEAD^{commit})" = 3eca71aac0497332151b147c684c29dc949d4dc7
+          git archive FETCH_HEAD library/kjv | tar -xf -
       - uses: actions/setup-node@v7
         with:
           node-version: '22'

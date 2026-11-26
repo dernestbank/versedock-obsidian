@@ -1,5 +1,8 @@
 # Original-language interlinear
 
+The worldwide 0.1.12 release also presents the companion alongside WEB. Previously installed tagged KJV editions retain the original workflow. The November decision and source audit follow.
+
+
 The user selected “KJV with a clearly labelled Berean interlinear companion”
 on November 18, 2026. The display keeps KJV Scripture alongside the selected
 verse's original words and Berean glosses. This resolves the presentation choice;

@@ -45,6 +45,8 @@ npm run smoke:preview
 
 Open `test-vault` as a separate vault in Obsidian and enable the development plugin. The committed `library/webp` contains validated public-domain data, so an additional data download is not necessary just to build. To regenerate the source precisely, download `https://ebible.org/Scriptures/engwebp_vpl.zip` to `.research/engwebp_vpl.zip` and run `npm run library:build`.
 
+The published 0.1.11 tag retains the historical KJV compatibility fixtures. The current checkout and release archives omit those files. CI retrieves the pinned historical fixture for migration tests. Local tests run the corpus-specific cases when that fixture is present.
+
 ## Credits and support
 
 SwordDock Bible is an independent QuantGist project. Obsidian, MySword and CrossWire are independent projects. Each bundled resource retains its own attribution and licence. [WEB](library/webp/SOURCE-LICENSE.md) · [Berean](library/interlinear/SOURCE-LICENSE.md) · [Strong’s](library/strongs/SOURCE-LICENSE.md) · [Cross-references](library/crossrefs/SOURCE-LICENSE.md) · [Commentary](library/mhc/SOURCE-LICENSE.md)

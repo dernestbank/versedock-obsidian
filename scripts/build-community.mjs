@@ -1,7 +1,7 @@
 // Obsidian installs exactly these three assets. Keep chapters compressed and
 // independently addressable so opening one passage doesn't expand the corpus.
 import { readFile, mkdir, copyFile, writeFile, stat } from 'node:fs/promises';
-import { gzipSync } from 'node:zlib';
+import { gzipSync } from 'fflate';
 import path from 'node:path';
 
 const output = 'dist/community';
@@ -17,7 +17,7 @@ for (const library of ['webp', 'crossrefs', 'mhc', 'strongs', 'interlinear']) {
     const key = library + '/' + file;
     if (Object.hasOwn(resources, key)) throw Error('Duplicate resource: ' + key);
     const data = await readFile(path.join(folder, file));
-    resources[key] = [data.length, gzipSync(data, {level: 8}).toString('base64')];
+    resources[key] = [data.length, Buffer.from(gzipSync(data, {level: 8, mtime: 0})).toString('base64')];
     if (file === 'SOURCE-LICENSE.md') notices.push(data.toString('utf8'));
   }
 }

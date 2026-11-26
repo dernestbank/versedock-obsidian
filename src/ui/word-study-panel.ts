@@ -10,6 +10,13 @@ export function renderWordStudy(parent: HTMLElement, plugin: SwordDockController
   selected: WordSelection | null = plugin.selectedWord, openFull?: (word: WordSelection) => void): () => void {
   const searches = new Set<() => void>();
   parent.addClass("vd-word-study");
+  if (!selected && !plugin.kjv.metadata) {
+    parent.createEl("p", { cls: "vd-subtle", text: "Select a word in the Berean companion to open its offline dictionary entry." });
+    textButton(parent, "Open Berean companion", () => {
+      void plugin.setBibleEdition("webp").then(() => plugin.setKjvDisplayMode("interlinear")).then(() => plugin.openReader());
+    });
+    return () => {};
+  }
   if (!selected) {
     parent.createEl("p", { cls: "vd-subtle", text: "Select a tagged word in the KJV Reader to see its original-language links and dictionary entries." });
     textButton(parent, "Read tagged KJV", () => { void plugin.setBibleEdition("kjv").then(() => plugin.openReader()); });
