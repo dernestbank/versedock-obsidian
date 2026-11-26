@@ -137,7 +137,7 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
       });
     await this.commentary.initialize();
 
-    this.modules = await createReadingInstaller(this.app, this.manifest.id,()=>[this.settings.bibleEdition]);
+    this.modules = await createReadingInstaller(this.app, ()=>[this.settings.bibleEdition]);
     if(this.settings.bibleEdition!=="webp"&&this.settings.bibleEdition!=="kjv") {
       try {if(!await this.getBibleResource(this.settings.bibleEdition))throw new Error("Unavailable Bible");}
       catch {this.settings.bibleEdition="webp";new Notice("The previously selected Bible is unavailable. WEB has been selected; check Module Library.");}

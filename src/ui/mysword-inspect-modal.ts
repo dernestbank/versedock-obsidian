@@ -1,6 +1,5 @@
 import { Modal } from "obsidian";
-import initSqlJs from "sql.js";
-import type { SqlJsStatic } from "sql.js";
+import { loadBundledSqlite } from "../core/bundled-sqlite";
 import { inspectMySwordBible, MAX_MY_SWORD_BYTES, type MySwordBiblePreview } from "../core/mysword-preview";
 import {
   preflightMySwordPlainTextCooperatively,
@@ -13,18 +12,7 @@ import { requestsFocusRestoration, restoreActionFocus } from "./focus";
 
 export class MySwordInspectModal extends Modal {
   private revision = 0;
-  private sqlPromise: Promise<SqlJsStatic> | null = null;
   constructor(private readonly plugin: SwordDockController) { super(plugin.app); }
-
-  private loadSql(): Promise<SqlJsStatic> {
-    if (!this.sqlPromise) {
-      const path = this.plugin.app.vault.configDir + "/plugins/versedock/assets/sql-wasm.wasm";
-      this.sqlPromise = this.plugin.app.vault.adapter.readBinary(path)
-        .then(wasm => initSqlJs({ wasmBinary: wasm }))
-        .catch(error => { this.sqlPromise = null; throw error; });
-    }
-    return this.sqlPromise;
-  }
 
   private async sha256(bytes: Uint8Array): Promise<string> {
     const digest = await crypto.subtle.digest("SHA-256", new Uint8Array(bytes).buffer as ArrayBuffer);
@@ -62,7 +50,7 @@ export class MySwordInspectModal extends Modal {
         try {
           const bytes = new Uint8Array(await file.arrayBuffer());
           if (version !== this.revision) return;
-          const sql = await this.loadSql();
+          const sql = await loadBundledSqlite();
           if (version !== this.revision) return;
           const preview = inspectMySwordBible(sql, file.name, bytes);
           const sourceSha256 = await this.sha256(bytes);

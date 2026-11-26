@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import esbuild from "esbuild";
 
 const production = process.argv.includes("production");
@@ -7,6 +8,8 @@ const config = {
   outfile: "main.js",
   format: "cjs",
   target: "es2022",
+  loader: { ".wasm": "binary" },
+  footer: { js: "/*\n" + readFileSync("assets/LICENSE-sql.js.txt", "utf8") + "\n*/" },
   platform: "browser",
   external: ["obsidian", "electron", "node:*", "@codemirror/*", "@lezer/*"],
   sourcemap: production ? false : "inline",
