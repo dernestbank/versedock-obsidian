@@ -1,6 +1,6 @@
 # Full completion ledger — 2026-11-18
 
-The [November 26 acceptance review](../docs/specs/acceptance-2026-11-26.md) maps each of the 68 entries below to the current evidence, including the desktop release checks. This file preserves the original scope and earlier observations.
+All 68 required entries were verified by November 26. The [acceptance review](../docs/specs/acceptance-2026-11-26.md) maps each entry to its evidence, and the [release report](../docs/specs/mobile-and-release-2026-11-26.md) identifies the tested ZIP and both physical iPads. The checkboxes and dated notes below preserve the earlier state of the work.
 
 The active goal includes design recovery plus all six numbered remaining areas.
 This ledger supersedes the historical read-only implementation boundary in the

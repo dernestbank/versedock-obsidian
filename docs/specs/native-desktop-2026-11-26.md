@@ -2,6 +2,8 @@
 
 The Mac mini ran Obsidian 1.15.1 on macOS 26.6.2 in a separate profile and disposable vault. Preview 0.1.11 contains 1,475 files, weighs 34,957,962 bytes and has SHA-256 `8037f4bfd4edbe1bce326c668e6806b1eb356e698a7d817d1a93fcd15074d19f`. All installed package files matched it. A separate fresh vault passed first launch, KJV companion selection and a full process restart on this ZIP. The full local check passed 501 tests in 73 files, TypeScript, production build and offline package smoke.
 
+The mobile-enabled ZIP uses the same JavaScript and CSS. Its digest and fresh desktop and iPad restart results appear in the [release verification report](mobile-and-release-2026-11-26.md).
+
 ## Reader contrast and pane sizes
 
 KJV red-letter text inherited each theme’s error color. Eleven of 20 native samples fell below 4.5:1 across John 3:15 and selected John 3:16. Converting the native captures from their embedded display profile to sRGB corrects the previously reported minimum. The original minimum was 2.638:1. The first adjustment reached 4.461:1. Mixing 40% theme red with normal text brought the minimum to 4.998:1.
