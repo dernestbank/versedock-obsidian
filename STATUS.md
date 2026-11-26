@@ -1,5 +1,7 @@
 # SwordDock Bible — Development QA Report
 
+The [November 26 acceptance review](docs/specs/acceptance-2026-11-26.md) covers all 68 required entries. The [desktop report](docs/specs/native-desktop-2026-11-26.md) records the reproducible package, native Windows/macOS/Linux checks, Orca announcements, real publisher update and managed-storage failure cases.
+
 Version: **0.1.11 (local developer candidate)** · Date: **2026-11-16** · Internal project directory: `mysword+`
 
 This independent project started under the internal name **MySword+**. Its original public name was **VerseDock**; its current preferred name is **SwordDock Bible**, with no affiliation with the original MySword app.

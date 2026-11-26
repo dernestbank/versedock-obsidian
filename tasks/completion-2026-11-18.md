@@ -1,5 +1,7 @@
 # Full completion ledger — 2026-11-18
 
+The [November 26 acceptance review](../docs/specs/acceptance-2026-11-26.md) maps each of the 68 entries below to the current evidence, including the desktop release checks. This file preserves the original scope and earlier observations.
+
 The active goal includes design recovery plus all six numbered remaining areas.
 This ledger supersedes the historical read-only implementation boundary in the
 older plan: the user has now explicitly authorized installation, import and
