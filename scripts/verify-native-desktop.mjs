@@ -53,7 +53,19 @@ async function runDesktop(check) {
     assert.ok(page, 'Obsidian did not open its vault window.');
     await page.waitForFunction(() => window.app?.vault?.adapter?.getBasePath?.());
     assert.equal(path.resolve(await page.evaluate(() => app.vault.adapter.getBasePath())), path.resolve(vault));
-    await check(page, context);
+    try {
+      await check(page, context);
+    } catch (error) {
+      console.error('Disposable vault state:', await page.evaluate(() => ({
+        enabled: [...app.plugins.enabledPlugins],
+        pluginLoaded: !!app.plugins.plugins.versedock,
+        dialogs: [...document.querySelectorAll('.modal')].map(dialog => dialog.innerText.slice(0, 400))
+      })));
+      throw error;
+    }
+    // Quit the application normally so Obsidian can persist vault trust and workspace state.
+    await page.evaluate(() => { setTimeout(() => window.electron.remote.app.quit(), 0); });
+    await Promise.race([exit, delay(15000, null, {ref: false}).then(() => { throw Error('Native quit did not finish.'); })]);
   } finally {
     await browser?.close();
     if (child.exitCode === null && child.signalCode === null) child.kill();
@@ -106,7 +118,7 @@ await runDesktop(async (page, context) => {
   await library.getByRole('button', {name: 'Read KJV with companion'}).click();
   const order = await observeCompanion(page);
   await order.selectOption('english');
-  // A restart must read the saved settings from disk, even on an abrupt process exit.
+  // A restart must read the saved settings from disk.
   const settingsPath = path.join(pluginDir, 'data.json');
   let saved;
   for (let attempt = 0; attempt < 100; attempt++) {
