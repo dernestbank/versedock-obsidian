@@ -34,11 +34,6 @@ assert commentary["id"] == "mhc" and commentary["license"] == "Public Domain" an
 assert {book["code"] for book in commentary["books"]} == {book["code"] for book in web["books"]}
 assert {p.name for p in commentary_dir.iterdir()} == allowed_books, "Unexpected commentary files"
 paths += ["library/mhc/" + name for name in sorted(allowed_books)]
-tagged_dir = ROOT / "library/kjv"
-tagged = json.loads((tagged_dir / "manifest.json").read_text())
-assert tagged["id"] == "kjv" and tagged["verseCount"] == 31102 and len(tagged["books"]) == 66
-assert {p.name for p in tagged_dir.iterdir()} == allowed_books, "Unexpected tagged Bible files"
-paths += ["library/kjv/" + name for name in sorted(allowed_books)]
 lexicon_dir = ROOT / "library/strongs"
 lexicon = json.loads((lexicon_dir / "manifest.json").read_text())
 lexicon_files = {"manifest.json", "SOURCE-LICENSE.md", "G.json", "H.json"}
@@ -54,7 +49,7 @@ assert {p.name for p in interlinear_dir.iterdir()} == interlinear_files, 'Unexpe
 paths += ['library/interlinear/' + name for name in sorted(interlinear_files)]
 for name in paths:
     assert (ROOT / name).is_file(), "Missing package asset: " + name
-target = ROOT / "dist" / f"SwordDock-Bible-{version}-offline-preview.zip"
+target = ROOT / "dist" / f"SwordDock-Bible-{version}-offline.zip"
 target.parent.mkdir(parents=True, exist_ok=True)
 with ZipFile(target, "w", compression=ZIP_DEFLATED, compresslevel=8) as out:
     for name in paths:

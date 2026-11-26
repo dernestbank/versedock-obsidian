@@ -63,7 +63,7 @@ export class InterlinearPanel {
     const previous = iconButton(navigation, "chevron-left", "Previous companion verse", () => move(-1)); previous.disabled = this.ref.verse === 1;
     const next = iconButton(navigation, "chevron-right", "Next companion verse", () => move(1)); next.disabled = this.ref.verse! >= this.lastVerse;
     previous.dataset.interlinearControl = "previous"; next.dataset.interlinearControl = "next";
-    root.createEl("p", { cls: "vd-interlinear-source", text: "Original words with Berean English glosses. KJV Scripture is shown above." });
+    root.createEl("p", { cls: "vd-interlinear-source", text: `Original words with Berean English glosses. ${this.plugin.settings.bibleEdition === "kjv" ? "KJV" : "WEB"} Scripture is shown above.` });
     const controls = root.createDiv({ cls: "vd-interlinear-controls" });
     const orderLabel = controls.createEl("label", { text: "Word order " });
     const order = orderLabel.createEl("select", { attr: { "aria-label": "Interlinear word order", "data-interlinear-control": "order" } });

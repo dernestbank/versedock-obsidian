@@ -1,6 +1,6 @@
 {
   "name": "sworddock-bible",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "private": true,
   "description": "SwordDock Bible — theme-adaptive offline-first Bible study for Obsidian",
   "scripts": {
@@ -21,7 +21,8 @@
     "package:preview": "python3 scripts/build_preview.py",
     "smoke:preview": "python3 scripts/smoke_preview.py",
     "qa:mysword": "node scripts/verify_mysword_local.mjs",
-    "qa:mysword:benchmark": "node --expose-gc scripts/benchmark_mysword_local.mjs"
+    "qa:mysword:benchmark": "node --expose-gc scripts/benchmark_mysword_local.mjs",
+    "package:community": "npm run build && node scripts/build-community.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
@@ -33,6 +34,7 @@
     "vitest": "4.1.12"
   },
   "dependencies": {
+    "fflate": "0.8.2",
     "sql.js": "^1.16.0"
   }
 }

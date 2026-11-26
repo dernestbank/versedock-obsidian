@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 def validate_package(archive: Path) -> None:
     with ZipFile(archive) as zf:
         names = zf.namelist()
-        assert len(names) == len(set(names)) == 1475, "Unexpected or duplicate ZIP entries"
+        assert len(names) == len(set(names)) == 1407, "Unexpected or duplicate ZIP entries"
         assert zf.testzip() is None, "Corrupt ZIP entry"
         for entry in zf.infolist():
             name = PurePosixPath(entry.filename)
@@ -150,24 +150,7 @@ def inspect_commentary(folder: Path) -> None:
 
 
 def inspect_tagged_resources(library: Path) -> None:
-    folder = library / "kjv"
-    manifest = json.loads((folder / "manifest.json").read_text(encoding="utf-8"))
-    assert manifest["id"] == "kjv" and manifest["verseCount"] == 31102
-    assert len(list(folder.iterdir())) == 68 and len(manifest["books"]) == 66
-    count = 0
-    for book in manifest["books"]:
-        raw = (folder / (book["code"] + ".json")).read_bytes()
-        assert len(raw) == book["bytes"] and hashlib.sha256(raw).hexdigest() == book["sha256"]
-        data = json.loads(raw)
-        for chapter in data["chapters"]:
-            for verse in chapter["verses"]:
-                count += 1
-                assert "".join(token["text"] for token in verse["tokens"]) == verse["text"]
-                if book["code"] == "JOH" and chapter["chapter"] == 3 and verse["verse"] == 16:
-                    loved = next(token for token in verse["tokens"] if token["text"] == "loved")
-                    assert loved["strongs"] == ["G25"] and loved["redLetter"]
-    assert count == 31102
-    assert "Crown of England" in (folder / "SOURCE-LICENSE.md").read_text(encoding="utf-8")
+    assert not (library / "kjv").exists(), "Worldwide ZIP contains legacy KJV"
     lexicon = library / "strongs"
     manifest = json.loads((lexicon / "manifest.json").read_text(encoding="utf-8"))
     assert manifest["id"] == "strongs" and manifest["license"] == "Public Domain"
@@ -199,4 +182,4 @@ def inspect_interlinear(folder: Path) -> None:
 if __name__ == "__main__":
     manifest = json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))
     version = manifest["version"]
-    validate_package(ROOT / "dist" / f"SwordDock-Bible-{version}-offline-preview.zip")
+    validate_package(ROOT / "dist" / f"SwordDock-Bible-{version}-offline.zip")

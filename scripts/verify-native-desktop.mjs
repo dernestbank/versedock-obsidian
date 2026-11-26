@@ -3,14 +3,14 @@
 import assert from 'node:assert/strict';
 import { spawn, execFileSync } from 'node:child_process';
 import { once } from 'node:events';
-import { mkdir, mkdtemp, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, writeFile, copyFile, stat } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { tmpdir, release } from 'node:os';
 import path from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium } from 'playwright-core';
 
-const [executable, archive] = process.argv.slice(2);
+const [executable, archive, upgradeDirectory] = process.argv.slice(2);
 if (!executable || !archive) throw Error('Expected an Obsidian executable and a SwordDock preview ZIP.');
 const scratch = await mkdtemp(path.join(tmpdir(), 'sworddock-native-'));
 const vault = path.join(scratch, 'vault');
@@ -18,8 +18,15 @@ const profile = path.join(scratch, 'profile');
 const pluginDir = path.join(vault, '.obsidian', 'plugins', 'versedock');
 await mkdir(pluginDir, { recursive: true });
 await mkdir(profile);
-execFileSync(process.platform === 'win32' ? 'python' : 'python3', ['-m', 'zipfile', '-e', path.resolve(archive), pluginDir]);
-const packageHash = createHash('sha256').update(await readFile(archive)).digest('hex');
+const directoryInstall = (await stat(archive)).isDirectory();
+async function copyDirectoryAssets(from) {
+  for (const file of ['manifest.json', 'main.js', 'styles.css']) await copyFile(path.join(from, file), path.join(pluginDir, file));
+}
+if (directoryInstall) await copyDirectoryAssets(archive);
+else execFileSync(process.platform === 'win32' ? 'python' : 'python3', ['-m', 'zipfile', '-e', path.resolve(archive), pluginDir]);
+if (process.env.SWORDDOCK_TEST_ASAR) await copyFile(process.env.SWORDDOCK_TEST_ASAR, path.join(profile, path.basename(process.env.SWORDDOCK_TEST_ASAR)));
+const packageHash = createHash('sha256').update(await readFile(directoryInstall ? path.join(archive,'main.js') : archive)).digest('hex');
+const legacy = JSON.parse(await readFile(path.join(pluginDir, 'manifest.json'), 'utf8')).version === '0.1.11';
 await writeFile(path.join(profile, 'obsidian.json'), JSON.stringify({
   vaults: { '5d0c000000000001': { path: vault, ts: Date.now(), open: true } }, updateDisabled: true
 }));
@@ -145,9 +152,12 @@ async function observeCompanion(page) {
   const reader = page.locator('.vd-reader:visible');
   await reader.locator('.vd-interlinear-word').first().waitFor();
   assert.match(await reader.locator('.vd-interlinear-head').innerText(), /Berean interlinear companion\s+John 3:16/);
-  assert.match(await reader.locator('.vd-verse[data-verse="16"]').innerText(), /only begotten Son/i);
-  const contrast = await textContrast(reader.locator('.vd-verse.is-selected .vd-red-letter').first());
-  assert.ok(contrast >= 4.5, 'Selected red-letter verse contrast: ' + contrast.toFixed(2));
+  const text = await reader.locator('.vd-verse[data-verse="16"]').innerText();
+  assert.match(text, legacy ? /only begotten Son/i : /his only born Son/i);
+  if (legacy) {
+    const contrast = await textContrast(reader.locator('.vd-verse.is-selected .vd-red-letter').first());
+    assert.ok(contrast >= 4.5, 'Selected red-letter verse contrast: ' + contrast.toFixed(2));
+  }
   const words = reader.locator('.vd-interlinear-word');
   assert.equal(await words.count(), 25);
   await words.first().click();
@@ -180,9 +190,9 @@ await runDesktop(async (page, context) => {
   assert.match(await scripture.innerText(), /his only born Son, that whoever believes in him/i);
   await command(page, 'open-library');
   const library = page.locator('.vd-library:visible');
-  await library.getByText('6 installed resources', {exact: true}).waitFor();
+  await library.getByText(legacy ? '6 installed resources' : '5 installed resources', {exact: true}).waitFor();
   result.libraryContrast = await checkLibraryContrast(page, library);
-  await library.getByRole('button', {name: 'Read KJV with companion'}).click();
+  await library.getByRole('button', {name: legacy ? 'Read KJV with companion' : 'Read WEB with companion'}).click();
   const order = await observeCompanion(page);
   await order.selectOption('english');
   // A restart must read the saved settings from disk.
@@ -190,15 +200,21 @@ await runDesktop(async (page, context) => {
   let saved;
   for (let attempt = 0; attempt < 100; attempt++) {
     saved = await readFile(settingsPath, 'utf8').then(JSON.parse).catch(() => null);
-    if (saved?.bibleEdition === 'kjv' && saved?.interlinear?.order === 'english') break;
+    if (saved?.bibleEdition === (legacy ? 'kjv' : 'webp') && saved?.interlinear?.order === 'english') break;
     await delay(100);
   }
   assert.equal(saved?.interlinear?.order, 'english');
-  assert.equal(saved?.bibleEdition, 'kjv');
+  assert.equal(saved?.bibleEdition, legacy ? 'kjv' : 'webp');
   result.window = await page.title();
   result.freshInstall = true;
 });
+if (upgradeDirectory) await copyDirectoryAssets(upgradeDirectory);
 await runDesktop(async page => {
+  if (upgradeDirectory) {
+    const expected = JSON.parse(await readFile(path.join(upgradeDirectory, 'manifest.json'), 'utf8'));
+    await page.waitForFunction(v => app.plugins.plugins.versedock?.manifest.version === v, expected.version);
+    result.upgradedVersion = expected.version;
+  }
   await page.waitForFunction(() => app.commands.commands['versedock:open-reader']);
   await command(page, 'open-reader');
   const order = await observeCompanion(page);

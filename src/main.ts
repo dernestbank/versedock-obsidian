@@ -1,3 +1,6 @@
+import { addIcon } from "obsidian";
+import ribbonSvg from "../assets/brand/ribbon.svg?raw";
+import { bundledLibraryFolder } from "./core/bundled-library-files";
 import { Plugin, PluginSettingTab, Setting, Modal, Notice, TFile, type WorkspaceLeaf } from "obsidian";
 import { createReadingInstaller } from "./obsidian/reading-installer";
 import type { ReadingInstallService } from "./core/reading-install-service";
@@ -110,31 +113,19 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     const available = await this.library.initialize();
     this.kjv = new OfflineBibleLibrary(this.app, this.manifest.id, "kjv");
     await this.kjv.initialize();
-    const lexiconFolder = this.app.vault.configDir + "/plugins/" + this.manifest.id + "/library/strongs/";
-    this.lexicon = new StrongsLexicon(file => this.app.vault.adapter.read(lexiconFolder + file), async file => {
-      const stat = await this.app.vault.adapter.stat(lexiconFolder + file);
-      return stat?.type === "file" ? stat.size : null;
-    });
+    const pluginDir = this.app.vault.configDir + "/plugins/" + this.manifest.id;
+    if (this.settings.bibleEdition === "kjv" && !this.kjv.metadata && available) this.settings.bibleEdition = "webp";
+    const lexiconFiles = bundledLibraryFolder(this.app.vault.adapter, pluginDir, "strongs");
+    this.lexicon = new StrongsLexicon(lexiconFiles.read, lexiconFiles.size);
     await this.lexicon.initialize();
-    const interlinearFolder = this.app.vault.configDir + "/plugins/" + this.manifest.id + "/library/interlinear/";
-    this.interlinear = new InterlinearLibrary(file => this.app.vault.adapter.read(interlinearFolder + file), async file => {
-      const stat = await this.app.vault.adapter.stat(interlinearFolder + file);
-      return stat?.type === "file" ? stat.size : null;
-    });
+    const interlinearFiles = bundledLibraryFolder(this.app.vault.adapter, pluginDir, "interlinear");
+    this.interlinear = new InterlinearLibrary(interlinearFiles.read, interlinearFiles.size);
     await this.interlinear.initialize();
-    const referencesFolder = this.app.vault.configDir + "/plugins/" + this.manifest.id + "/library/crossrefs/";
-    this.crossReferences = new CrossReferenceLibrary(file => this.app.vault.adapter.read(referencesFolder + file),
-      async file => {
-        const stat = await this.app.vault.adapter.stat(referencesFolder + file);
-        return stat?.type === "file" ? stat.size : null;
-      });
+    const crossReferencesFiles = bundledLibraryFolder(this.app.vault.adapter, pluginDir, "crossrefs");
+    this.crossReferences = new CrossReferenceLibrary(crossReferencesFiles.read, crossReferencesFiles.size);
     await this.crossReferences.initialize();
-    const commentaryFolder = this.app.vault.configDir + "/plugins/" + this.manifest.id + "/library/mhc/";
-    this.commentary = new CommentaryLibrary(file => this.app.vault.adapter.read(commentaryFolder + file),
-      async file => {
-        const stat = await this.app.vault.adapter.stat(commentaryFolder + file);
-        return stat?.type === "file" ? stat.size : null;
-      });
+    const commentaryFiles = bundledLibraryFolder(this.app.vault.adapter, pluginDir, "mhc");
+    this.commentary = new CommentaryLibrary(commentaryFiles.read, commentaryFiles.size);
     await this.commentary.initialize();
 
     this.modules = await createReadingInstaller(this.app, ()=>[this.settings.bibleEdition]);
@@ -172,7 +163,8 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     this.registerEvent(this.app.workspace.on("active-leaf-change", () => this.synchronizeFocusDocks()));
     this.app.workspace.onLayoutReady(() => this.synchronizeFocusDocks());
 
-    this.addRibbonIcon("book-open", "SwordDock Bible Reader", () => { void this.openReader(); });
+    addIcon("sworddock-bookmark", ribbonSvg.slice(ribbonSvg.indexOf(">") + 1, ribbonSvg.lastIndexOf("</svg>")));
+    this.addRibbonIcon("sworddock-bookmark", "SwordDock Bible Reader", () => { void this.openReader(); });
     this.addCommand({ id: "open-reader", name: "Open Bible Reader", callback: () => { void this.openReader(); } });
     this.addCommand({ id: "open-study-desk", name: "Open Bible Study Desk", callback: () => { void this.openStudyDesk(); } });
     this.addCommand({ id: "open-navigation", name: "Open Bible navigation dock", callback: () => { void this.openNavigation(); } });

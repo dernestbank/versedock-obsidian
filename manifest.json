@@ -1,9 +1,9 @@
 {
   "id": "versedock",
   "name": "SwordDock Bible",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "minAppVersion": "1.8.0",
-  "description": "Read and search WEB and KJV offline, study the labelled Berean interlinear companion, and manage Bible resources in your vault.",
+  "description": "Read and search the World English Bible offline, study Hebrew and Greek with the Berean interlinear, and manage local Bible resources.",
   "author": "QuantGist",
   "isDesktopOnly": false
 }
