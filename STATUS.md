@@ -1962,3 +1962,20 @@ will separately validate this pushed tree. No release or merge is performed.
 Local sync receipts and fresh-check logs stay in sibling
 .sworddock-qa/git-sync-2026-11-25, outside version control. Remote synchronization
 is verified against the exact branch-head SHA after push.
+
+## Resources dictionary focus — November 26, 2026
+
+Following the Reader could move typing into a sibling Resources pane, collapse
+a selected Strong’s identifier to a caret, or lose focus in a pop-out. Each pane
+now checks its own query input against its document’s active element and restores
+both selection offsets and the selection direction. Three reproductions failed
+before the change and pass afterward. Chromium independently reproduced all
+three outcomes with production Resources views and a second document realm.
+
+The full Mini check passes 500 tests across 73 files, TypeScript and production
+build. The 1,475-entry preview passes the clean-install and offline data-reopen
+smoke check. Its SHA-256 is
+`944815779e5a7688d4ad35a1cf3bdc334aab6b89f5ce159ec6bb8c99e72c825d`.
+The earlier package opened in an isolated Obsidian 1.15.1 profile on macOS
+26.6.2 and reached its first-run vault trust prompt. Exact-build plugin startup,
+native focus and the remaining release criteria still need verification.

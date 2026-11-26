@@ -1,6 +1,7 @@
 import {vi} from 'vitest';
 export class FixtureElement {
  children:FixtureElement[]=[];parent:FixtureElement|null=null;dataset:Record<string,string>={};attrs:Record<string,string>={};listeners=new Map<string,Array<(event:any)=>void>>();
+ selectionDirection:'forward'|'backward'|'none'='none';
  className='';value='';open=false;disabled=false;hidden=false;checked=false;connected=true;selectionStart=0;selectionEnd=0;scrollTop=0;tabIndex=0;style={setProperty:vi.fn()};private ownText='';
  constructor(readonly tag:string,readonly ownerDocument:any){}
  get tagName(){return this.tag.toUpperCase();}get parentElement(){return this.parent;}
@@ -10,6 +11,8 @@ export class FixtureElement {
  get childElementCount(){return this.children.length;}get options(){return this.children.filter(c=>c.tag==='option');}get selectedIndex(){return this.options.findIndex(c=>c.value===this.value);}
  createEl(tag:string,options:any={}){const child=new FixtureElement(tag,this.ownerDocument);child.className=options.cls??'';child.textContent=options.text??'';if(options.value!==undefined)child.value=options.value;for(const [k,v]of Object.entries(options.attr??{}))child.setAttribute(k,String(v));this.append(child);return child;}
  createDiv(options={}){return this.createEl('div',options);}createSpan(options={}){return this.createEl('span',options);}append(child:FixtureElement){child.parent=this;this.children.push(child);if(this.tag==='select'&&child.tag==='option'&&this.children.length===1)this.value=child.value;}appendText(text:string){this.ownText+=text;}
+ hasClass(name:string){return this.className.split(/\s+/).includes(name);}
+ setSelectionRange(start:number,end:number,direction:'forward'|'backward'|'none'='none'){this.selectionStart=start;this.selectionEnd=end;this.selectionDirection=direction;}
  addClass(...names:string[]){this.className+=' '+names.join(' ');}setText(text:string){this.textContent=text;}
  setAttribute(key:string,value:string){this.attrs[key]=value;if(key==='value')this.value=value;if(key==='disabled')this.disabled=true;if(key.startsWith('data-'))this.dataset[key.slice(5).replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]=value;}
  getAttribute(key:string){return key.startsWith('data-')?this.dataset[key.slice(5).replace(/-([a-z])/g,(_,c)=>c.toUpperCase())]??null:this.attrs[key]??null;}hasAttribute(key:string){return this.getAttribute(key)!==null;}

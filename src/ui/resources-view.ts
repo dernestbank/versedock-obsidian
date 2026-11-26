@@ -126,9 +126,10 @@ export class ResourcesView extends ItemView {
     this.inventory = this.inventoryKey();
     this.readingPanel?.dispose(); this.readingPanel = null;
     this.studyPanel?.dispose(); this.studyPanel = null;
-    const focused = this.contentEl.ownerDocument.activeElement;
-    const queryFocused = focused instanceof HTMLInputElement && focused.hasClass("vd-resource-dictionary-query");
-    const caret = queryFocused ? focused.selectionStart : null;
+    const priorQuery = this.contentEl.querySelector<HTMLInputElement>(".vd-resource-dictionary-query");
+    const selection = priorQuery && priorQuery === this.contentEl.ownerDocument.activeElement
+      ? { start: priorQuery.selectionStart, end: priorQuery.selectionEnd, direction: priorQuery.selectionDirection }
+      : null;
     const scrollTop = this.contentEl.querySelector<HTMLElement>(".vd-resources-body")?.scrollTop ?? 0;
     this.wordCleanup?.(); this.wordCleanup = null;
     const sequence = ++this.renderSequence;
@@ -207,10 +208,11 @@ export class ResourcesView extends ItemView {
     }, "vd-study-card-link");
 
     body.scrollTop = scrollTop;
-    if (queryFocused) {
+    if (selection) {
       const input = root.querySelector<HTMLInputElement>(".vd-resource-dictionary-query");
       input?.focus({ preventScroll: true });
-      if (caret !== null) input?.setSelectionRange(caret, caret);
+      if (selection.start !== null && selection.end !== null)
+        input?.setSelectionRange(selection.start, selection.end, selection.direction ?? undefined);
     }
   }
 
