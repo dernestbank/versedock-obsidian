@@ -34,7 +34,7 @@ This is the current review of the 68 required entries in the [completion ledger]
 | 2.4 | Six imports reopened with verified stored content and original input hashes after restart. |
 | 2.5 | Imported Genesis 1:4 retained a distinct RF translator note and the original tagged verse. Two invalid inputs showed the expected explanation. |
 | 2.6 | Real six-source corpus checks and Linux filesystem tests supplement the fixture regressions and the native file-picker run. |
-| 2.7 | The native modal rejected malformed/opaque inputs and allowed the same review to be retried after write permission returned. Earlier wrong-type and closed-review cases and current stale-review tests cover invalidation. |
+| 2.7 | The native modal rejected malformed/opaque inputs and a mismatched dictionary choice for an actual Bible file. Closing the corrected review left the inventory unchanged. The same review could be retried after a separate write failure. |
 
 ## Management
 
@@ -46,7 +46,7 @@ This is the current review of the 68 required entries in the [completion ledger]
 | 3.4 | Damaged Easton data was rejected. A pinned repair created a separate verified generation and preserved damaged bytes. All of Grace has earlier book-specific evidence. |
 | 3.5 | All 105 files in the current QA storage snapshot survived a real write failure unchanged. Retry succeeded and restored the original mode. The historical 127/133-file counts describe a different inventory. |
 | 3.6 | Native plugin disable during a JFB repair cancelled the live job. Re-enable reopened 21,114 commentary entries. The suite also exercises queued writes and partial cleanup. |
-| 3.7 | Local preview preparation has dedicated shutdown, discard, replacement, database closure and stale-result regressions across the real corpora. |
+| 3.7 | Disabling the native plugin while it prepared a real local Bible aborted the active preview, published no review ticket, and preserved the input digest and nine-resource inventory. Dedicated regressions cover discard, replacement, database closure and stale results. |
 | 3.8 | Interrupting a real response socket retained the prior digest and active version. The native Retry action completed the pinned transfer. |
 | 3.9 | The native management dialog displayed two publisher digests and applied the reviewed KJV update. Both dated 31,102-entry versions remained readable through rollback, reselection and restart. |
 | 3.10 | Native removal and restore preserved owned data. The selected default KJV had removal disabled. |
