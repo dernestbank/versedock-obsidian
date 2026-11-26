@@ -1,6 +1,6 @@
 # SwordDock Bible acceptance, November 26
 
-This is the current review of the 68 required entries in the [completion ledger](../../tasks/completion-2026-11-18.md). The two optional entries are outside that count. The assessed desktop artifact is the 0.1.11 archive at `8037f4bf`. The [native desktop report](native-desktop-2026-11-26.md) identifies the complete digest, platform tests and curated captures. Each row describes the proof available for that requirement. Historical fixture-specific checks are identified where the current run used a different resource.
+This review covers all 68 required entries in the [completion ledger](../../tasks/completion-2026-11-18.md). The two optional entries are outside that count. The final 0.1.11 artifact is `b00249d6`. The [release and mobile report](mobile-and-release-2026-11-26.md) gives its full digest, physical-device measurements and platform results. The [native desktop report](native-desktop-2026-11-26.md) covers the byte-identical runtime and stylesheet used for the design and management checks. Rows identify earlier fixture-specific checks where the current run used a different resource.
 
 ## Design
 
@@ -98,9 +98,9 @@ This is the current review of the 68 required entries in the [completion ledger]
 | 6.4 | The exact 1,475-file package passed fresh startup and full restart. Bundled WEB, KJV and the labelled companion opened. |
 | 6.5 | Orca 43.1 on native Linux announced tab navigation, word position, missing gloss, grammar and the Strong’s entry on the exact ZIP. Speech was captured on the guest's audio monitor. |
 | 6.6 | Windows and network-isolated Linux passed native fresh startup and full restart on the same ZIP as macOS. |
-| 6.7 | Physical iPad acceptance is in progress. The shipped manifest remains desktop-only. |
-| 6.8 | Physical slower-device timing and responsiveness are in progress. |
+| 6.7 | Obsidian 1.15.1 ran the Reader, labelled interlinear companion, dictionary and SQLite import on two physical iPads. Restart retained the chosen KJV passage and 480-entry local book. The final manifest enables mobile. |
+| 6.8 | The older, 3rd-generation iPad Pro measured 34–79 ms for six direct verse selections and 512 ms to open the last verse of Psalm 119. The release report also records slower Quick Jump transitions, frame intervals and full publisher-install times. |
 | 6.9 | The current 501-test suite, TypeScript, production build, clean extraction and offline data smoke passed on macOS and CI. The ZIP hash matched on all three desktop systems. |
-| 6.10 | Desktop fresh-install, offline-start and assistive gates passed. The final package still depends on physical mobile acceptance. |
+| 6.10 | The final ZIP passed desktop fresh installation, full restart, isolated Linux startup and native Orca checks. Physical iPad runtime and slower-device results are recorded alongside them. |
 | 6.11 | The source and test reviews are recorded in the prior audit. The new transport, theme cascade, native regression and cross-host ZIP changes received focused review and direct runtime verification. |
-| 6.12 | All 68 entries are accounted for here. Final acceptance and artifact identity remain open pending the physical-device results. |
+| 6.12 | All 68 entries are accounted for. The package identity, physical-device timings, native captures, source-specific findings and CI results are linked above. |
