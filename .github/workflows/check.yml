@@ -29,6 +29,25 @@ jobs:
       - run: npm run package:preview
       - name: Verify independent offline fresh installation
         run: npm run smoke:preview
+      - name: Open and restart native Obsidian in an offline Linux session
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          installer="$RUNNER_TEMP/obsidian_1.15.1_amd64.deb"
+          curl --fail --location --retry 3 --output "$installer" 'https://github.com/obsidianmd/obsidian-releases/releases/download/v1.15.1/obsidian_1.15.1_amd64.deb'
+          echo "f77b6dfc8c040214f2febad2b1b9b051b6a838a47b0f4fb90a31cfcb79b8fcec  $installer" | sha256sum --check
+          sudo apt-get update -qq
+          sudo apt-get install -y "$installer" xvfb xauth dbus-x11 iproute2
+          namespace=sworddock-qa
+          sudo ip netns add "$namespace"
+          trap 'sudo ip netns delete "$namespace"' EXIT
+          sudo ip -n "$namespace" link set lo up
+          sudo ip -n "$namespace" link show
+          previews=(dist/*-offline-preview.zip)
+          test "${#previews[@]}" = 1
+          sudo ip netns exec "$namespace" sudo -u "$(id -un)" -H -- xvfb-run -a -s '-screen 0 1440x960x24' \
+            dbus-run-session -- "$(command -v node)" scripts/verify-native-desktop.mjs "$(command -v obsidian)" "${previews[0]}"
       - name: Open the packaged plugin and restart native Obsidian
         if: runner.os == 'Windows'
         shell: pwsh

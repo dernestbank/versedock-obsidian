@@ -75,7 +75,12 @@ export function createDesktopModuleDownloader(store:ModuleStore,options:Transpor
     }catch(error){
      active?.destroy();
      if(etag&&received>saved&&received<source.compressedBytes)await cache.save(source,join(chunks,received),etag);
-     check();throw error;
+     check();
+     if(error instanceof Error && 'code' in error &&
+      (error.code==='ECONNRESET'||error.code==='ERR_STREAM_PREMATURE_CLOSE')){
+      throw Error('The connection to the publisher was interrupted. Retry this resource.');
+     }
+     throw error;
     }
     check();if(received!==source.compressedBytes){
      if(etag&&received>saved)await cache.save(source,join(chunks,received),etag);

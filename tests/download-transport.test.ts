@@ -39,6 +39,23 @@ describe('cancellable publisher byte stream',()=>{
   expect((await new PartialDownloads(disk.store).latest(source))?.bytes.length).toBe(32768);
   expect(await download(source,new AbortController().signal,()=>{})).toEqual(body);
  });
+ it('explains a dropped response and resumes the saved prefix on retry',async()=>{
+  const disk=memoryStore();
+  const prefix=32768;
+  const request=await serverFor((req,res)=>{
+   if(req.headers.range){
+    expect(req.headers.range).toBe('bytes='+prefix+'-');
+    res.writeHead(206,{'ETag':'"v1"','Content-Length':body.length-prefix,'Content-Range':`bytes ${prefix}-${body.length-1}/${body.length}`});
+    res.end(body.slice(prefix));return;
+   }
+   res.writeHead(200,{'ETag':'"v1"','Content-Length':body.length});
+   res.write(body.slice(0,prefix),()=>setTimeout(()=>res.destroy(),20));
+  });
+  const download=createDesktopModuleDownloader(disk.store,{request});
+  await expect(download(source,new AbortController().signal,()=>{})).rejects.toThrow(/connection.*interrupted.*retry/i);
+  expect((await new PartialDownloads(disk.store).latest(source))?.bytes).toEqual(body.slice(0,prefix));
+  expect(await download(source,new AbortController().signal,()=>{})).toEqual(body);
+ });
  it('closes the real socket on cancellation, saves partial bytes, and resumes after recreating the downloader',async()=>{
   const disk=memoryStore(),ranges:(string|undefined)[]=[];
   let closed!:()=>void;const socketClosed=new Promise<void>(resolve=>closed=resolve);
