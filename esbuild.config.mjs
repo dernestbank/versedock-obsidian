@@ -8,7 +8,7 @@ const config = {
   format: "cjs",
   target: "es2022",
   platform: "browser",
-  external: ["obsidian", "electron", "@codemirror/*", "@lezer/*"],
+  external: ["obsidian", "electron", "node:*", "@codemirror/*", "@lezer/*"],
   sourcemap: production ? false : "inline",
   minify: production,
   logLevel: "info",
@@ -17,5 +17,5 @@ if (production) await esbuild.build(config);
 else {
   const context = await esbuild.context(config);
   await context.watch();
-  console.log("Watching VerseDock sources.");
+  console.log("Watching SwordDock Bible sources.");
 }

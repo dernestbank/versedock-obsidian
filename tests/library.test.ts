@@ -34,7 +34,76 @@ describe("official WEB content", () => {
     expect(verses).toHaveLength(1);
     expect(verses[0].text).toContain("For God so loved the world");
     expect((await reader.getChapter(parseReference("John 3"))).verses.length).toBeGreaterThan(30);
-    const results = await reader.search("For God so loved the world", 5);
-    expect(results.some(r => r.label === "John 3:16")).toBe(true);
+    const search = await reader.search({
+      phrase: "For God so loved the world",
+      scope: "all",
+      match: "phrase",
+      currentBook: parseReference("John 3:16").book,
+      limit: 5
+    });
+    expect(search.results.some(r => r.label === "John 3:16")).toBe(true);
+  });
+  it("rejects a range whose requested endpoint is outside the chapter", async () => {
+    const app = { vault: {
+      configDir: ".obsidian",
+      adapter: {
+        read: async (name: string) => readFileSync(path.join(libraryPath, path.basename(name)), "utf-8")
+      }
+    }} as unknown as App;
+    const reader = new OfflineBibleLibrary(app, "versedock");
+    expect(await reader.initialize()).toBe(true);
+    await expect(reader.getPassage(parseReference("John 3:16-52"))).rejects.toThrow("No complete passage found");
+  });
+  it("measures installed manifest and book files without exposing adapter paths", async () => {
+    const app = { vault: {
+      configDir: ".obsidian",
+      adapter: {
+        read: async (name: string) => readFileSync(path.join(libraryPath, path.basename(name)), "utf-8"),
+        stat: async (name: string) => ({ type: "file", size: name.endsWith("manifest.json") ? 12 : 7 })
+      }
+    }} as unknown as App;
+    const reader = new OfflineBibleLibrary(app, "versedock");
+    expect(await reader.initialize()).toBe(true);
+    expect(await reader.getStorageSummary()).toEqual({ bytes: 12 + 66 * 7, files: 67, missing: 0 });
+  });
+  it("does not expose an absolute resource path when a book cannot be read", async () => {
+    const privatePath = "/Users/private/Vault/.obsidian/plugins/versedock/library/webp/JOH.json";
+    const app = { vault: {
+      configDir: ".obsidian",
+      adapter: { read: async (name: string) => {
+        if (name.endsWith("/JOH.json")) throw new Error("ENOENT: no such file or directory, open '" + privatePath + "'");
+        return readFileSync(path.join(libraryPath, path.basename(name)), "utf-8");
+      }}
+    }} as unknown as App;
+    const reader = new OfflineBibleLibrary(app, "versedock");
+    expect(await reader.initialize()).toBe(true);
+
+    let failure = "";
+    try { await reader.getPassage(parseReference("John 3:16")); }
+    catch (error) { failure = error instanceof Error ? error.message : String(error); }
+
+    expect(failure).toBe("The installed offline Bible data for John is missing or unreadable.");
+    expect(failure).not.toContain(privatePath);
+  });
+  it("verifies all 66 locally installed books and reports missing ones", async () => {
+    const privatePath = "/Users/private/Vault/.obsidian/plugins/versedock/library/webp/GEN.json";
+    const makeApp = (missing = "") => ({ vault: {
+      configDir: ".obsidian",
+      adapter: { read: async (name: string) => {
+        if (name.endsWith("/" + missing + ".json")) throw new Error("ENOENT: no such file or directory, open '" + privatePath + "'");
+        return readFileSync(path.join(libraryPath, path.basename(name)), "utf8");
+      }}
+    }} as unknown as App);
+    const library = new OfflineBibleLibrary(makeApp(), "versedock");
+    expect(await library.initialize()).toBe(true);
+    const complete = await library.verifyIntegrity();
+    expect(complete.checked).toBe(66);
+    expect(complete.issues).toEqual([]);
+    const broken = new OfflineBibleLibrary(makeApp("GEN"), "versedock");
+    expect(await broken.initialize()).toBe(true);
+    const report = await broken.verifyIntegrity();
+    expect(report.checked).toBe(66);
+    expect(report.issues).toContainEqual({ code: "GEN", problem: "Unable to read or verify this installed book file" });
+    expect(report.issues.some(issue => issue.problem.includes(privatePath))).toBe(false);
   });
 });
