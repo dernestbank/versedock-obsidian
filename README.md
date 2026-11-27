@@ -16,6 +16,8 @@ Open the command palette and run **SwordDock Bible: Open Bible Reader**. Use Qui
 
 **Open Bible Study Desk** opens the Reader and Inspector together. Search by phrase or individual words, compare available editions, bookmark and highlight verse ranges, and follow commentary references. The library includes the 66-book WEB, Berean interlinear, Strong’s dictionaries, OpenBible cross-references and Matthew Henry’s Commentary.
 
+Hover over a plain verse reference in a Markdown note to read the passage. Use **Quick Verse Insert into Markdown** for an attributed quotation or **Insert resource citation from dock** to link a commentary section or another local entry. [Study-note guide](docs/reading-guide.md#preview-a-reference-in-a-note)
+
 ## Installation and upgrades
 
 SwordDock uses the three files that Obsidian installs from a release. The Community build includes the compressed library and SQLite engine inside `main.js`. Opening a book expands only the requested data. Reading works offline from the first launch.

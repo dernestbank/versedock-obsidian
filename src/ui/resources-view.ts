@@ -33,9 +33,10 @@ export class ResourcesView extends ItemView {
   private studyPanel: InstalledStudyPanel | null = null;
   private unsubscribeModules: (() => void) | null = null;
 
-  openModule(id: string): void {
+  openModule(id: string, entryKey?: string): void {
     const installed = this.plugin.modules.installed.find(module => module.id === id);
     if (!installed) return;
+    if (entryKey) this.readingPositions[id] = {...(this.readingPositions[id] ?? {bookmarks:[], zoom:1}), entry:entryKey, scroll:0};
     this.resourceType = installed.kind; this.moduleId = id; this.moduleSelections[installed.kind] = id;
     this.render(); this.app.workspace.requestSaveLayout();
   }
@@ -220,6 +221,7 @@ export class ResourcesView extends ItemView {
   private renderBible(parent: HTMLElement, bible: BibleResource,
     ref: PassageReference, sequence: number): void {
     const metadata = bible.metadata;
+    const source = this.plugin.modules.installed.find(info => info.id === bible.edition)?.sourceSha256;
     parent.createEl("h3", { text: metadata?.title ?? "Bible unavailable" });
     parent.createEl("p", { cls: "vd-subtle", text: (metadata?.abbreviation ?? "") + " · " +
       (metadata?.edition ?? "Unavailable") + " · Offline" });
@@ -247,6 +249,8 @@ export class ResourcesView extends ItemView {
             {book:ref.book,chapter:ref.chapter,verse:verse.verse},verse.source!,metadata?.abbreviation??bible.edition).open(),'vd-study-card-link');
         }
         if (verses.length > 8) preview.createEl("p", { cls: "vd-subtle", text: "Showing the first 8 verses; open in Reader for the full passage." });
+        if (verses.length && metadata) textButton(actions, "Cite entry", () => this.plugin.citeResource(metadata.title + " · " + refLabel(ref),
+          {module:bible.edition, entry:referenceId(ref), ...(source ? {source} : {})}), "vd-study-card-link");
         if (!verses.length) preview.setText("This passage is unavailable in the selected edition.");
       } catch (error) {
         if (preview.isConnected && sequence === this.renderSequence)
@@ -292,7 +296,11 @@ export class ResourcesView extends ItemView {
         result.createEl("h4", { text: key + (entry?.lemma ? " · " + entry.lemma : "") });
         if (entry?.transliteration) result.createEl("p", { cls: "vd-subtle", text: entry.transliteration });
         const definition = result.createEl("p", { text: entry?.text ?? "No entry is available for this identifier." });
-        if (entry) strongsAnnotations(definition, this.plugin, key);
+        if (entry) {
+          strongsAnnotations(definition, this.plugin, key);
+          textButton(result, "Cite entry", () => this.plugin.citeResource("Strong’s " + name + " Dictionary · " + key + " · " + entry.lemma,
+            {module:resourceId, entry:key}), "vd-study-card-link");
+        }
       }).catch(() => {
         if (result.isConnected && sequence === this.renderSequence && lookupId === lookupSequence) result.setText("The offline dictionary could not be read.");
       });

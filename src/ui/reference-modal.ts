@@ -1,6 +1,5 @@
 import { Modal, MarkdownView, Notice } from "obsidian";
 import type { BibleResource } from "../core/library";
-import { BOOKS } from "../core/books";
 import { parseReference, refLabel, type PassageReference } from "../core/references";
 import { studyNotePath } from "../core/scripture-notes";
 import type { SwordDockController } from "../controller";
@@ -17,6 +16,7 @@ export class ReferenceModal extends Modal {
   private readonly editorPath: string | null;
   private readonly targetSnapshot: InsertionSnapshot | null;
   private inserting = false;
+  private editionSelect?: HTMLSelectElement;
   private previewBible: BibleResource | null = null;
   private unsubscribe: (() => void) | null = null;
 
@@ -47,6 +47,23 @@ export class ReferenceModal extends Modal {
     const icon = entry.createSpan({ cls: "vd-lookup-icon" });
     iconButton(icon, "search", "Search reference", () => this.input.focus());
     this.input = entry.createEl("input", { attr: { type: "search", "aria-label": "Scripture reference", placeholder: "John 3:16 · ps23 · 1co 13:4-7", autocomplete: "off" } });
+    if (this.mode === "insert") {
+      const label = root.createEl("label", {cls:"vd-insert-edition", text:"Bible translation (also used in Reader)"});
+      this.editionSelect = label.createEl("select", {attr:{"aria-label":"Bible translation"}});
+      this.refreshEditions();
+      this.editionSelect.addEventListener("change", async () => {
+        const picker = this.editionSelect!;
+        this.revision++;
+        this.current = null;
+        this.actions.empty();
+        this.preview.setText("Opening translation…");
+        picker.disabled = true;
+        await this.plugin.setBibleEdition(picker.value);
+        if (!picker.isConnected) return;
+        this.refreshEditions();
+        await this.update();
+      });
+    }
     this.preview = root.createDiv({ cls: "vd-modal-preview", attr: { "aria-live": "polite", "aria-atomic": "true" } });
     this.actions = root.createDiv({ cls: "vd-modal-actions" });
     this.input.addEventListener("input", () => { void this.update(); });
@@ -58,10 +75,20 @@ export class ReferenceModal extends Modal {
     this.input.focus(); this.input.select();
     const tip = root.createEl("p", { cls: "vd-modal-tip", text: this.previewHint() });
     this.unsubscribe = this.plugin.subscribe(() => {
+      this.refreshEditions();
       if (this.previewBible === this.plugin.readerBible) return;
       tip.setText(this.previewHint());
       void this.update();
     });
+  }
+  private refreshEditions(): void {
+    const picker = this.editionSelect;
+    if (!picker) return;
+    const editions = this.plugin.availableBibleEditions().filter(edition => edition.ready);
+    picker.empty();
+    for (const edition of editions) picker.createEl("option", {value:edition.id, text:edition.title});
+    picker.value = this.plugin.settings.bibleEdition;
+    picker.disabled = editions.length < 2;
   }
   private previewHint(): string {
     const edition = this.plugin.readerBible.metadata?.abbreviation;
@@ -102,7 +129,8 @@ export class ReferenceModal extends Modal {
       } else {
         textButton(this.actions, "Insert callout", () => { void this.insert("callout"); }, "mod-cta");
         textButton(this.actions, "Insert quote", () => { void this.insert("quote"); });
-        textButton(this.actions, "Insert reference link", () => { void this.insert("reference"); });
+        textButton(this.actions, "Insert reference", () => { void this.insert("reference"); });
+        textButton(this.actions, "Insert reference link", () => { void this.insert("reference", true); });
         textButton(this.actions, "Create study note", () => {
           const current = this.current;
           if (!current) return;
@@ -142,7 +170,7 @@ export class ReferenceModal extends Modal {
       new Notice("Unable to copy automatically. Your note was not modified. Use Copy or try again.");
     }
   }
-  private async insert(format: InsertFormat): Promise<void> {
+  private async insert(format: InsertFormat, linkToNote = false): Promise<void> {
     if (!this.current || this.inserting) return;
     const ref = this.current;
     const version = this.revision;
@@ -152,7 +180,7 @@ export class ReferenceModal extends Modal {
       const verses = await bible.getPassage(ref);
       if (this.revision !== version) return;
       const referenceLabel = refLabel(ref) + " (" + bible.metadata?.abbreviation + ")";
-      const markdown = formatPassageMarkdown(format, referenceLabel, verses, studyNotePath(ref, this.plugin.settings.studyNoteFolder));
+      const markdown = formatPassageMarkdown(format, referenceLabel, verses, linkToNote ? studyNotePath(ref, this.plugin.settings.studyNoteFolder) : undefined);
       const viewStillOpen = this.editorView !== null &&
         this.plugin.app.workspace.getLeavesOfType("markdown").some(leaf => leaf.view === this.editorView);
       if (!viewStillOpen || !this.editorView || !this.targetSnapshot ||
@@ -161,7 +189,7 @@ export class ReferenceModal extends Modal {
         await this.copyInstead(markdown, "No original Markdown editor is available.");
         return;
       }
-      if (!insertAtSnapshot(this.editorView.editor, this.targetSnapshot, markdown)) {
+      if (!insertAtSnapshot(this.editorView.editor, this.targetSnapshot, markdown, format === "reference" ? "inline" : "block")) {
         await this.copyInstead(markdown, "The original note or selection changed.");
         return;
       }

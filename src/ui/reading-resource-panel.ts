@@ -56,6 +56,11 @@ export class ReadingResourcePanel {
   const count=tools.createEl('p',{cls:'vd-subtle',attr:{role:'status'}});
   const select=controls.createEl('select',{attr:{'aria-label':module.kind==='graphics'?'Contents and maps':'Contents'}});
   const navigation=controls.createDiv({cls:'vd-action-row'});
+  textButton(navigation, "Cite entry", () => {
+   const entry = this.entry;
+   if (entry) this.plugin.citeResource(module.title + " · " + entry.title,
+     {module:module.id, entry:entry.key, source:module.sourceSha256});
+  }, "vd-study-card-link");
   const imageControls:HTMLButtonElement[]=[];
   let dateInput:HTMLInputElement|null=null;let period:HTMLSelectElement|null=null;
   const filtered=():ReadingEntry[]=>{const q=search.value.trim().toLocaleLowerCase();return entries.filter(e=>!q||(e.title+' '+modulePlainText(e)).toLocaleLowerCase().includes(q));};

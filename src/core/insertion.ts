@@ -22,9 +22,14 @@ export function canInsertAtSnapshot(editor: SafeInsertionEditor, snapshot: Inser
   return editor.getValue() === snapshot.content &&
     equal(editor.getCursor("from"), snapshot.from) && equal(editor.getCursor("to"), snapshot.to);
 }
-export function insertAtSnapshot(editor: SafeInsertionEditor, snapshot: InsertionSnapshot, markdown: string): boolean {
+export function insertAtSnapshot(editor: SafeInsertionEditor, snapshot: InsertionSnapshot, markdown: string, layout: "inline" | "block" = "block"): boolean {
   if (!canInsertAtSnapshot(editor, snapshot)) return false;
-  editor.replaceRange(markdown + "\n", snapshot.from, snapshot.to);
+  if (layout === "block") {
+    const lastLine = snapshot.content.split("\n")[snapshot.to.line];
+    const suffix = snapshot.to.ch < lastLine.length ? "\n\n" : "\n";
+    markdown = (snapshot.from.ch > 0 ? "\n" : "") + markdown + suffix;
+  }
+  editor.replaceRange(markdown, snapshot.from, snapshot.to);
   return true;
 }
 export function formatPassageMarkdown(format: InsertFormat, referenceLabel: string, verses: readonly PassageLine[], targetPath?: string): string {

@@ -1,3 +1,7 @@
+import type { CitationAddress } from "./core/study-citation";
+import { insertCitation, registerCitationLinks } from "./ui/study-citation";
+import { registerVersePreviews, refreshReadingPreviews } from "./obsidian/verse-previews";
+import { restoredStudyPreviews } from "./core/note-references";
 import { restoreAnnotations, type ReaderAnnotation } from "./core/annotations";
 import { addIcon } from "obsidian";
 import ribbonSvg from "../assets/brand/ribbon.svg?raw";
@@ -89,6 +93,7 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
   async onload(): Promise<void> {
     const previous = await this.loadData() as Partial<SwordDockSettings> | null;
     this.settings = { ...DEFAULT_SETTINGS, ...(previous ?? {}),
+      ...restoredStudyPreviews(previous),
       annotations: restoreAnnotations(previous?.annotations),
       bookmarks: Array.isArray(previous?.bookmarks) ? previous.bookmarks : [],
       highlights: Array.isArray(previous?.highlights) ? previous.highlights : [],
@@ -181,6 +186,12 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     this.addCommand({ id: "focus-toggle", name: "Toggle Reader Focus Mode", callback: () => {
       void this.openView(READER_VIEW).then(() => this.setReaderMode("toggle-focus"));
     } });
+    registerCitationLinks(this);
+    this.addCommand({id:"insert-resource-citation", name:"Insert resource citation from dock", editorCallback:() => {
+      void this.openResources();
+      new Notice("Choose Cite entry beside the resource you want to insert.");
+    }});
+    registerVersePreviews(this);
     this.addSettingTab(new SwordDockSettingsTab(this));
 
     if (!available) new Notice(OFFLINE_LIBRARY_RECOVERY.startupNotice);
@@ -369,10 +380,11 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     const view = leaf.view;
     if (view instanceof InspectorView && tab) view.activateExternalTab(tab);
   }
-  async openResources(moduleId?: string): Promise<void> {
+  citeResource(label: string, address: CitationAddress): void { insertCitation(this, label, address); }
+  async openResources(moduleId?: string, entryKey?: string): Promise<void> {
     const leaf = await this.openView(RESOURCES_VIEW, "right");
     await leaf.loadIfDeferred();
-    if (moduleId && leaf.view instanceof ResourcesView) leaf.view.openModule(moduleId);
+    if (moduleId && leaf.view instanceof ResourcesView) leaf.view.openModule(moduleId, entryKey);
   }
   async openSearch(): Promise<void> { await this.openNavigation(); await this.openView(SEARCH_VIEW); }
   async openLibrary(): Promise<void> { await this.openNavigation(); await this.openView(LIBRARY_VIEW); }
@@ -526,6 +538,14 @@ class SwordDockSettingsTab extends PluginSettingTab {
       .setDesc("Catalogue downloads use the reviewed publisher sources and start only when requested. Reading and local-file import work offline.");
 
     new Setting(containerEl).setName("Notes & references").setHeading();
+    for (const [key, label] of [["readingPreviews", "Reading View verse previews"], ["livePreviews", "Live Preview verse previews"]] as const) {
+      new Setting(containerEl).setName(label).setDesc("Hover over plain Scripture references to read the selected offline Bible.")
+        .addToggle(toggle => toggle.setValue(this.plugin.settings[key]).onChange(async value => {
+          this.plugin.settings[key] = value;
+          if (key === "readingPreviews") refreshReadingPreviews(this.plugin);
+          await this.plugin.saveSettings();
+        }));
+    }
     new Setting(containerEl).setName("Study notes")
       .setDesc("Primary Scripture notes are normal Markdown files in your vault. The Reader can create or open them for the current passage.")
       .addButton(button => button.setButtonText("Open current note").onClick(() => { void this.plugin.openStudyNote(this.plugin.currentRef); }));

@@ -21,8 +21,13 @@ describe("safe Scripture insertion", () => {
   it("inserts at the captured selection in one editor transaction", () => {
     const s = stub(), p = captureInsertionSnapshot(s.editor);
     expect(insertAtSnapshot(s.editor, p, "> Scripture")).toBe(true);
-    expect(s.text()).toBe("Study> Scripture\n note");
+    expect(s.text()).toBe("Study\n> Scripture\n\n note");
     expect(s.calls()).toBe(1);
+  });
+  it("keeps inline citations between the surrounding words", () => {
+    const s = stub();
+    expect(insertAtSnapshot(s.editor, captureInsertionSnapshot(s.editor), " (John 3:16)", "inline")).toBe(true);
+    expect(s.text()).toBe("Study (John 3:16) note");
   });
   it("rejects edited notes", () => {
     const s = stub(), p = captureInsertionSnapshot(s.editor); s.setText("Changed note");

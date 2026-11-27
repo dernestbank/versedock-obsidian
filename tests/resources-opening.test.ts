@@ -10,8 +10,8 @@ describe('Resources opening from deferred workspace leaves',()=>{
   const view=new ResourcesView({} as WorkspaceLeaf,plugin),open=vi.spyOn(view,'openModule').mockImplementation(()=>{});
   const leaf={view:{},loadIfDeferred:vi.fn(async()=>{await gate.promise;leaf.view=view;})};
   Object.assign(plugin,{openView:vi.fn(async()=>leaf)});
-  const opening=plugin.openResources('local-book');await Promise.resolve();expect(open).not.toHaveBeenCalled();
-  gate.resolve();await opening;expect(open).toHaveBeenCalledWith('local-book');
+  const opening=plugin.openResources('local-book', '3');await Promise.resolve();expect(open).not.toHaveBeenCalled();
+  gate.resolve();await opening;expect(open).toHaveBeenCalledWith('local-book', '3');
  });
  it('opens a warm Resources view without changing its current module when no target is given',async()=>{
   const plugin=new SwordDockBiblePlugin({} as App,{id:'versedock'} as PluginManifest);

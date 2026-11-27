@@ -1,4 +1,5 @@
 import type { ReaderAnnotation } from "./core/annotations";
+import type { CitationAddress } from "./core/study-citation";
 import type { App } from "obsidian";
 import type { ReadingInstallService } from "./core/reading-install-service";
 import type { PassageReference } from "./core/references";
@@ -22,7 +23,9 @@ import type {
   StudyLinkAssignment,
 } from "./core/link-groups";
 
-export interface SwordDockSettings {
+import { restoredStudyPreviews, type StudyPreviews } from "./core/note-references";
+
+export interface SwordDockSettings extends StudyPreviews {
   bibleEdition: string;
   kjvDisplayMode: KjvDisplayMode;
   kjvInlineStrongs: boolean;
@@ -47,6 +50,7 @@ export interface SwordDockSettings {
   };
 }
 export const DEFAULT_SETTINGS: SwordDockSettings = {
+  ...restoredStudyPreviews(null),
   bibleEdition: "webp", kjvDisplayMode: "word-study", kjvInlineStrongs: false,
   interlinear: restoredInterlinearPreferences(null),
   reference: "John.3.16", fontSize: 17, lineHeight: 1.68,
@@ -107,7 +111,8 @@ export interface SwordDockController {
   openWorkspaceSettings(): void;
   openWorkspaceHelp(): void;
   openInspector(tab?: InspectorTarget): Promise<void>;
-  openResources(moduleId?: string): Promise<void>;
+  citeResource(label: string, address: CitationAddress): void;
+  openResources(moduleId?: string, entryKey?: string): Promise<void>;
   openSearch(): Promise<void>;
   openLibrary(): Promise<void>;
   openComparison(): Promise<void>;

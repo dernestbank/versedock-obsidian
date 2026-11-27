@@ -1559,3 +1559,31 @@ body.is-mobile .versedock.vd-reader .vd-study-display-bar { flex-wrap: wrap; }
   user-select: text;
 }
 .versedock .vd-resource-selection { margin-block: 0.35rem; }
+
+/* Plain-text references keep the note's typography and use native focus rings. */
+.markdown-rendered button.vd-note-reference {
+  display: inline;
+  padding: 0;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font: inherit;
+  color: var(--link-color);
+  text-decoration: underline dotted;
+  text-underline-offset: .15em;
+  cursor: pointer;
+}
+.vd-note-reference:focus-visible { outline: 2px solid var(--interactive-accent); }
+.vd-note-verse-preview {
+  box-sizing: border-box;
+  max-width: min(30rem, 90vw);
+  padding: var(--size-4-3);
+  color: var(--text-normal);
+  background: var(--background-primary);
+}
+.vd-note-verse-preview .vd-preview-verse { max-height: 40vh; overflow: auto; }
+.hover-popover:has(.vd-note-verse-preview) { width: fit-content; height: auto; min-height: 0; }
+.vd-insert-edition { display: flex; align-items: center; flex-wrap: wrap; gap: var(--size-4-2); margin-block: var(--size-4-2); color: var(--text-muted); }
+.vd-insert-edition select { max-width: 100%; }

@@ -1,7 +1,7 @@
 import { resourceAnnotations } from "./resource-annotations";
 import type { SwordDockController } from "../controller";
 import { COMMENTARY_SOURCE, type CommentaryEntry } from "../core/commentary";
-import { refLabel, type PassageReference } from "../core/references";
+import { referenceId, refLabel, type PassageReference } from "../core/references";
 import { textButton } from "./components";
 import {renderResourceNodes} from './resource-content';
 import {ResourcePassageModal} from './resource-passage-modal';
@@ -18,10 +18,12 @@ function sectionReference(ref: PassageReference, entry: CommentaryEntry): Passag
     ...(entry.endVerse > entry.verse ? { endVerse: entry.endVerse } : {}) };
 }
 
-function renderSection(parent: HTMLElement, plugin: SwordDockController, ref: PassageReference, entry: CommentaryEntry): void {
+export function renderCommentarySection(parent: HTMLElement, plugin: SwordDockController, ref: PassageReference, entry: CommentaryEntry): void {
   const section = parent.createEl("section", { cls: "vd-commentary-section" });
   const reference = sectionReference(ref, entry);
   section.createEl("h3", { text: refLabel(reference) });
+  textButton(section, "Cite entry", () => plugin.citeResource("Matthew Henry’s Commentary · MHC 2.2 · " + refLabel(reference),
+    {module:"mhc", entry:referenceId(reference)}), "vd-study-card-link");
   const content = section.createDiv({ cls: "vd-commentary-text" });
   const document=plugin.commentary.content(entry);
   const actions={open:(target:ResourceLink):void=>{if(target.kind==='scripture')new ResourcePassageModal(plugin,target,"Matthew Henry's Commentary · MHC 2.2").open();}};
@@ -108,7 +110,7 @@ export function renderCommentaryPanel(parent: HTMLElement, plugin: SwordDockCont
         const append = (focus: boolean): void => {
           const page = entries.slice(position, position + 2);
           const firstNew = sections.children.length;
-          for (const entry of page) renderSection(sections, plugin, ref, entry);
+          for (const entry of page) renderCommentarySection(sections, plugin, ref, entry);
           position += page.length;
           if (position >= entries.length) next.remove();
           else next.setText("More sections · " + (entries.length - position) + " remaining");

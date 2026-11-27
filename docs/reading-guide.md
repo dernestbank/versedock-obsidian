@@ -36,15 +36,29 @@ If you remember the words but not the reference, run **Search installed Bible**.
 
 ![Offline WEB search for “eternal life” scoped to John, with the phrase highlighted in matching verses](screenshots/search.png)
 
+## Preview a reference in a note
+
+Type a reference in ordinary prose, such as `John 3:16`, `Jn 3:16–18` or `1 Corinthians 13:4–7`. Hover over it in Reading View or Live Preview to read the passage in the current offline Bible. Choose **Open in SwordDock** to take that same passage to the Reader.
+
+In Reading View, Tab to a reference and press Enter. In the editor, put the cursor inside the reference and run **Preview Scripture at cursor**. Automatic recognition looks for a book followed by a chapter and verse, with an optional range in the same chapter. Code and existing links keep their normal behavior.
+
+Under **Settings → SwordDock Bible → Notes & references**, toggle **Reading View verse previews** or **Live Preview verse previews** independently. The editor command remains available with automatic previews off. If an edition lacks a passage, the preview displays the lookup error.
+
 ## Insert a passage into a note
 
-Open a Markdown note and place the cursor where you want the verse. Run **Quick Verse Insert into Markdown** and enter `John 3:16`. Choose **Insert callout** for the result shown below. **Insert quote** and **Insert reference link** are available in the same preview.
+Open a Markdown note and place the cursor where you want the verse. Run **Quick Verse Insert into Markdown** and enter `John 3:16`. Choose an installed **Bible translation**. The Reader and subsequent previews use that choice too. Choose **Insert callout** for the result shown below, **Insert quote** for a Markdown blockquote, or **Insert reference** for an inline reference with its translation. **Insert reference link** links to the configured Scripture study-note path. The editor replaces the selected text or inserts at the cursor in one undo step.
 
 ![Quick Verse Insert showing John 3:16 and the callout, quote and reference-link actions](screenshots/insert-passage.png)
 
 Switch the note to Reading view to see the inserted callout.
 
 ![Rendered Markdown callout containing John 3:16 from the World English Bible](screenshots/inserted-callout.png)
+
+## Cite a resource in a note
+
+Place the cursor in an open Markdown note and run **Insert resource citation from dock**. In the Resources dock, find the commentary section, passage, dictionary headword, book entry, devotional reading or map you want. Choose **Cite entry**, check the resource and location, then choose **Insert into** followed by your note’s name. **Copy Markdown citation** also works while reading without an editor open.
+
+The note stores an ordinary Markdown link with a label such as **Matthew Henry’s Commentary · MHC 2.2 · John 3:1-21**. Follow the link in Reading View to reopen that section. The address includes the vault name. Imported entries also identify their source version so that an updated module cannot silently open a different entry. After removing a module, you can still read the label in any Markdown editor. Restore the cited source in Module Library to follow the link again.
 
 ## Find your offline resources
 

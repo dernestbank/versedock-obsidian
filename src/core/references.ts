@@ -14,7 +14,7 @@ export function parseReference(input: string): PassageReference {
   if (!result) throw new ReferenceError("Enter a reference such as John 3:16 or Ps 23.");
   const tail = result.remaining.trim();
   // Supported: 3, 3:16, 3 16, 3:16-18, 3.16, including aliases such as 1co.
-  const match = /^(\d+)(?:[:.\s]+(\d+)(?:\s*-\s*(\d+))?)?$/.exec(tail);
+  const match = /^(\d+)(?:[:.\s]+(\d+)(?:\s*[-–—]\s*(\d+))?)?$/.exec(tail);
   if (!match) throw new ReferenceError("Use a book, chapter and optional verse (for example John 3:16-18).");
   const chapter = Number(match[1]);
   const verse = match[2] ? Number(match[2]) : undefined;

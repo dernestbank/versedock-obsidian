@@ -17,6 +17,7 @@ function fixture(){
  vi.stubGlobal('document',app.qaDoc);vi.stubGlobal('window',{setTimeout,clearTimeout});
  const blank=()=>({metadata:null,initialize:vi.fn(async()=>true),getStorageSummary:async()=>({bytes:0,files:0,missing:0})});
  const plugin={app,settings:{...DEFAULT_SETTINGS,bibleEdition:'local-bible-one'},currentRef:ref,get readerBible(){return current;},
+  availableBibleEditions:()=>[{id:current.edition,title:current.metadata.title,ready:true}],
   library:blank(),kjv:blank(),lexicon:blank(),crossReferences:blank(),commentary:blank(),interlinear:{...blank(),available:false},
   subscribe(callback:()=>void){listeners.add(callback);return()=>listeners.delete(callback);},
   modules:{installed:[] as any[],jobs:new Map(),subscribe:()=>()=>{},storageSummary:()=>({bytes:0,files:0})},saveSettings:async()=>{}};
