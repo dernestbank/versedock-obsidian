@@ -4,9 +4,15 @@
 
 Read the World English Bible offline in Obsidian. Study a verse with its Berean Hebrew, Aramaic or Greek companion, then insert the passage and your notes into ordinary Markdown.
 
+![SwordDock Study Desk with John 3:16 selected between the navigation dock and the Study Inspector](docs/screenshots/study-desk.png)
+
+[Follow the illustrated guide to reading, word study, search and Markdown notes](docs/reading-guide.md).
+
 ## Start reading
 
 Open the command palette and run **SwordDock Bible: Open Bible Reader**. Use Quick Jump to open a passage such as **John 3:16**. Select **Interlinear** to see the original words, transliterations, Berean English glosses and Strong’s entries. Word order and numbering follow the source. The companion explicitly identifies the 17 verses for which the source supplies no words.
+
+![Quick Jump previewing John 3:16–18 in the World English Bible, with Open passage below the text](docs/screenshots/quick-jump.png)
 
 **Open Bible Study Desk** opens the Reader and Inspector together. Search by phrase or individual words, compare available editions, bookmark and highlight verse ranges, and follow commentary references. The library includes the 66-book WEB, Berean interlinear, Strong’s dictionaries, OpenBible cross-references and Matthew Henry’s Commentary.
 
@@ -16,6 +22,8 @@ Version 0.1.12 uses the three files that Obsidian installs from a release. The C
 
 For manual installation, download **main.js**, **manifest.json** and **styles.css** from the same release. Place them directly inside `<vault>/.obsidian/plugins/versedock/`, reopen Obsidian and enable **SwordDock Bible** in Community plugins. The complete manual ZIP is an alternative. On upgrade, keep the existing plugin folder, `data.json`, study notes and installed resources. The historical plugin ID is `versedock`. [GitHub releases](https://github.com/dernestbank/versedock-obsidian/releases)
 
+![SwordDock Bible 0.1.12 enabled in Obsidian’s Community plugins settings](docs/screenshots/enable-plugin.png)
+
 ## Editions and source rights
 
 The worldwide stable distribution omits the full King James Version. WEB is the default Scripture text. Existing, separately installed tagged KJV files from a previous installation remain usable, including tagged word study and the labelled Berean companion. Source-specific verse numbering is preserved. UK rights in the Authorized Version are vested in the Crown. Obtain any permission needed for local use or redistribution. [CrossWire’s source notice](https://crosswire.org/sword/modules/ModInfo.jsp?modName=KJV) · [Cambridge permissions](https://www.cambridge.org/sites/default/files/media/documents/Bibles%20Request%20Form%20-%20Permissions.pdf)
@@ -23,6 +31,8 @@ The worldwide stable distribution omits the full King James Version. WEB is the 
 ## Additional resources
 
 In **Module Library**, choose a publisher resource or **Import local file**. Compatible SQLite and gzip inputs include Bibles, commentaries, dictionaries, books, devotionals and graphics. Review the source, samples and size before installation. The original file is preserved. Rich entries retain supported formatting, source links and original content. Library management includes updates, version selection, repair and reversible removal.
+
+![My library tab with the installed World English Bible, Strong’s dictionaries and the Import local file button](docs/screenshots/module-library.png)
 
 Publisher downloads contact the MySword publisher at `mysword-bible.info` when you select an install or repair. SwordDock checks the pinned file hashes before activation. Desktop supports transfer cancellation and validated resume. On mobile, cancelling prevents activation while the host may finish its current network request. Compressed publisher modules and gzip local imports on iPadOS require 16.4 or newer.
 

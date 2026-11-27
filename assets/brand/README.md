@@ -2,6 +2,10 @@
 
 The open folio and notched ribbon identify SwordDock in a single color. Use the full name **SwordDock Bible** on first mention and **SwordDock** in running text. QuantGist is the publisher.
 
+<img src="app-icon.png" width="96" height="96" alt="SwordDock app tile with cream pages and a terracotta bookmark on ink green">
+
+The Obsidian Community listing uses the directory’s green **book-marked** symbol. The plugin uses the folio artwork in its ribbon. [Public listing](https://community.obsidian.md/plugins/versedock)
+
 | Use | Artwork |
 | --- | --- |
 | Light background | [Horizontal wordmark](wordmark-light.svg) |
