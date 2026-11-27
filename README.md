@@ -28,6 +28,10 @@ For manual installation, download **main.js**, **manifest.json** and **styles.cs
 
 The worldwide stable distribution omits the full King James Version. WEB is the default Scripture text. Existing, separately installed tagged KJV files from a previous installation remain usable, including tagged word study and the labelled Berean companion. Source-specific verse numbering is preserved. UK rights in the Authorized Version are vested in the Crown. Obtain any permission needed for local use or redistribution. [CrossWire’s source notice](https://crosswire.org/sword/modules/ModInfo.jsp?modName=KJV) · [Cambridge permissions](https://www.cambridge.org/sites/default/files/media/documents/Bibles%20Request%20Form%20-%20Permissions.pdf)
 
+## Mark verses and phrases
+
+Select a verse, Shift-click to extend a verse range, or select the exact words you want to mark. Choose the **highlighter** in the Reader toolbar. Pick a color and choose **Highlight** or **Underline**. You can attach a note before saving. [Illustrated annotation guide](docs/annotations.md)
+
 ## Additional resources
 
 In **Module Library**, choose a publisher resource or **Import local file**. Compatible SQLite and gzip inputs include Bibles, commentaries, dictionaries, books, devotionals and graphics. Review the source, samples and size before installation. The original file is preserved. Rich entries retain supported formatting, source links and original content. Library management includes updates, version selection, repair and reversible removal.

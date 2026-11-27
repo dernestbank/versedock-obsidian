@@ -1,3 +1,4 @@
+import type { ReaderAnnotation } from "./core/annotations";
 import type { App } from "obsidian";
 import type { ReadingInstallService } from "./core/reading-install-service";
 import type { PassageReference } from "./core/references";
@@ -37,6 +38,7 @@ export interface SwordDockSettings {
   studyNoteFolder: string;
   bookmarks: string[];
   highlights: string[];
+  annotations: ReaderAnnotation[];
   /** Canonical OSIS references, most recent first. */
   history: string[];
   studyLinks: {
@@ -51,7 +53,7 @@ export const DEFAULT_SETTINGS: SwordDockSettings = {
   textWidth: 65, fontStyle: "serif", mode: "classic", focusReturnMode: "classic",
   focusDockState: null,
   studyNoteFolder: "Bible Study",
-  bookmarks: [], highlights: [], history: [],
+  bookmarks: [], highlights: [], annotations: [], history: [],
   studyLinks: {
     reader: { group: "unlinked", mode: "follow" },
     comparison: { group: "unlinked", mode: "follow" }
@@ -119,6 +121,7 @@ export interface SwordDockController {
   openLinkedNote(path: string): Promise<void>;
   copyPassage(ref: PassageReference): Promise<void>;
   toggleBookmark(ref: PassageReference): void;
+  changeAnnotation(previous: ReaderAnnotation | null, replacement: ReaderAnnotation | null): Promise<void>;
   toggleHighlight(ref: PassageReference): void;
 }
 

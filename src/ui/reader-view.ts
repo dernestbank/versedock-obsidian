@@ -1,6 +1,9 @@
+import { AnnotationModal } from "./annotation-modal";
+import { selectedMarkParts, paintAnnotations } from "./reader-annotation-text";
+import type { MarkPart } from "../core/annotations";
 import { ItemView, Menu, Notice, setIcon, type WorkspaceLeaf } from "obsidian";
 import { BOOKS, type BookInfo } from "../core/books";
-import { extendReferenceInDirection, extendReferenceToVerse, referenceContainsVerse, referenceId, refLabel, storedReferencesContainVerse, type PassageReference } from "../core/references";
+import { extendReferenceInDirection, extendReferenceToVerse, referenceContainsVerse, referenceId, refLabel, passageIsHighlighted, storedReferencesContainVerse, type PassageReference } from "../core/references";
 import type { StudyLinkGroup, StudyLinkMode } from "../core/link-groups";
 import { DEFAULT_SETTINGS, type SwordDockController } from "../controller";
 import { iconButton, linkButton, textButton, emptyState } from "./components";
@@ -280,6 +283,27 @@ export class ReaderView extends ItemView {
     editionButton.setAttribute("aria-label", "Bible edition: " + (this.plugin.readerBible.metadata?.abbreviation ?? "unavailable"));
     editionButton.setAttribute("aria-haspopup", "menu");
     editionButton.title = (this.plugin.readerBible.metadata?.title ?? "Unavailable") + " · Offline";
+    const edition = this.plugin.settings.bibleEdition;
+    const partsForMark = () => {
+      const passage = app.querySelector<HTMLElement>(".vd-passage");
+      if (!passage) return [];
+      const selection = app.ownerDocument.getSelection();
+      const range = selection?.rangeCount && !selection.isCollapsed ? selection.getRangeAt(0) : null;
+      const selected = Array.from(passage.querySelectorAll<HTMLElement>(".is-selected .vd-verse-text"), el => el.dataset.reference!);
+      return selectedMarkParts(passage, range, selected);
+    };
+    const openMark = (parts: MarkPart[]) => {
+      if (!parts.length) { new Notice("Select a verse or some Scripture text first."); return; }
+      new AnnotationModal(this.plugin, {id: crypto.randomUUID(), edition, parts, color: "amber", style: "highlight", note: ""}).open();
+    };
+    let pressedParts: MarkPart[] | null = null;
+    const markButton = iconButton(tools, "highlighter", "Mark selected text or verses", () => {
+      openMark(pressedParts ?? partsForMark());
+      pressedParts = null;
+    });
+    markButton.addEventListener("pointerdown", () => { pressedParts = partsForMark(); });
+    markButton.addEventListener("pointercancel", () => { pressedParts = null; });
+    markButton.addEventListener("keydown", () => { pressedParts = null; });
     const tagged = this.plugin.settings.bibleEdition === "kjv";
     if (tagged || this.plugin.settings.bibleEdition === "webp") {
       const study = app.createDiv({ cls: "vd-study-display-bar", attr: { "aria-label": "Scripture study display" } });
@@ -381,6 +405,8 @@ export class ReaderView extends ItemView {
     }
     if (version !== this.renderId) return;
     const passage = article.createDiv({ cls: "vd-passage" });
+    const chapterPrefix = ref.book.osis + "." + ref.chapter + ".";
+    const marks = this.plugin.settings.annotations.filter(mark => mark.edition === edition && mark.parts[0].ref.startsWith(chapterPrefix));
     for (const verse of chapter.verses) {
       const selected = referenceContainsVerse(ref, verse.verse);
       const selectedStart = selected && ref.verse === verse.verse;
@@ -400,6 +426,7 @@ export class ReaderView extends ItemView {
       row.dataset.verse = String(verse.verse);
       row.createEl("sup", { cls: "vd-verse-num", text: String(verse.verse) });
       const verseText = row.createSpan({ cls: "vd-verse-text" });
+      verseText.dataset.reference = referenceId(verseRef);
       if (verse.tokens) verse.tokens.forEach((token, index) => {
         const classes = (token.redLetter ? " vd-red-letter" : "") + (token.added ? " vd-added-word" : "");
         if (token.strongs?.length && showKjvTaggedControls(this.plugin.settings.bibleEdition, this.plugin.settings.kjvDisplayMode)) {
@@ -439,12 +466,16 @@ export class ReaderView extends ItemView {
         } else verseText.createSpan({ cls: classes.trim(), text: token.text });
       });
       else verseText.setText(verse.text);
+      paintAnnotations(verseText, marks, edition);
       row.addEventListener("click", e => {
         if ((e.target as HTMLElement).closest("button")) return;
         // Do not tear down the DOM while the user is selecting Scripture text to copy.
-        const selection = window.getSelection();
+        const selection = row.ownerDocument.getSelection();
         if (selection && !selection.isCollapsed &&
             (row.contains(selection.anchorNode) || row.contains(selection.focusNode))) return;
+        const markId = (e.target as HTMLElement).closest("mark")?.dataset.annotationId;
+        const annotation = markId && marks.find(mark => mark.id === markId);
+        if (annotation && !e.shiftKey) { new AnnotationModal(this.plugin, annotation, true).open(); return; }
         this.plugin.selectReference(e.shiftKey
           ? extendReferenceToVerse(ref, verse.verse)
           : { book: ref.book, chapter: ref.chapter, verse: verse.verse });
@@ -461,8 +492,7 @@ export class ReaderView extends ItemView {
         const range = ref.endVerse !== undefined;
         const selectedLabel = range ? "selected passage" : "verse";
         iconButton(actions, "copy", range ? "Copy selected passage" : "Copy verse", () => { void this.plugin.copyPassage(ref); });
-        const highlightId = referenceId(ref);
-        const highlightActive = this.plugin.settings.highlights.includes(highlightId) || (!range && highlight);
+        const highlightActive = passageIsHighlighted(this.plugin.settings.highlights, ref);
         iconButton(actions, "notebook-pen", "Open linked note", () => { void this.plugin.openStudyNote(ref); });
         if(verse.source!==undefined)iconButton(actions,'file-text','Source notes and markup for '+refLabel(verseRef),()=>{
           new VerseSourceModal(this.plugin,verseRef,verse.source!,metadata.abbreviation+' · '+metadata.edition).open();

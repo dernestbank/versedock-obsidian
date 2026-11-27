@@ -1,3 +1,5 @@
+import { annotationReference } from "../core/annotations";
+import { AnnotationModal } from "./annotation-modal";
 import { ItemView, setIcon as importIcon, type ViewStateResult, type WorkspaceLeaf } from "obsidian";
 import type { InspectorTarget, SwordDockController } from "../controller";
 import { renderWordStudy } from "./word-study-panel";
@@ -191,13 +193,28 @@ export class InspectorView extends ItemView {
     const ref = this.reference;
     body.createDiv({ cls: "vd-resource-heading", text: refLabel(ref) });
     if (this.tab === "highlights") {
-      body.createEl("h3", { text: "Highlighted passages" });
-      if (!this.plugin.settings.highlights.length) emptyState(body, "No highlights yet", "Select a passage in the Reader and choose Highlight.", "highlighter");
+      body.createEl("h3", { text: "Highlights and annotations" });
+      if (!this.plugin.settings.annotations.length && !this.plugin.settings.highlights.length) emptyState(body, "No highlights yet", "Select a verse or phrase in the Reader and choose the highlighter in the toolbar.", "highlighter");
       for (const id of this.plugin.settings.highlights) {
         try {
           const highlighted = parseOsis(id);
           textButton(body, refLabel(highlighted), () => { this.plugin.selectReference(highlighted); void this.plugin.openReader(); });
         } catch { /* Ignore stale references. */ }
+      }
+      for (const mark of this.plugin.settings.annotations) {
+        const entry = body.createDiv({cls: "vd-annotation-entry"});
+        const reference = annotationReference(mark);
+        entry.createEl("strong", {text: refLabel(reference) + " · " + mark.edition});
+        entry.createEl("blockquote", {text: mark.parts.map(part => part.quote).join(" ")});
+        if (mark.note) entry.createEl("p", {text: mark.note});
+        const actions = entry.createDiv({cls: "vd-action-row"});
+        textButton(actions, "Open passage", async () => {
+          if (this.plugin.settings.bibleEdition !== mark.edition) await this.plugin.setBibleEdition(mark.edition);
+          if (this.plugin.settings.bibleEdition !== mark.edition) return;
+          this.plugin.selectReference(reference);
+          await this.plugin.openReader();
+        });
+        textButton(actions, "Edit annotation", () => new AnnotationModal(this.plugin, mark, true).open());
       }
       this.renderInstantDetails(root);
       return;
