@@ -18,4 +18,6 @@ SwordDock stores annotations in this vault’s plugin settings. Each is attached
 
 Select words in a Matthew Henry section, a Strong’s definition, or an installed commentary, dictionary, book, or devotional. **Copy selection** copies the selected text to the clipboard. The usual copy shortcut also works. **Highlight selection** opens the same color, underline, and note controls as the Bible Reader.
 
+![Matthew Henry’s commentary on John 3 with Copy selection and Highlight selection above a saved phrase](screenshots/resource-highlight.png)
+
 Save the mark and reopen the entry to see it in context. To edit a mark that overlaps a source link, open **Highlights** and choose **Edit annotation**. Marks stay with their source entry, including when two dictionaries use the same headword.
