@@ -459,7 +459,6 @@ class SwordDockSettingsTab extends PluginSettingTab {
   }
   renderInto(containerEl: HTMLElement): void {
     containerEl.empty();
-    new Setting(containerEl).setName("SwordDock Bible · Settings").setHeading();
     containerEl.createEl("p", { text: "SwordDock follows your Obsidian theme. WEB, the Berean companion and your installed resources are available offline." });
     new Setting(containerEl).setName("Reading & appearance").setHeading();
     new Setting(containerEl).setName("Reading typeface").setDesc("Changes only Scripture, not Obsidian notes.")

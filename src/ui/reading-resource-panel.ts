@@ -113,7 +113,7 @@ export class ReadingResourcePanel {
  private applyZoom():void{for(const image of this.viewport?.querySelectorAll<HTMLImageElement>('img')??[])image.style.width=this.position.zoom*100+'%';}
  private renderEntry(anchor?:string):void{
   const viewport=this.viewport!;const entry=this.entry!;viewport.empty();viewport.createEl('h4',{text:entry.title,attr:{tabindex:'-1'}});
-  const content=renderResourceEntryContent(viewport,this.module!,entry,{imageUrl:key=>this.imageUrl(key),open:target=>this.openLink(target)});
+  const content=renderResourceEntryContent(viewport,this.module!,entry,{imageUrl:key=>this.imageUrl(key),open:target=>this.openLink(target)},this.plugin);
   this.applyZoom();const top=this.position.scroll;viewport.scrollTop=top;
   if(anchor&&!content.anchor(anchor))new Notice('The linked anchor is missing or ambiguous in this source entry.');
   const anchorFocus=viewport.ownerDocument.activeElement;let alignedScroll=viewport.scrollTop;

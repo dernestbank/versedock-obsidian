@@ -38,3 +38,10 @@ describe("whole-verse highlights from earlier versions", () => {
     expect(togglePassageHighlight(old,parseOsis("John.3.19"))).toContain("John.3.19");
   });
 });
+
+it("restores resource excerpts alongside legacy Scripture and rejects a malformed anchor", () => {
+  const resource = {...mark, edition: "mhc", resource: {key: "John.3.16-21", label: "Matthew Henry · John 3"},
+    parts: [{ref: "block-2", start: 7, quote: "faith"}]};
+  expect(restoreAnnotations([resource, mark, {...resource, resource: {key: ""}},
+    {...resource, parts: [{ref: "block-2", start: -2, quote: "faith"}]}])).toEqual([resource, mark]);
+});

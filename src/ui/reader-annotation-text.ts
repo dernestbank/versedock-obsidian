@@ -10,10 +10,10 @@ function scriptureNodes(element: HTMLElement): Text[] {
 }
 
 /** DOM ranges are in document order even when the reader drags backwards. */
-export function selectedMarkParts(passage: HTMLElement, range: Range | null, selected: string[]): MarkPart[] {
+export function selectedMarkParts(passage: HTMLElement, range: Range | null, selected: string[], selector = ".vd-verse-text[data-reference]"): MarkPart[] {
   if (range && (!passage.contains(range.startContainer) || !passage.contains(range.endContainer))) return [];
   const parts: MarkPart[] = [];
-  for (const el of passage.querySelectorAll<HTMLElement>(".vd-verse-text[data-reference]")) {
+  for (const el of (passage.matches(selector) ? [passage] : passage.querySelectorAll<HTMLElement>(selector))) {
     const ref = el.dataset.reference!;
     if (range ? !range.intersectsNode(el) : !selected.includes(ref)) continue;
     let offset = 0, start = 0, quote = "";
@@ -58,7 +58,7 @@ export function paintAnnotations(el: HTMLElement, marks: ReaderAnnotation[], edi
           const tag = el.ownerDocument.createElement("mark");
           tag.className = "vd-annotation vd-mark-" + mark.color + " vd-mark-" + mark.style;
           tag.dataset.annotationId = mark.id;
-          tag.title = mark.note || "Scripture annotation";
+          tag.title = mark.note || mark.resource?.label || "Scripture annotation";
           tag.append(part);
           part = tag;
         }

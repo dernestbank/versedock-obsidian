@@ -1,3 +1,4 @@
+import { strongsAnnotations } from "./resource-annotations";
 import { ItemView, Notice, type ViewStateResult, type WorkspaceLeaf } from "obsidian";
 import type { SwordDockController } from "../controller";
 import { referenceId, refLabel, type PassageReference } from "../core/references";
@@ -290,7 +291,8 @@ export class ResourcesView extends ItemView {
         result.empty();
         result.createEl("h4", { text: key + (entry?.lemma ? " · " + entry.lemma : "") });
         if (entry?.transliteration) result.createEl("p", { cls: "vd-subtle", text: entry.transliteration });
-        result.createEl("p", { text: entry?.text ?? "No entry is available for this identifier." });
+        const definition = result.createEl("p", { text: entry?.text ?? "No entry is available for this identifier." });
+        if (entry) strongsAnnotations(definition, this.plugin, key);
       }).catch(() => {
         if (result.isConnected && sequence === this.renderSequence && lookupId === lookupSequence) result.setText("The offline dictionary could not be read.");
       });

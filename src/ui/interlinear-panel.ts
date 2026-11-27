@@ -1,3 +1,4 @@
+import { strongsAnnotations } from "./resource-annotations";
 import type { SwordDockController } from "../controller";
 import { interlinearLexiconKey, interlinearWordsForOrder, type InterlinearVerse, type InterlinearWord } from "../core/interlinear";
 import type { InterlinearPreferences } from "../core/interlinear-preferences";
@@ -146,7 +147,11 @@ export class InterlinearPanel {
     try {
       const entry = await this.plugin.lexicon.lookup(key);
       if (this.disposed || version !== this.selectionVersion || !detail.isConnected) return;
-      definition.setText(word.strongs + " · Strong’s dictionary: " + (entry ? entry.lemma + " · " + entry.text : "No entry available."));
+      definition.setText(word.strongs + " · Strong’s dictionary: " + (entry ? entry.lemma : "No entry available."));
+      if (entry) {
+        const body = detail.createEl("p", {text: entry.text});
+        strongsAnnotations(body, this.plugin, key);
+      }
     } catch (error) {
       if (!this.disposed && version === this.selectionVersion && detail.isConnected) definition.setText(error instanceof Error ? error.message : "Dictionary unavailable.");
     }

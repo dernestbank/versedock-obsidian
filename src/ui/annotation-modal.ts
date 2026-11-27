@@ -6,13 +6,13 @@ import { textButton } from "./components";
 
 export class AnnotationModal extends Modal {
   constructor(private readonly plugin: SwordDockController, private readonly mark: ReaderAnnotation,
-    private readonly existing = false) { super(plugin.app); }
+    private readonly existing = false, private readonly afterSave?: () => void) { super(plugin.app); }
 
   onOpen(): void {
     const root = this.contentEl;
     root.addClass("versedock", "vd-annotation-editor");
-    root.createEl("h2", {text: this.existing ? "Edit annotation" : "Mark Scripture"});
-    root.createEl("strong", {text: refLabel(annotationReference(this.mark))});
+    root.createEl("h2", {text: this.existing ? "Edit annotation" : this.mark.resource ? "Mark resource text" : "Mark Scripture"});
+    root.createEl("strong", {text: this.mark.resource?.label ?? refLabel(annotationReference(this.mark))});
     root.createEl("blockquote", {text: this.mark.parts.map(part => part.quote).join(" ")});
     const controls = root.createDiv({cls: "vd-action-row"});
     const color = controls.createEl("label", {text: "Color "}).createEl("select", {attr: {"aria-label": "Color"}});
@@ -32,6 +32,7 @@ export class AnnotationModal extends Modal {
       try {
         await this.plugin.changeAnnotation(this.existing ? this.mark : null, replacement);
         this.close();
+        this.afterSave?.();
         new Notice(replacement ? "Annotation saved" : "Annotation removed");
       } catch (error) {
         busy = false;

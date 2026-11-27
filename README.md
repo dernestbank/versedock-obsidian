@@ -30,7 +30,7 @@ The worldwide stable distribution omits the full King James Version. WEB is the 
 
 ## Mark verses and phrases
 
-Select a verse, Shift-click to extend a verse range, or select the exact words you want to mark. Choose the **highlighter** in the Reader toolbar. Pick a color and choose **Highlight** or **Underline**. You can attach a note before saving. [Illustrated annotation guide](docs/annotations.md)
+Select a verse, Shift-click to extend a verse range, or select the exact words you want to mark. Choose the **highlighter** in the Reader toolbar. Pick a color and choose **Highlight** or **Underline**. You can attach a note before saving. In a commentary, dictionary, or book, select the words and choose **Copy selection** or **Highlight selection**. [Illustrated annotation guide](docs/annotations.md)
 
 ## Additional resources
 

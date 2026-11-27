@@ -16,7 +16,7 @@ export class VerseSourceModal extends Modal {
   const details=resourceBibleSource(this.source);
   for(const [index,note]of details.annotations.entries()){
    root.createEl('h3',{text:(note.kind==='note'?'Source note':'Source heading')+' '+(index+1)});
-   renderResourceEntryContent(root,{images:{}},{key:String(index),title:'Source note',blocks:[],source:note.source.replace(/<FI>/g,'<em>').replace(/<Fi>/g,'</em>')},{originalSource:note.source,open:target=>this.openLink(target)});
+   renderResourceEntryContent(root,{images:{},id:'source-notes:'+this.plugin.readerBible.edition,title:this.edition+' · '+refLabel(this.ref)},{key:refLabel(this.ref)+'/'+index,title:'Source note',blocks:[],source:note.source.replace(/<FI>/g,'<em>').replace(/<Fi>/g,'</em>')},{originalSource:note.source,open:target=>this.openLink(target)},this.plugin);
   }
   if(!details.annotations.length)root.createEl('p',{text:'No separate notes or headings are supplied for this verse.'});
   if(details.references.length){root.createEl('h3',{text:'Source cross-references'});for(const range of details.references.slice(0,50))textButton(root,resourceRangeLabel(range),()=>this.openLink({kind:'scripture',range}));

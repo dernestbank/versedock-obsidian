@@ -1551,3 +1551,11 @@ body.is-mobile .versedock.vd-reader .vd-study-display-bar { flex-wrap: wrap; }
 .vd-annotation-editor .vd-action-row { margin-block: 0.8em; }
 .vd-annotation-entry { padding-block: 0.7em; border-bottom: 1px solid var(--background-modifier-border); }
 .vd-annotation-entry p { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.versedock .vd-selectable-resource, .versedock .vd-selectable-resource *,
+.versedock .vd-retained-source pre, .versedock .vd-resource-passage-preview,
+.versedock .vd-resource-preview, .versedock .vd-resource-note-text {
+  -webkit-user-select: text;
+  user-select: text;
+}
+.versedock .vd-resource-selection { margin-block: 0.35rem; }

@@ -9,6 +9,7 @@ export interface MarkPart {
 export interface ReaderAnnotation {
   id: string;
   edition: string;
+  resource?: {key: string; label: string};
   parts: MarkPart[];
   color: typeof MARK_COLORS[number];
   style: "highlight" | "underline";
@@ -27,6 +28,12 @@ function validMark(value: unknown): value is ReaderAnnotation {
   if (typeof mark.id !== "string" || !mark.id || typeof mark.edition !== "string" || !mark.edition ||
       !MARK_COLORS.includes(mark.color) || !["highlight", "underline"].includes(mark.style) ||
       typeof mark.note !== "string" || !Array.isArray(mark.parts) || !mark.parts.length) return false;
+  if (mark.resource !== undefined) {
+    const target = mark.resource;
+    return !!target && typeof target.key === "string" && !!target.key && typeof target.label === "string" && !!target.label &&
+      mark.parts.every(part => part && /^block-\d+$/.test(part.ref) && Number.isSafeInteger(part.start) &&
+        part.start >= 0 && typeof part.quote === "string" && !!part.quote.trim());
+  }
   try {
     const first = parseOsis(mark.parts[0].ref);
     let previous = 0;
