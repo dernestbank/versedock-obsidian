@@ -57,8 +57,11 @@ interlinear_files = {entry['file'] for entry in interlinear['chapters']} | {'man
 assert len(interlinear_files) == 1191
 assert {p.name for p in interlinear_dir.iterdir()} == interlinear_files, 'Unexpected interlinear files'
 paths += ['library/interlinear/' + name for name in sorted(interlinear_files)]
+def package_source(name):
+    return ROOT / ("dist/manual/main.js" if name == "main.js" else name)
+
 for name in paths:
-    assert (ROOT / name).is_file(), "Missing package asset: " + name
+    assert package_source(name).is_file(), "Missing package asset: " + name
 target = ROOT / "dist" / f"SwordDock-Bible-{version}-offline.zip"
 target.parent.mkdir(parents=True, exist_ok=True)
 with ZipFile(target, "w", compression=ZIP_DEFLATED, compresslevel=8) as out:
@@ -67,7 +70,7 @@ with ZipFile(target, "w", compression=ZIP_DEFLATED, compresslevel=8) as out:
         info.create_system = 3  # Unix permissions are encoded identically on all build hosts.
         info.compress_type = ZIP_DEFLATED
         info.external_attr = 0o100644 << 16
-        out.writestr(info, (ROOT / name).read_bytes(), compress_type=ZIP_DEFLATED, compresslevel=8)
+        out.writestr(info, package_source(name).read_bytes(), compress_type=ZIP_DEFLATED, compresslevel=8)
 with ZipFile(target) as zf:
     assert zf.testzip() is None
     assert set(zf.namelist()) == set(paths)

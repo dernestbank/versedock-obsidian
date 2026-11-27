@@ -49,7 +49,7 @@ Requirements: Node.js 22+, Python 3, and desktop Obsidian.
 ```bash
 git clone https://github.com/dernestbank/versedock-obsidian.git
 cd versedock-obsidian
-npm ci --legacy-peer-deps
+npm ci
 npm run check
 npm run deploy:test
 npm run package:community
@@ -63,6 +63,6 @@ The published 0.1.11 tag retains the historical KJV compatibility fixtures. The 
 
 ## Credits and support
 
-SwordDock Bible is an independent QuantGist project. Obsidian, MySword and CrossWire are independent projects. Each bundled resource retains its own attribution and licence. [WEB](library/webp/SOURCE-LICENSE.md) · [Berean](library/interlinear/SOURCE-LICENSE.md) · [Strong’s](library/strongs/SOURCE-LICENSE.md) · [Cross-references](library/crossrefs/SOURCE-LICENSE.md) · [Commentary](library/mhc/SOURCE-LICENSE.md)
+SwordDock Bible is an independent QuantGist project. Obsidian, MySword and CrossWire are independent projects. Each bundled resource retains its own attribution and licence. This source-code license does not override separate rights/provenance for included Bible content; see library/webp/SOURCE-LICENSE.md. [WEB](library/webp/SOURCE-LICENSE.md) · [Berean](library/interlinear/SOURCE-LICENSE.md) · [Strong’s](library/strongs/SOURCE-LICENSE.md) · [Cross-references](library/crossrefs/SOURCE-LICENSE.md) · [Commentary](library/mhc/SOURCE-LICENSE.md)
 
 [Code licence](LICENSE) · [Artwork and usage](assets/brand/README.md) · [Changelog](CHANGELOG.md) · [Report an issue](https://github.com/dernestbank/versedock-obsidian/issues)

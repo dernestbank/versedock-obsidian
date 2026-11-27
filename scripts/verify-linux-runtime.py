@@ -46,7 +46,7 @@ set -eu
 mkdir -p /tmp/sworddock-linux-qa
 cp -R /fixture/. /tmp/sworddock-linux-qa/
 cd /tmp/sworddock-linux-qa
-npm ci --legacy-peer-deps --ignore-scripts --no-fund --audit=false
+npm ci --ignore-scripts --no-fund --audit=false
 node -p 'JSON.stringify({platform:process.platform,arch:process.arch,node:process.version})'
 npm run check
 node scripts/verify-local-imports.mjs

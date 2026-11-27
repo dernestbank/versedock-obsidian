@@ -24,9 +24,11 @@ for (const library of ['webp', 'crossrefs', 'mhc', 'strongs', 'interlinear']) {
 await mkdir(output, {recursive: true});
 const license = await readFile('LICENSE', 'utf8');
 const noticesText = [license, ...notices].join('\n\n').replaceAll('*/', '* /');
-const bundle = await readFile('main.js', 'utf8');
+const bundle = await readFile('dist/manual/main.js', 'utf8');
 await writeFile(path.join(output, 'main.js'), '"use strict";\nconst SWORDDOCK_LIBRARY='
   + JSON.stringify(resources) + ';\n' + bundle + '\n/*\n' + noticesText + '\n*/\n');
 for (const file of ['manifest.json', 'styles.css']) await copyFile(file, path.join(output, file));
 console.log(Object.keys(resources).length, 'offline resource files in community main.js,',
   (await stat(path.join(output, 'main.js'))).size, 'bytes');
+
+await copyFile(path.join(output, 'main.js'), 'main.js');
