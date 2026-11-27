@@ -1,5 +1,6 @@
 // Fresh native Obsidian startup and process restart from the packaged preview.
 // Run with a desktop session (or Xvfb) and a local Obsidian executable.
+import { createStudyNote, reopenStudyNote } from './verify-markdown-study.mjs';
 import assert from 'node:assert/strict';
 import { spawn, execFileSync } from 'node:child_process';
 import { once } from 'node:events';
@@ -212,6 +213,7 @@ await runDesktop(async (page, context) => {
   assert.equal(saved?.bibleEdition, legacy ? 'kjv' : 'webp');
   result.window = await page.title();
   result.freshInstall = true;
+  if (process.env.SWORDDOCK_TEST_STUDY_NOTES) await createStudyNote(page, scratch);
 });
 if (upgradeDirectory) await copyDirectoryAssets(upgradeDirectory);
 await runDesktop(async page => {
@@ -229,6 +231,10 @@ await runDesktop(async page => {
   if (process.env.SWORDDOCK_TEST_ANNOTATIONS) {
     await verifyRestartedAnnotations(page);
     result.restartedAnnotations = true;
+  }
+  if (process.env.SWORDDOCK_TEST_STUDY_NOTES) {
+    await reopenStudyNote(page);
+    result.reopenedMarkdownCitation = true;
   }
 });
 console.log(JSON.stringify(result, null, 2));

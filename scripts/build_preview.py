@@ -15,7 +15,7 @@ assets = ["main.js", "manifest.json", "styles.css", "README.md", "BRAND-GUIDELIN
 assets += ["CHANGELOG.md", "docs/reading-guide.md", "docs/annotations.md"]
 assets += ["docs/screenshots/" + name + ".png" for name in (
     "annotation-editor", "enable-plugin", "insert-passage", "inserted-callout", "interlinear",
-    "marked-reader", "resource-highlight", "module-library", "quick-jump", "reader", "search", "study-desk", "word-detail",
+    "marked-reader", "resource-highlight", "study-citation", "study-verse-preview", "module-library", "quick-jump", "reader", "search", "study-desk", "word-detail",
 )]
 assets += ["assets/brand/" + name for name in (
     "README.md", "app-icon.png", "app-icon.svg", "mark.svg", "release-card.png", "release-card.svg",

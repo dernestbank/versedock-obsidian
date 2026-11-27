@@ -24,6 +24,11 @@ describe("safe Scripture insertion", () => {
     expect(s.text()).toBe("Study\n> Scripture\n\n note");
     expect(s.calls()).toBe(1);
   });
+  it("leaves a Markdown paragraph after a quote inserted at the end of a note", () => {
+    const s = stub("Study", {line:0, ch:5});
+    insertAtSnapshot(s.editor, captureInsertionSnapshot(s.editor), "> Scripture");
+    expect(s.text() + "Source: commentary").toBe("Study\n> Scripture\n\nSource: commentary");
+  });
   it("keeps inline citations between the surrounding words", () => {
     const s = stub();
     expect(insertAtSnapshot(s.editor, captureInsertionSnapshot(s.editor), " (John 3:16)", "inline")).toBe(true);

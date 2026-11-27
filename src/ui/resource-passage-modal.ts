@@ -8,11 +8,11 @@ import {textButton} from './components';
 
 /** Fixed-edition offline preview: source addresses never become application URLs. */
 export class ResourcePassageModal extends Modal {
- private revision=0;private closed=false;private bible:BibleResource|null=null;
+ private revision=0;private closed=false;
  private cursor:ResourceChapter;private page=0;
  private ranges:ResourceRange[];private rangeIndex=0;
  private get range():ResourceRange{return this.ranges[this.rangeIndex];}
- constructor(private readonly plugin:SwordDockController,private readonly target:Extract<ResourceLink,{kind:'scripture'}>,private readonly sourceTitle:string){
+ constructor(private readonly plugin:SwordDockController,private readonly target:Extract<ResourceLink,{kind:'scripture'}>,private readonly sourceTitle:string, private bible:BibleResource|null=null){
   super(plugin.app);this.ranges=[target.range,...target.additionalRanges??[]];this.cursor={book:target.range.start.book,chapter:target.range.start.chapter};
  }
  onOpen():void{this.contentEl.addClass('versedock','vd-resource-passage-modal');void this.openBible();}
@@ -21,6 +21,7 @@ export class ResourcePassageModal extends Modal {
   const desired=this.target.edition??this.target.module;
   try {
    if(this.ranges.length>32)throw Error('This source citation exceeds the supported reference count. No target was substituted.');
+   if(this.bible){await this.render();return;}
    const current=this.plugin.readerBible;
    if(!desired||[current.edition,current.metadata?.abbreviation].some(value=>value?.toLocaleLowerCase()===desired.toLocaleLowerCase()))this.bible=current;
    else {

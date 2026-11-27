@@ -40,6 +40,8 @@ If you remember the words but not the reference, run **Search installed Bible**.
 
 Type a reference in ordinary prose, such as `John 3:16`, `Jn 3:16–18` or `1 Corinthians 13:4–7`. Hover over it in Reading View or Live Preview to read the passage in the current offline Bible. Choose **Open in SwordDock** to take that same passage to the Reader.
 
+![John 3:16–18 preview with three WEB verses and the Open in SwordDock button](screenshots/study-verse-preview.png)
+
 In Reading View, Tab to a reference and press Enter. In the editor, put the cursor inside the reference and run **Preview Scripture at cursor**. Automatic recognition looks for a book followed by a chapter and verse, with an optional range in the same chapter. Code and existing links keep their normal behavior.
 
 Under **Settings → SwordDock Bible → Notes & references**, toggle **Reading View verse previews** or **Live Preview verse previews** independently. The editor command remains available with automatic previews off. If an edition lacks a passage, the preview displays the lookup error.
@@ -57,6 +59,8 @@ Switch the note to Reading view to see the inserted callout.
 ## Cite a resource in a note
 
 Place the cursor in an open Markdown note and run **Insert resource citation from dock**. In the Resources dock, find the commentary section, passage, dictionary headword, book entry, devotional reading or map you want. Choose **Cite entry**, check the resource and location, then choose **Insert into** followed by your note’s name. **Copy Markdown citation** also works while reading without an editor open.
+
+![Citation dialog identifying the Matthew Henry section and the destination note](screenshots/study-citation.png)
 
 The note stores an ordinary Markdown link with a label such as **Matthew Henry’s Commentary · MHC 2.2 · John 3:1-21**. Follow the link in Reading View to reopen that section. The address includes the vault name. Imported entries also identify their source version so that an updated module cannot silently open a different entry. After removing a module, you can still read the label in any Markdown editor. Restore the cited source in Module Library to follow the link again.
 

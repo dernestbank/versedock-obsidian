@@ -98,7 +98,12 @@ export async function reopenCitation(plugin: SwordDockController, params: Record
       const ref = parseOsis(key), book = BOOKS.indexOf(ref.book) + 1;
       const start = {book, chapter:ref.chapter, verse:ref.verse};
       const range = {start, ...(ref.endVerse ? {end:{...start, verse:ref.endVerse}} : {})};
-      new ResourcePassageModal(plugin, {kind:"scripture", edition:id, range}, "study note").open();
+      const bible = await plugin.getBibleResource(id);
+      if (!bible?.metadata || bible.edition !== id)
+        throw Error("The cited Bible " + id + " is unavailable. Restore it in Module Library.");
+      if (installed && plugin.modules.installed.find(info => info.id === id)?.sourceSha256 !== source)
+        throw Error("This citation belongs to a different source version. Restore the cited version in Module Library.");
+      new ResourcePassageModal(plugin, {kind:"scripture", edition:id, range}, "study note", bible).open();
       return;
     }
     if (!installed) throw Error("The cited module " + id + " is unavailable. Restore it in Module Library to reopen this entry.");

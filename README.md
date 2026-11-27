@@ -20,6 +20,8 @@ Hover over a plain verse reference in a Markdown note to read the passage. Use *
 
 ## Installation and upgrades
 
+In Obsidian, open **Settings → Community plugins → Browse**, turn off **Show installed only**, and search for **SwordDock Bible**. Choose **Install**, then **Enable**. You can also use **Add to Obsidian** on the [community listing](https://community.obsidian.md/plugins/versedock).
+
 SwordDock uses the three files that Obsidian installs from a release. The Community build includes the compressed library and SQLite engine inside `main.js`. Opening a book expands only the requested data. Reading works offline from the first launch.
 
 For manual installation, download **main.js**, **manifest.json** and **styles.css** from the same release. Place them directly inside `<vault>/.obsidian/plugins/versedock/`, reopen Obsidian and enable **SwordDock Bible** in Community plugins. The complete manual ZIP is an alternative. On upgrade, keep the existing plugin folder, `data.json`, study notes and installed resources. The historical plugin ID is `versedock`. [GitHub releases](https://github.com/dernestbank/versedock-obsidian/releases)

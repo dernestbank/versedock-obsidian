@@ -3,10 +3,12 @@ import { Notice } from "obsidian";
 import type { SwordDockController } from "../src/controller";
 import { citationMarkdown } from "../src/core/study-citation";
 import { reopenCitation } from "../src/ui/study-citation";
+import { ResourcePassageModal } from "../src/ui/resource-passage-modal";
 import { ResourceEntryModal } from "../src/ui/resource-entry-modal";
 
 vi.mock("obsidian", () => ({Modal:class {}, Notice:vi.fn()}));
 vi.mock("../src/ui/resource-entry-modal", () => ({ResourceEntryModal:vi.fn(class { open() {} })}));
+vi.mock("../src/ui/resource-passage-modal", () => ({ResourcePassageModal:vi.fn(class { open() {} })}));
 beforeEach(() => vi.clearAllMocks());
 
 const source = "1".repeat(64);
@@ -41,4 +43,16 @@ it.each(["missing module", "different source", "missing entry"])("reports a %s w
   await reopenCitation(f.plugin, f.params);
   expect(Notice).toHaveBeenCalledWith(expect.stringMatching(/unavailable|different source version|missing/i));
   expect(f.openResources).not.toHaveBeenCalled();
+});
+
+it("resolves a saved Bible ID even when the active import uses the same abbreviation", async () => {
+  const bible = {edition:"kjv", metadata:{abbreviation:"KJV"}};
+  const plugin = {
+    readerBible:{edition:"local-bible-123",metadata:{abbreviation:"KJV"}},
+    modules:{installed:[]},
+    getBibleResource:vi.fn(async () => bible)
+  };
+  await reopenCitation(plugin as unknown as SwordDockController, {module:"kjv", entry:"John.3.16"});
+  expect(plugin.getBibleResource).toHaveBeenCalledWith("kjv");
+  expect(ResourcePassageModal).toHaveBeenCalledWith(plugin, expect.objectContaining({edition:"kjv"}), "study note", bible);
 });

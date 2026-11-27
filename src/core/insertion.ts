@@ -25,8 +25,9 @@ export function canInsertAtSnapshot(editor: SafeInsertionEditor, snapshot: Inser
 export function insertAtSnapshot(editor: SafeInsertionEditor, snapshot: InsertionSnapshot, markdown: string, layout: "inline" | "block" = "block"): boolean {
   if (!canInsertAtSnapshot(editor, snapshot)) return false;
   if (layout === "block") {
-    const lastLine = snapshot.content.split("\n")[snapshot.to.line];
-    const suffix = snapshot.to.ch < lastLine.length ? "\n\n" : "\n";
+    const lines = snapshot.content.split("\n");
+    const followedByNewline = snapshot.to.line < lines.length - 1 && snapshot.to.ch === lines[snapshot.to.line].length;
+    const suffix = followedByNewline ? "\n" : "\n\n";
     markdown = (snapshot.from.ch > 0 ? "\n" : "") + markdown + suffix;
   }
   editor.replaceRange(markdown, snapshot.from, snapshot.to);
