@@ -53,7 +53,7 @@ export class InstalledStudyPanel {
     const article = parent.createEl('article', {cls: 'vd-installed-study-entry'});
     article.setAttribute('dir',this.rightToLeft?'rtl':'ltr');
     article.createEl('h4', {text: entry.title,attr:{tabindex:'-1'}});
-    renderResourceEntryContent(article,this.module!,entry,{open:target=>this.openLink(target)});
+    renderResourceEntryContent(article,this.module!,entry,{open:target=>this.openLink(target)},this.plugin);
     textButton(article, 'Copy entry', () => {
       void navigator.clipboard.writeText(entry.title + '\n\n' + modulePlainText(entry));
     }, 'vd-study-card-link');

@@ -1,3 +1,4 @@
+import { strongsAnnotations } from "./resource-annotations";
 import type { SwordDockController } from "../controller";
 import { refLabel } from "../core/references";
 import { textButton } from "./components";
@@ -45,7 +46,8 @@ export function renderWordStudy(parent: HTMLElement, plugin: SwordDockController
       for (const { key, entry } of definitions) {
         const section = entries.createEl("section", { cls: "vd-word-definition" });
         section.createEl("h4", { text: key + (entry?.lemma ? " · " + entry.lemma : "") + (entry?.transliteration ? " · " + entry.transliteration : "") });
-        section.createEl("p", { text: entry?.text ?? "This identifier has no entry in the bundled dictionary. The source tag is preserved." });
+        const definition = section.createEl("p", { text: entry?.text ?? "This identifier has no entry in the bundled dictionary. The source tag is preserved." });
+        if (entry) strongsAnnotations(definition, plugin, key);
         if (!compact) {
           const results = section.createDiv();
           const find = textButton(section, "Find " + key + " occurrences in KJV", () => {

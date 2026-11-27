@@ -13,3 +13,11 @@ The example below shows a blue underline beneath a phrase in John 3:16, a rose h
 Click marked text in Reading mode to edit its color, style or note. Choose **Remove mark** to delete it. The **Highlights** section of the navigation dock lists your annotations, including overlapping marks. Each entry shows the passage, edition, quotation and note. Use **Open passage** to return to the text or **Edit annotation** to change the mark.
 
 SwordDock stores annotations in this vault’s plugin settings. Each is attached to the edition and the selected occurrence of the quoted words. If a replacement module changes the text at that position, you can still read the original quotation and note in **Highlights**. The Reader also retains whole-passage highlights created with its **More actions** menu.
+
+## Mark a commentary or another resource
+
+Select words in a Matthew Henry section, a Strong’s definition, or an installed commentary, dictionary, book, or devotional. **Copy selection** copies the selected text to the clipboard. The usual copy shortcut also works. **Highlight selection** opens the same color, underline, and note controls as the Bible Reader.
+
+![Matthew Henry’s commentary on John 3 with Copy selection and Highlight selection above a saved phrase](screenshots/resource-highlight.png)
+
+Save the mark and reopen the entry to see it in context. To edit a mark that overlaps a source link, open **Highlights** and choose **Edit annotation**. Marks stay with their source entry, including when two dictionaries use the same headword.

@@ -1,3 +1,5 @@
+import {resourceAnnotations} from './resource-annotations';
+import type {SwordDockController} from '../controller';
 import {parseResourceContent,type ResourceNode} from '../core/resource-content';
 import type {ResourceLink} from '../core/resource-links';
 import type {ReadingEntry,ReadingModule} from '../core/reading-modules';
@@ -46,7 +48,7 @@ export function renderResourceNodes(content:HTMLElement,nodes:readonly ResourceN
  render(content,nodes);return {anchor};
 }
 
-export function renderResourceEntryContent(parent:HTMLElement,module:Pick<ReadingModule,'images'>,entry:ReadingEntry,actions:ResourceContentActions):{anchor:(id:string)=>boolean} {
+export function renderResourceEntryContent(parent:HTMLElement,module:Pick<ReadingModule,'images'|'title'|'id'>,entry:ReadingEntry,actions:ResourceContentActions,plugin?:SwordDockController):{anchor:(id:string)=>boolean} {
  const content=parent.createDiv({cls:'vd-rich-resource'});
  const doc=entry.source!==undefined?parseResourceContent(entry.source,module.images):null;
  const result=doc?.complete?renderResourceNodes(content,doc.nodes,actions,entry.title):{anchor:(_id:string)=>false};
@@ -56,6 +58,7 @@ export function renderResourceEntryContent(parent:HTMLElement,module:Pick<Readin
    else if(actions.imageUrl){const figure=content.createSpan({cls:'vd-resource-figure'});figure.createEl('img',{attr:{src:actions.imageUrl(block.image),alt:block.caption||entry.title}});}
   }
  }
+ if(plugin && content.textContent?.trim())resourceAnnotations(content,plugin,module.id,entry.key,module.title+" · "+entry.title);
  if(!doc||doc.issues.length){
   const explanation=parent.createEl('details',{cls:'vd-resource-format-notice'});explanation.createEl('summary',{text:doc?.complete?'Source formatting notes':'Plain text display · source formatting unavailable'});
   for(const issue of doc?.issues??['This saved generation does not retain original markup. Reinstall or reimport it to enable supported formatting and links.'])explanation.createEl('p',{text:issue});

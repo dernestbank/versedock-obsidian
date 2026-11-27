@@ -192,13 +192,6 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     this.modules?.stop();
     this.focusDocks?.stop();
     this.listeners.clear();
-    this.app.workspace.detachLeavesOfType(READER_VIEW);
-    this.app.workspace.detachLeavesOfType(INSPECTOR_VIEW);
-    this.app.workspace.detachLeavesOfType(RESOURCES_VIEW);
-    this.app.workspace.detachLeavesOfType(SEARCH_VIEW);
-    this.app.workspace.detachLeavesOfType(LIBRARY_VIEW);
-    this.app.workspace.detachLeavesOfType(COMPARISON_VIEW);
-    this.app.workspace.detachLeavesOfType(NAVIGATION_VIEW);
   }
   selectReference(ref: PassageReference, origin: StudyLinkOrigin = "reader", cause: StudyLinkCause = "user"): void {
     if (this.selectedWord && referenceId(ref) !== referenceId(this.selectedWord.ref)) this.selectedWord = null;
@@ -466,9 +459,8 @@ class SwordDockSettingsTab extends PluginSettingTab {
   }
   renderInto(containerEl: HTMLElement): void {
     containerEl.empty();
-    containerEl.createEl("h2", { text: "SwordDock Bible · Settings" });
     containerEl.createEl("p", { text: "SwordDock follows your Obsidian theme. WEB, the Berean companion and your installed resources are available offline." });
-    containerEl.createEl("h3", { text: "Reading & appearance" });
+    new Setting(containerEl).setName("Reading & appearance").setHeading();
     new Setting(containerEl).setName("Reading typeface").setDesc("Changes only Scripture, not Obsidian notes.")
       .addDropdown(dropdown => dropdown
         .addOption("serif", "Reading serif")
@@ -515,7 +507,7 @@ class SwordDockSettingsTab extends PluginSettingTab {
         this.renderInto(containerEl);
       }));
 
-    containerEl.createEl("h3", { text: "Study workspace" });
+    new Setting(containerEl).setName("Study workspace").setHeading();
     new Setting(containerEl).setName("Study Inspector")
       .setDesc("Open the linked notes, bookmarks, history and validated resource panels beside the Reader.")
       .addButton(button => button.setButtonText("Open Inspector").onClick(() => { void this.plugin.openInspector(); }));
@@ -526,14 +518,14 @@ class SwordDockSettingsTab extends PluginSettingTab {
       .setDesc("Search the selected offline Bible without leaving the vault.")
       .addButton(button => button.setButtonText("Open Search").onClick(() => { void this.plugin.openSearch(); }));
 
-    containerEl.createEl("h3", { text: "Library & downloads" });
+    new Setting(containerEl).setName("Library & downloads").setHeading();
     new Setting(containerEl).setName("Module Library")
       .setDesc("Review installed resource provenance, integrity and safe MySword inspection.")
       .addButton(button => button.setButtonText("Open Library").onClick(() => { void this.plugin.openLibrary(); }));
     new Setting(containerEl).setName("Network access")
       .setDesc("Catalogue downloads use the reviewed publisher sources and start only when requested. Reading and local-file import work offline.");
 
-    containerEl.createEl("h3", { text: "Notes & references" });
+    new Setting(containerEl).setName("Notes & references").setHeading();
     new Setting(containerEl).setName("Study notes")
       .setDesc("Primary Scripture notes are normal Markdown files in your vault. The Reader can create or open them for the current passage.")
       .addButton(button => button.setButtonText("Open current note").onClick(() => { void this.plugin.openStudyNote(this.plugin.currentRef); }));
@@ -549,13 +541,13 @@ class SwordDockSettingsTab extends PluginSettingTab {
     new Setting(containerEl).setName("Reference insertion")
       .setDesc("Quick Verse Insert writes a callout or quote using the selected Bible edition; it never overwrites an existing note automatically.");
 
-    containerEl.createEl("h3", { text: "Keyboard & accessibility" });
+    new Setting(containerEl).setName("Keyboard & accessibility").setHeading();
     new Setting(containerEl).setName("Reader shortcuts")
       .setDesc("Use [ and ] for chapter navigation, J and K for verse movement, Shift+J/Shift+K to extend a selection, and Tab or Enter for verse actions. Reader controls expose accessible names.");
     new Setting(containerEl).setName("Reduced motion")
       .setDesc("SwordDock follows Obsidian's motion preferences and does not add looping or distracting animation.");
 
-    containerEl.createEl("h3", { text: "Data & privacy" });
+    new Setting(containerEl).setName("Data & privacy").setHeading();
     new Setting(containerEl).setName("Local data")
       .setDesc("Reading history, bookmarks and highlights are stored in plugin settings inside this vault. They are not uploaded by SwordDock.");
     new Setting(containerEl).setName("Storage & resources")

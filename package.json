@@ -1,10 +1,10 @@
 {
   "name": "sworddock-bible",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "private": true,
   "description": "SwordDock Bible — theme-adaptive offline-first Bible study for Obsidian",
   "scripts": {
-    "build": "node esbuild.config.mjs production",
+    "build": "node esbuild.config.mjs production && node scripts/build-community.mjs",
     "dev": "node esbuild.config.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
@@ -22,7 +22,7 @@
     "smoke:preview": "python3 scripts/smoke_preview.py",
     "qa:mysword": "node scripts/verify_mysword_local.mjs",
     "qa:mysword:benchmark": "node --expose-gc scripts/benchmark_mysword_local.mjs",
-    "package:community": "npm run build && node scripts/build-community.mjs"
+    "package:community": "npm run build"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
@@ -36,5 +36,6 @@
   "dependencies": {
     "fflate": "0.8.3",
     "sql.js": "^1.16.0"
-  }
+  },
+  "license": "MIT"
 }

@@ -1,3 +1,4 @@
+import { resourceAnnotations } from "./resource-annotations";
 import type { SwordDockController } from "../controller";
 import { COMMENTARY_SOURCE, type CommentaryEntry } from "../core/commentary";
 import { refLabel, type PassageReference } from "../core/references";
@@ -24,27 +25,32 @@ function renderSection(parent: HTMLElement, plugin: SwordDockController, ref: Pa
   const content = section.createDiv({ cls: "vd-commentary-text" });
   const document=plugin.commentary.content(entry);
   const actions={open:(target:ResourceLink):void=>{if(target.kind==='scripture')new ResourcePassageModal(plugin,target,"Matthew Henry's Commentary · MHC 2.2").open();}};
+  const label = refLabel(reference);
+  const paint = resourceAnnotations(content, plugin, "mhc", label, "Matthew Henry · " + label, true);
   let position = 0;
   const more = textButton(section, "Continue reading this section", () => append(true), "vd-study-card-link");
   const append = (focus: boolean): void => {
     const page = document.blocks.slice(position, position + 20);
     let first: HTMLElement | null = null;
-    for (const block of page) {
+    for (const [index, block] of page.entries()) {
       let element: HTMLElement;
       if (block.kind === "quotation") {
         const quotation = content.createEl("details", { cls: "vd-commentary-quotation" });
         element = quotation.createEl("summary", { text: "Quoted Scripture · source edition" });
         const quoted=quotation.createEl('blockquote',{cls:'vd-rich-resource'});
+        quoted.dataset.reference = "block-" + (position + index);
         if(block.nodes)renderResourceNodes(quoted,block.nodes,actions);
         else quoted.setText(block.text);
       } else {
         element = content.createEl(block.kind === "heading" ? "h4" : "p", {cls:'vd-rich-resource'});
+        element.dataset.reference = "block-" + (position + index);
         if(block.nodes)renderResourceNodes(element,block.nodes,actions);
         else element.setText(block.text);
       }
       first ??= element;
     }
     position += page.length;
+    paint();
     if (position >= document.blocks.length) more.remove();
     if (focus && first) {
       if (first.tagName !== "SUMMARY") first.tabIndex = -1;
@@ -85,8 +91,14 @@ export function renderCommentaryPanel(parent: HTMLElement, plugin: SwordDockCont
         results.createDiv({ cls: "vd-study-card-reference", text: refLabel(sectionReference(ref, entry)) });
         const document=plugin.commentary.content(entry);
         const excerpt = document.blocks.find(block => block.kind === "paragraph")?.text ?? document.blocks[0]?.text ?? 'Rich formatting is unavailable. Open the complete original source.';
-        results.createEl("p", { cls: "vd-commentary-excerpt", text: excerpt.length > 320
-          ? excerpt.slice(0, 320).replace(/\s+\S*$/, "") + "…" : excerpt });
+        const wrapper = results.createDiv();
+        const paragraph = wrapper.createEl("p", {cls: "vd-commentary-excerpt"});
+        const blockIndex = Math.max(0, document.blocks.findIndex(block => block.kind === "paragraph"));
+        paragraph.dataset.reference = "block-" + blockIndex;
+        paragraph.setText(excerpt.length > 320 ? excerpt.slice(0, 320).replace(/\s+\S*$/, "") : excerpt);
+        if (excerpt.length > 320) paragraph.after("…");
+        const label = refLabel(sectionReference(ref, entry));
+        resourceAnnotations(wrapper, plugin, "mhc", label, "Matthew Henry · " + label, true);
         if (entries.length > 1) results.createDiv({ cls: "vd-subtle vd-commentary-count", text: entries.length + " sections cover this selection" });
         if (more) textButton(results, "Read more", more, "vd-study-card-link");
       } else {

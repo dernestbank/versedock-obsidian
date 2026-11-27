@@ -24,7 +24,7 @@ export class ResourceEntryModal extends Modal {
    controls.createSpan({text:(at+1)+' of '+this.entries.length+' matching source entries'});
    const next=textButton(controls,'Next source entry',()=>{this.entry=this.entries[at+1];this.render();});next.disabled=at+1===this.entries.length;
   }
-  const rendered=renderResourceEntryContent(root,this.module,this.entry,{open:target=>this.openLink(target)});
+  const rendered=renderResourceEntryContent(root,this.module,this.entry,{open:target=>this.openLink(target)},this.plugin);
   if(anchor&&!rendered.anchor(anchor))new Notice('The linked anchor is missing or ambiguous in this source entry.');
   else if(!anchor)root.querySelector<HTMLElement>('h2')?.focus({preventScroll:true});
  }
@@ -40,6 +40,6 @@ export class ResourceEntryModal extends Modal {
 }
 export class ResourceNoteModal extends Modal {
  constructor(plugin:SwordDockController,private readonly text:string){super(plugin.app);}
- onOpen():void{this.contentEl.addClass('versedock');this.contentEl.createEl('h2',{text:'Source note'});this.contentEl.createEl('p',{text:this.text});}
+ onOpen():void{this.contentEl.addClass('versedock');this.contentEl.createEl('h2',{text:'Source note'});this.contentEl.createEl('p',{cls:'vd-resource-note-text',text:this.text});}
  onClose():void{this.contentEl.empty();}
 }

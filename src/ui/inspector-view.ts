@@ -203,12 +203,12 @@ export class InspectorView extends ItemView {
       }
       for (const mark of this.plugin.settings.annotations) {
         const entry = body.createDiv({cls: "vd-annotation-entry"});
-        const reference = annotationReference(mark);
-        entry.createEl("strong", {text: refLabel(reference) + " · " + mark.edition});
+        const reference = mark.resource ? null : annotationReference(mark);
+        entry.createEl("strong", {text: reference ? refLabel(reference) + " · " + mark.edition : mark.resource!.label});
         entry.createEl("blockquote", {text: mark.parts.map(part => part.quote).join(" ")});
         if (mark.note) entry.createEl("p", {text: mark.note});
         const actions = entry.createDiv({cls: "vd-action-row"});
-        textButton(actions, "Open passage", async () => {
+        if (reference) textButton(actions, "Open passage", async () => {
           if (this.plugin.settings.bibleEdition !== mark.edition) await this.plugin.setBibleEdition(mark.edition);
           if (this.plugin.settings.bibleEdition !== mark.edition) return;
           this.plugin.selectReference(reference);

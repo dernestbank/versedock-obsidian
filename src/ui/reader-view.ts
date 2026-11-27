@@ -406,7 +406,7 @@ export class ReaderView extends ItemView {
     if (version !== this.renderId) return;
     const passage = article.createDiv({ cls: "vd-passage" });
     const chapterPrefix = ref.book.osis + "." + ref.chapter + ".";
-    const marks = this.plugin.settings.annotations.filter(mark => mark.edition === edition && mark.parts[0].ref.startsWith(chapterPrefix));
+    const marks = this.plugin.settings.annotations.filter(mark => !mark.resource && mark.edition === edition && mark.parts[0].ref.startsWith(chapterPrefix));
     for (const verse of chapter.verses) {
       const selected = referenceContainsVerse(ref, verse.verse);
       const selectedStart = selected && ref.verse === verse.verse;

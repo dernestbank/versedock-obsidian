@@ -5,7 +5,7 @@ const production = process.argv.includes("production");
 const config = {
   entryPoints: ["src/main.ts"],
   bundle: true,
-  outfile: "main.js",
+  outfile: production ? "dist/manual/main.js" : "main.js",
   format: "cjs",
   target: "es2022",
   loader: { ".wasm": "binary", ".svg": "text" },

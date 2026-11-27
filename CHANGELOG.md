@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.14 — Commentary and resource annotations
+
+- Select, copy, highlight, underline, and annotate passages in Matthew Henry, Strong’s definitions, and installed reading and study resources. Resource marks appear in **Highlights** alongside Scripture annotations.
+- Updated the settings headings and pane lifecycle for Obsidian’s directory review.
+- A standard npm install and production build now reproduce the self-contained community installer.
+
 ## 0.1.13 — Verse and phrase annotations
 
 - Highlight or underline selected words, whole verses and same-chapter verse ranges in four colors. Save an optional note and revisit, edit or remove it from Highlights.
