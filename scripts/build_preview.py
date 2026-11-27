@@ -11,6 +11,16 @@ version = manifest["version"]
 assert manifest["id"] == "versedock", "Keep the existing installed plugin ID"
 assert version in json.loads((ROOT / "versions.json").read_text()), version
 assets = ["main.js", "manifest.json", "styles.css", "README.md", "BRAND-GUIDELINES.md", "LICENSE", "assets/sql-wasm.wasm", "assets/LICENSE-sql.js.txt"]
+# Bundle the user-facing guides and the files they reference for offline reading.
+assets += ["CHANGELOG.md", "docs/reading-guide.md", "docs/annotations.md"]
+assets += ["docs/screenshots/" + name + ".png" for name in (
+    "annotation-editor", "enable-plugin", "insert-passage", "inserted-callout", "interlinear",
+    "marked-reader", "module-library", "quick-jump", "reader", "search", "study-desk", "word-detail",
+)]
+assets += ["assets/brand/" + name for name in (
+    "README.md", "app-icon.png", "app-icon.svg", "mark.svg", "release-card.png", "release-card.svg",
+    "ribbon.svg", "wordmark-dark.svg", "wordmark-light.svg", "Newsreader-OFL.txt",
+)]
 library_dir = ROOT / "library" / "webp"
 web = json.loads((library_dir / "manifest.json").read_text(encoding="utf-8"))
 assert web["id"] == "webp" and len(web["books"]) == 66 and web["verseCount"] == 31103

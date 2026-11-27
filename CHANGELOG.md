@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.13 — Verse and phrase annotations
+
+- Highlight or underline selected words, whole verses and same-chapter verse ranges in four colors. Save an optional note and revisit, edit or remove it from Highlights.
+- Remove one verse from a previously highlighted range while preserving the surrounding highlights.
+- Added the [illustrated reading guide](docs/reading-guide.md) and [annotation guide](docs/annotations.md). The manual ZIP includes their screenshots for offline use.
+
 ## 0.1.12 — Community installation
 
 - The three Obsidian release assets carry the offline WEB library, Berean interlinear, dictionaries, cross-references, commentary and SQLite engine.

@@ -28,6 +28,8 @@ Select **ἠγάπησεν** (“loved”). Its detail panel identifies the verb
 
 ![Detail for ἠγάπησεν showing the gloss “loved,” its Greek verb form and the Strong’s dictionary definition](screenshots/word-detail.png)
 
+For colored highlights, underlines and notes on selected words, see the [annotation guide](annotations.md).
+
 ## Search the text
 
 If you remember the words but not the reference, run **Search installed Bible**. To find the phrase *eternal life* in John, open John in the Reader first. In Search, choose **Current book · John** and **Exact phrase**, type `eternal life`, and choose **Search**. Select a result’s verse reference to open it in the Reader.

@@ -4,6 +4,7 @@
 Uses only the standard library, no user vaults or network access. This checks
 packaging and persisted reading data, not Obsidian's graphical interface.
 """
+import re
 import hashlib
 import json
 from pathlib import Path, PurePosixPath
@@ -19,7 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 def validate_package(archive: Path) -> None:
     with ZipFile(archive) as zf:
         names = zf.namelist()
-        assert len(names) == len(set(names)) == 1407, "Unexpected or duplicate ZIP entries"
+        assert len(names) == len(set(names)) == 1432, "Unexpected or duplicate ZIP entries"
         assert zf.testzip() is None, "Corrupt ZIP entry"
         for entry in zf.infolist():
             name = PurePosixPath(entry.filename)
@@ -40,6 +41,12 @@ def validate_package(archive: Path) -> None:
             (vault / "Smoke Test.md").write_text(
                 "# SwordDock clean-vault smoke test\n", encoding="utf-8"
             )
+            for doc in ("README.md", "docs/reading-guide.md", "docs/annotations.md", "assets/brand/README.md"):
+                page = plugin_dir / doc
+                for href, src in re.findall(r'\]\(([^) ]+)\)|src="([^"]+)"', page.read_text(encoding="utf-8")):
+                    target = (href or src).split("#")[0]
+                    if target and not target.startswith(("https://", "http://")):
+                        assert (page.parent / target).is_file(), f"Broken offline link in {doc}: {target}"
             plugin = json.loads((plugin_dir / "manifest.json").read_text(encoding="utf-8"))
             assert plugin["id"] == "versedock", "Existing plugin ID must remain stable"
             assert plugin["name"] == "SwordDock Bible", "Unexpected public display name"
