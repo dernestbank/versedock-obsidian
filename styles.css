@@ -1537,3 +1537,17 @@ body.is-mobile .versedock.vd-reader .vd-toolbar { flex-wrap: wrap; }
 body.is-mobile .versedock.vd-reader .vd-toolbar-nav { flex: 1 1 auto; }
 body.is-mobile .versedock.vd-reader .vd-toolbar-actions { margin-inline-start: auto; }
 body.is-mobile .versedock.vd-reader .vd-study-display-bar { flex-wrap: wrap; }
+
+.versedock .vd-verse-text { user-select: text; -webkit-user-select: text; }
+.versedock .vd-annotation { color: inherit; background: transparent; cursor: pointer; }
+.versedock .vd-mark-amber { --vd-mark-ink: #c48b00; }
+.versedock .vd-mark-green { --vd-mark-ink: #339867; }
+.versedock .vd-mark-blue { --vd-mark-ink: #518ed3; }
+.versedock .vd-mark-rose { --vd-mark-ink: #cd618d; }
+.versedock .vd-mark-highlight { background-color: color-mix(in srgb, var(--vd-mark-ink) 34%, transparent); }
+.versedock .vd-mark-underline { text-decoration: underline 2px var(--vd-mark-ink); text-underline-offset: 0.16em; }
+.vd-annotation-editor textarea { display: block; width: 100%; margin-block: 0.4em 1em; }
+.vd-annotation-editor blockquote { max-height: 26vh; overflow: auto; }
+.vd-annotation-editor .vd-action-row { margin-block: 0.8em; }
+.vd-annotation-entry { padding-block: 0.7em; border-bottom: 1px solid var(--background-modifier-border); }
+.vd-annotation-entry p { white-space: pre-wrap; overflow-wrap: anywhere; }

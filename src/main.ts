@@ -1,3 +1,4 @@
+import { restoreAnnotations, type ReaderAnnotation } from "./core/annotations";
 import { addIcon } from "obsidian";
 import ribbonSvg from "../assets/brand/ribbon.svg?raw";
 import { bundledLibraryFolder } from "./core/bundled-library-files";
@@ -15,7 +16,7 @@ import { InterlinearLibrary } from "./core/interlinear";
 import { restoredInterlinearPreferences } from "./core/interlinear-preferences";
 import { CrossReferenceLibrary } from "./core/cross-references";
 import { CommentaryLibrary } from "./core/commentary";
-import { parseOsis, parseReference, referenceId, refLabel, type PassageReference } from "./core/references";
+import { parseOsis, parseReference, passageIsHighlighted, togglePassageHighlight, referenceId, refLabel, type PassageReference } from "./core/references";
 import { restoredKjvDisplayMode, type KjvDisplayMode } from "./core/kjv-display";
 import { normalizeReadingHistory, recordReadingHistory } from "./core/reading-history";
 import { newStudyNoteMarkdown, normalizeStudyNoteFolder, type ScriptureNoteDiscovery } from "./core/scripture-notes";
@@ -88,6 +89,7 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
   async onload(): Promise<void> {
     const previous = await this.loadData() as Partial<SwordDockSettings> | null;
     this.settings = { ...DEFAULT_SETTINGS, ...(previous ?? {}),
+      annotations: restoreAnnotations(previous?.annotations),
       bookmarks: Array.isArray(previous?.bookmarks) ? previous.bookmarks : [],
       highlights: Array.isArray(previous?.highlights) ? previous.highlights : [],
       studyNoteFolder: normalizeStudyNoteFolder(previous?.studyNoteFolder),
@@ -267,7 +269,27 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
   subscribeStudyLinks(callback: (event: StudyLinkEvent) => void): () => void {
     return this.studyLinkBus.subscribe(callback);
   }
-  async saveSettings(): Promise<void> { await this.saveData(this.settings); }
+  private pendingSave: Promise<void> = Promise.resolve();
+  saveSettings(): Promise<void> {
+    const write = this.pendingSave.then(() => this.saveData(this.settings));
+    this.pendingSave = write.catch(() => {});
+    return write;
+  }
+  private pendingAnnotation: Promise<void> = Promise.resolve();
+  changeAnnotation(previous: ReaderAnnotation | null, replacement: ReaderAnnotation | null): Promise<void> {
+    const change = this.pendingAnnotation.then(async () => {
+      const before = this.settings.annotations;
+      if (previous && !before.includes(previous)) throw new Error("This annotation changed. Reopen it before editing.");
+      this.settings.annotations = previous
+        ? before.flatMap(mark => mark !== previous ? [mark] : replacement ? [replacement] : [])
+        : [...before, ...(replacement ? [replacement] : [])];
+      try { await this.saveSettings(); }
+      catch (error) { this.settings.annotations = before; throw error; }
+      for (const subscriber of this.listeners) subscriber(this.currentRef);
+    });
+    this.pendingAnnotation = change.catch(() => {});
+    return change;
+  }
   async setBibleEdition(edition: string): Promise<void> {
     const revision=++this.editionSelectionRevision;
     let bible: BibleResource|null;
@@ -418,9 +440,8 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     new Notice(had ? "Bookmark removed" : "Verse bookmarked");
   }
   toggleHighlight(ref: PassageReference): void {
-    const id = referenceId(ref);
-    const had = this.settings.highlights.includes(id);
-    this.settings.highlights = had ? this.settings.highlights.filter(x => x !== id) : [...this.settings.highlights, id];
+    const had = passageIsHighlighted(this.settings.highlights, ref);
+    this.settings.highlights = togglePassageHighlight(this.settings.highlights, ref);
     this.selectReference(ref);
     new Notice(had ? "Highlight removed" : "Verse highlighted");
   }

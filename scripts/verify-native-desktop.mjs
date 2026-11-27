@@ -9,6 +9,7 @@ import { tmpdir, release } from 'node:os';
 import path from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { chromium } from 'playwright-core';
+import { createReaderAnnotations, verifyRestartedAnnotations } from './verify-reader-annotations.mjs';
 
 const [executable, archive, upgradeDirectory] = process.argv.slice(2);
 if (!executable || !archive) throw Error('Expected an Obsidian executable and a SwordDock preview ZIP.');
@@ -188,6 +189,10 @@ await runDesktop(async (page, context) => {
   const scripture = page.locator('.vd-reader:visible .vd-verse[data-verse="16"]');
   await scripture.waitFor();
   assert.match(await scripture.innerText(), /his only born Son, that whoever believes in him/i);
+  if (process.env.SWORDDOCK_TEST_ANNOTATIONS) {
+    await createReaderAnnotations(page, scratch);
+    await scripture.locator('.vd-verse-num').click();
+  }
   await command(page, 'open-library');
   const library = page.locator('.vd-library:visible');
   await library.getByText(legacy ? '6 installed resources' : '5 installed resources', {exact: true}).waitFor();
@@ -221,6 +226,10 @@ await runDesktop(async page => {
   assert.equal(await order.inputValue(), 'english');
   await page.screenshot({path: path.join(scratch, 'restarted-reader.png')});
   result.restartedCompanionWords = 25;
+  if (process.env.SWORDDOCK_TEST_ANNOTATIONS) {
+    await verifyRestartedAnnotations(page);
+    result.restartedAnnotations = true;
+  }
 });
 console.log(JSON.stringify(result, null, 2));
 console.log('Native QA vault and capture:', scratch);

@@ -93,3 +93,29 @@ export function parseOsis(input: string): PassageReference {
   if (!book) throw new ReferenceError("Unsupported OSIS book.");
   return parseReference(book.name + " " + match[2] + (match[3] ? ":" + match[3] + (match[4] ? "-" + match[4] : "") : ""));
 }
+
+export function passageIsHighlighted(ids: readonly string[], ref: PassageReference): boolean {
+  if (ref.verse === undefined) return false;
+  for (let verse = ref.verse; verse <= (ref.endVerse ?? ref.verse); verse++) {
+    if (!storedReferencesContainVerse(ids, { ...ref, verse })) return false;
+  }
+  return true;
+}
+
+export function togglePassageHighlight(ids: string[], ref: PassageReference): string[] {
+  if (ref.verse === undefined) return ids;
+  if (!passageIsHighlighted(ids, ref)) return [...ids, referenceId(ref)];
+  const from = ref.verse, to = ref.endVerse ?? from;
+  const slice = (verse: number, end: number) => referenceId({...ref, verse, endVerse: end > verse ? end : undefined});
+  return ids.flatMap(id => {
+    let saved;
+    try { saved = parseOsis(id); } catch { return [id]; }
+    const first = saved.verse, last = saved.endVerse ?? first;
+    if (saved.book !== ref.book || saved.chapter !== ref.chapter || first === undefined || last === undefined ||
+        first > to || last < from) return [id];
+    const remaining = [];
+    if (first < from) remaining.push(slice(first, from - 1));
+    if (last > to) remaining.push(slice(to + 1, last));
+    return remaining;
+  });
+}
