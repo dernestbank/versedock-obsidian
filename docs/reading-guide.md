@@ -14,7 +14,7 @@ Click verse 16 to select it. The action bar beside the verse lets you copy it, o
 
 ![Reader with John 3:16 highlighted and its verse actions visible](screenshots/reader.png)
 
-Run **Open Bible Study Desk** to read alongside Matthew Henry’s Commentary and cross-references. The Inspector on the right follows the selected passage. Click **Follow** to pin the Inspector to that verse while you read elsewhere. Click **Pinned** to resume following.
+Run **Open Bible Study Desk** to read alongside commentary and cross-references. Use **Commentary source** to choose Matthew Henry or an installed commentary. **Find commentaries** opens the download wizard. **Read more** shows the selected source’s full entry in the same Inspector. In **Lexicon**, enter a Strong’s identifier such as **G25** or **H430** to read its offline definition. The Inspector on the right follows the selected passage. Click **Follow** to pin the Inspector to that verse while you read elsewhere. Click **Pinned** to resume following.
 
 ![Study Desk with the Reader in the center and the Inspector showing commentary and related verses for John 3:16](screenshots/study-desk.png)
 

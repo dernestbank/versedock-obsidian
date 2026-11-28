@@ -24,6 +24,7 @@ import type {
 
 export interface SwordDockSettings {
   bibleEdition: string;
+  inspectorCommentary: string;
   kjvDisplayMode: KjvDisplayMode;
   kjvInlineStrongs: boolean;
   interlinear: InterlinearPreferences;
@@ -47,6 +48,7 @@ export interface SwordDockSettings {
   };
 }
 export const DEFAULT_SETTINGS: SwordDockSettings = {
+  inspectorCommentary: "mhc",
   bibleEdition: "webp", kjvDisplayMode: "word-study", kjvInlineStrongs: false,
   interlinear: restoredInterlinearPreferences(null),
   reference: "John.3.16", fontSize: 17, lineHeight: 1.68,
@@ -79,6 +81,7 @@ export interface SwordDockController {
   lexicon: StrongsLexicon;
   interlinear: InterlinearLibrary;
   selectedWord: WordSelection | null;
+  setInspectorCommentary(id: string): Promise<void>;
   setBibleEdition(edition: string): Promise<void>;
   availableBibleEditions(): Array<{id:string;title:string;ready:boolean}>;
   getBibleResource(edition:string): Promise<BibleResource|null>;

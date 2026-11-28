@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.16 — Study Inspector
+
+- Choose a commentary in the Study overview or full entry. The Inspector remembers the choice, and **Find commentaries** opens the filtered module catalogue.
+- A single tab bar keeps Study, Parallel, Lexicon, bookmarks, highlights and history available when opening commentary details. Reopening the Study Desk preserves the active Inspector tab.
+- Look up Greek or Hebrew Strong’s identifiers directly in the Lexicon. Parallel shows the Bible editions installed in the vault.
+
 ## 0.1.15 — Publisher module discovery
 
 - Discover publisher modules inside Obsidian. Browse MySword and third-party catalogues, review a mixed selection and install supported files into the vault for offline reading. Multi-module ZIPs offer individual file selection.

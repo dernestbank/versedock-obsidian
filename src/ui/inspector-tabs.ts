@@ -14,17 +14,6 @@ export const INSPECTOR_TABS = [
 ] as const;
 
 export type InspectorTab = typeof INSPECTOR_TABS[number];
-export const INSPECTOR_WORKSPACE_TABS = ["study", "parallel", "notes"] as const;
-export type InspectorWorkspaceTab = typeof INSPECTOR_WORKSPACE_TABS[number];
-export function inspectorWorkspaceTabForKey(current: InspectorWorkspaceTab, key: string): InspectorWorkspaceTab | null {
-  const index = INSPECTOR_WORKSPACE_TABS.indexOf(current);
-  if (key === "Home") return "study";
-  if (key === "End") return "notes";
-  if (key === "ArrowRight") return INSPECTOR_WORKSPACE_TABS[(index + 1) % 3];
-  if (key === "ArrowLeft") return INSPECTOR_WORKSPACE_TABS[(index + 2) % 3];
-  return null;
-}
-
 export const INSPECTOR_TAB_CHANGED = "sworddock-inspector-tab-changed";
 export const STUDY_SECTIONS = ["Commentary", "Cross-References", "My Notes"] as const;
 export type StudySection = typeof STUDY_SECTIONS[number];

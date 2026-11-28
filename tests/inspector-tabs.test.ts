@@ -1,7 +1,6 @@
 import {describe, expect, it} from "vitest";
 import {
   INSPECTOR_TABS,
-  inspectorWorkspaceTabForKey,
   restoredInspectorTab,
   restoredInspectorPin,
   restoredCollapsedSections,
@@ -19,13 +18,11 @@ describe("Inspector tab keyboard navigation", () => {
     for (const state of [null, {}, { pinnedReference: 16 }, { pinnedReference: "John.3.0" }, { pinnedReference: "John.3.16-14" }])
       expect(restoredInspectorPin(state)).toBeNull();
   });
-  it("navigates the three primary dock tabs without leaving the dock", () => {
-    expect(inspectorWorkspaceTabForKey("study", "ArrowRight")).toBe("parallel");
-    expect(inspectorWorkspaceTabForKey("parallel", "ArrowRight")).toBe("notes");
-    expect(inspectorWorkspaceTabForKey("study", "ArrowLeft")).toBe("notes");
-    expect(inspectorWorkspaceTabForKey("notes", "Home")).toBe("study");
-    expect(inspectorWorkspaceTabForKey("study", "End")).toBe("notes");
-    expect(inspectorWorkspaceTabForKey("study", "Tab")).toBeNull();
+  it("exposes each Inspector destination once in the shared tab order", () => {
+    expect(new Set(INSPECTOR_TABS).size).toBe(INSPECTOR_TABS.length);
+    for (const tab of ["study", "parallel", "notes", "bookmarks", "highlights", "history"]) {
+      expect(INSPECTOR_TABS).toContain(tab);
+    }
   });
   it("restores only supported collapsed Study cards", () => {
     expect([...restoredCollapsedSections({ collapsedSections: ["My Notes", "Commentary", "Commentary", "bad", null] })])
