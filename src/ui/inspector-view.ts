@@ -7,13 +7,12 @@ import { refLabel, parseOsis, referenceId, type PassageReference } from "../core
 import { resourceInfoRows } from "../core/resource-info";
 import { emptyState, iconButton, textButton } from "./components";
 import { renderCrossReferencePanel } from "./cross-reference-panel";
-import { renderCommentaryPanel } from "./commentary-panel";
+import { renderInspectorCommentary } from "./inspector-commentary";
+import { renderStrongsLookup } from "./strongs-lookup";
 import { renderScriptureNoteCard } from "./scripture-note-card";
 import { discoverScriptureNotes } from "../core/scripture-notes";
 import {
   INSPECTOR_TABS,
-  INSPECTOR_WORKSPACE_TABS,
-  inspectorWorkspaceTabForKey,
   INSPECTOR_TAB_CHANGED,
   restoredInspectorTab,
   restoredInspectorPin,
@@ -37,17 +36,25 @@ export class InspectorView extends ItemView {
   private primaryNotePath: string | null = null;
   private noteEventCleanup: Array<() => void> = [];
   private noteRefreshTimer: number | null = null;
+  private commentaryCleanup: (() => void) | null = null;
+  private instantExpanded = false;
+  private lexiconQuery = "";
+  private parallelEdition = "";
   private wordStudyCleanup: (() => void) | null = null;
   constructor(leaf: WorkspaceLeaf, private readonly plugin: SwordDockController) { super(leaf); }
   getViewType(): string { return INSPECTOR_VIEW; }
   getDisplayText(): string { return "SwordDock Bible Study Inspector"; }
   getIcon(): string { return "book-open-check"; }
   getState(): Record<string, unknown> {
-    return { tab: this.tab, collapsedSections: [...this.collapsedSections],
+    return { tab: this.tab, parallelEdition: this.parallelEdition, instantExpanded: this.instantExpanded, lexiconQuery: this.lexiconQuery, collapsedSections: [...this.collapsedSections],
       pinnedReference: this.pinnedReference ? referenceId(this.pinnedReference) : null };
   }
   async setState(state: unknown, result: ViewStateResult): Promise<void> {
     this.tab = restoredInspectorTab(state);
+    const saved = state as { instantExpanded?: unknown; lexiconQuery?: unknown; parallelEdition?: unknown } | null;
+    this.parallelEdition = typeof saved?.parallelEdition === "string" ? saved.parallelEdition : "";
+    this.instantExpanded = saved?.instantExpanded === true;
+    this.lexiconQuery = typeof saved?.lexiconQuery === "string" ? saved.lexiconQuery.slice(0, 6) : "";
     this.collapsedSections = restoredCollapsedSections(state);
     this.pinnedReference = restoredInspectorPin(state);
     await super.setState(state, result);
@@ -83,15 +90,16 @@ export class InspectorView extends ItemView {
   async onClose(): Promise<void> {
     this.unsubscribe?.(); this.unsubscribe = null;
     this.wordStudyCleanup?.(); this.wordStudyCleanup = null;
+    this.commentaryCleanup?.(); this.commentaryCleanup = null;
     this.noteEventCleanup.forEach(cleanup => cleanup()); this.noteEventCleanup = [];
     if (this.noteRefreshTimer !== null) window.clearTimeout(this.noteRefreshTimer);
     this.contentEl.empty();
   }
   private activateTab(tab: InspectorTab): void {
+    if (tab === this.tab) return;
     this.tab = tab;
     this.render();
-    const activeTab = this.contentEl.querySelector<HTMLElement>(`[data-vd-workspace-tab="${tab}"]`)
-      ?? this.contentEl.querySelector<HTMLElement>(`[data-vd-inspector-tab="${tab}"]`);
+    const activeTab = this.contentEl.querySelector<HTMLElement>(`[data-vd-inspector-tab="${tab}"]`);
     activeTab?.focus({ preventScroll: true });
     activeTab?.scrollIntoView({ block: "nearest", inline: "nearest" });
     this.app.workspace.requestSaveLayout();
@@ -103,6 +111,7 @@ export class InspectorView extends ItemView {
   }
   private render(): void {
     this.wordStudyCleanup?.(); this.wordStudyCleanup = null;
+    this.commentaryCleanup?.(); this.commentaryCleanup = null;
     this.displayedNotePaths.clear(); this.primaryNotePath = null;
     const root = this.contentEl;
     root.empty(); root.addClass("versedock", "vd-inspector");
@@ -118,45 +127,7 @@ export class InspectorView extends ItemView {
     pin.setAttribute("aria-label", this.pinnedReference
       ? "Unpin Inspector and follow Reader; pinned to " + refLabel(this.reference)
       : "Pin Inspector to " + refLabel(this.reference));
-    const mainTab = this.tab === "parallel" || this.tab === "notes" ? this.tab : "study";
-    const workspaceTabs = root.createDiv({ cls: "vd-study-workspace-tabs", attr: { role: "tablist", "aria-label": "Study workspace" } });
-    for (const tab of INSPECTOR_WORKSPACE_TABS) {
-      const selected = mainTab === tab;
-      const button = workspaceTabs.createEl(inspectorTabElementTag(selected), {
-        cls: "vd-text-button " + (selected ? "is-active" : ""),
-        text: tab[0].toUpperCase() + tab.slice(1),
-        attr: { role: "tab", id: this.domScope + "-workspace-" + tab,
-          "aria-selected": String(selected), "aria-controls": this.domScope + "-workspace-panel",
-          tabindex: selected ? "0" : "-1", ...(selected ? { type: "button" } : {}) }
-      });
-      const glyph = button.createSpan({ cls: "vd-study-tab-icon", attr: { "aria-hidden": "true" } });
-      importIcon(glyph, tab === "study" ? "book-open" : tab === "parallel" ? "columns-2" : "notebook-pen");
-      button.prepend(glyph);
-      button.dataset.vdWorkspaceTab = tab;
-      button.addEventListener("click", () => this.activateTab(tab));
-      button.addEventListener("keydown", event => {
-        if (!(event instanceof KeyboardEvent)) return;
-        const target = inspectorWorkspaceTabForKey(tab, event.key);
-        if (!target) return;
-        event.preventDefault();
-        this.activateTab(target);
-      });
-    }
-    const content = root.createDiv({ cls: "vd-inspector-content", attr: {
-      role: "tabpanel", id: this.domScope + "-workspace-panel", "aria-labelledby": this.domScope + "-workspace-" + mainTab
-    } });
-    if (this.tab === "study") {
-      this.renderStudyOverview(content);
-      this.renderInstantDetails(root);
-      return;
-    }
-    if (this.tab === "parallel") {
-      void this.renderParallel(content);
-      this.renderInstantDetails(root);
-      return;
-    }
-    if (this.tab !== "notes") {
-      const tabs = content.createDiv({ cls: "vd-inspector-tabs", attr: { role: "tablist", "aria-label": "Study resources" } });
+    const tabs = root.createDiv({ cls: "vd-inspector-tabs", attr: { role: "tablist", "aria-label": "Inspector sections" } });
     INSPECTOR_TABS.forEach(tab => {
       const label = tab === "references" ? "References"
         : tab === "resource-info" ? "Resource Info"
@@ -183,13 +154,21 @@ export class InspectorView extends ItemView {
         this.activateTab(destination);
       });
     });
-    }
     const activeIds = inspectorTabDomIds(this.domScope, this.tab);
-    const body = content.createDiv({ cls: "vd-inspector-body", attr: {
-      id: activeIds.panelId,
-      role: "tabpanel",
-      "aria-labelledby": this.tab === "notes" ? this.domScope + "-workspace-notes" : activeIds.tabId
+    const content = root.createDiv({ cls: "vd-inspector-content", attr: {
+      id: activeIds.panelId, role: "tabpanel", "aria-labelledby": activeIds.tabId
     } });
+    if (this.tab === "study") {
+      this.renderStudyOverview(content);
+      this.renderInstantDetails(root);
+      return;
+    }
+    if (this.tab === "parallel") {
+      void this.renderParallel(content);
+      this.renderInstantDetails(root);
+      return;
+    }
+    const body = content.createDiv({ cls: "vd-inspector-body" });
     const ref = this.reference;
     body.createDiv({ cls: "vd-resource-heading", text: refLabel(ref) });
     if (this.tab === "highlights") {
@@ -305,9 +284,18 @@ export class InspectorView extends ItemView {
       return;
     }
     if (this.tab === "commentary") {
-      renderCommentaryPanel(body, this.plugin, ref, false);
+      this.commentaryCleanup = renderInspectorCommentary(body, this.plugin, ref);
     } else if (this.tab === "lexicon") {
-      this.wordStudyCleanup = renderWordStudy(body, this.plugin);
+      body.createEl("h3", { text: "Strong’s Lexicon" });
+      renderStrongsLookup(body, this.plugin, this.lexiconQuery, query => {
+        this.lexiconQuery = query;
+        this.app.workspace.requestSaveLayout();
+      });
+      const word = this.plugin.selectedWord;
+      if (word && (!this.pinnedReference || referenceId(word.ref) === referenceId(ref))) {
+        this.wordStudyCleanup = renderWordStudy(body.createDiv(), this.plugin, false, word);
+      }
+      return;
     } else {
       renderCrossReferencePanel(body, this.plugin, ref, false);
     }
@@ -324,16 +312,43 @@ export class InspectorView extends ItemView {
     textButton(actions, "Copy " + (this.plugin.readerBible.metadata?.abbreviation ?? "Bible") + " passage", () => { void this.plugin.copyPassage(ref); });
     textButton(actions, "Open full comparison", () => { void this.plugin.openComparison(); });
     body.createEl("p", { cls: "vd-subtle", text: "Source verse numbers are preserved independently; matching numbers do not imply identical versification." });
-    for (const bible of [this.plugin.library, this.plugin.kjv]) {
+    const editions = this.plugin.availableBibleEditions().filter(edition => edition.ready);
+    const primary = editions.find(edition => edition.id === this.plugin.settings.bibleEdition) ?? editions[0];
+    if (!primary) {
+      body.createEl("p", { text: "No Bible editions are available in this vault." });
+      textButton(body, "Open Module Library", () => { void this.plugin.openLibrary(); });
+      return;
+    }
+    const others = editions.filter(edition => edition.id !== primary.id);
+    const secondary = others.find(edition => edition.id === this.parallelEdition) ?? others[0];
+    if (others.length > 1) {
+      const label = body.createEl("label", { text: "Compare with " });
+      const select = label.createEl("select");
+      for (const edition of others) select.createEl("option", { value: edition.id, text: edition.title });
+      select.value = secondary.id;
+      select.onchange = () => {
+        this.parallelEdition = select.value;
+        this.app.workspace.requestSaveLayout();
+        this.render();
+      };
+    } else if (!secondary) {
+      body.createEl("p", { text: "Install another Bible in the Module Library to compare this passage." });
+      textButton(body, "Open Module Library", () => { void this.plugin.openLibrary(); });
+    }
+    for (const edition of secondary ? [primary, secondary] : [primary]) {
       const head = body.createDiv({ cls: "vd-dock-edition" });
-      head.createEl("strong", { text: bible.metadata?.title ?? (bible.edition === "kjv" ? "King James Version" : "World English Bible") });
-      head.createSpan({ cls: "vd-version-chip", text: (bible.edition === "kjv" ? "KJV" : "WEB") + " · Offline" });
+      head.createEl("strong", { text: edition.title });
+      head.createSpan({ cls: "vd-version-chip", text: "Offline" });
       const preview = body.createDiv({ cls: "vd-dock-parallel-preview", attr: { "aria-busy": "true" } });
       preview.setText("Loading passage…");
       try {
+        const bible = await this.plugin.getBibleResource(edition.id);
+        if (!preview.isConnected) return;
+        if (!bible) throw new Error("This edition is no longer installed.");
         const verses = await bible.getPassage(ref);
         if (!preview.isConnected) return;
         preview.empty();
+        if (!verses.length) preview.setText("No text for this passage in this edition.");
         for (const verse of verses) {
           const row = preview.createEl("p");
           row.createEl("sup", { text: String(verse.verse) + " " });
@@ -369,7 +384,7 @@ export class InspectorView extends ItemView {
       return card.createDiv({ cls: "vd-study-card-content" });
     };
     const commentary = section("Commentary", "book-open");
-    renderCommentaryPanel(commentary, this.plugin, ref, true, () => this.activateTab("commentary"));
+    this.commentaryCleanup = renderInspectorCommentary(commentary, this.plugin, ref, () => this.activateTab("commentary"));
     const references = section("Cross-References", "link");
     renderCrossReferencePanel(references, this.plugin, ref, true, () => this.activateTab("references"));
     const notes = section("My Notes", "notebook-pen");
@@ -385,8 +400,6 @@ export class InspectorView extends ItemView {
       textButton(notes, "View linked note index", () => this.activateTab("notes"), "vd-study-card-link");
     const resources = body.createDiv({ cls: "vd-study-resource-footer" });
     textButton(resources, "Resources", () => { void this.plugin.openResources(); });
-    textButton(resources, "Lexicon", () => this.activateTab("lexicon"));
-    textButton(resources, "Resource Info", () => this.activateTab("resource-info"));
   }
 
   private renderResourceInfo(body: HTMLElement): void {
@@ -418,14 +431,18 @@ export class InspectorView extends ItemView {
     const toggle = details.createEl("button", {
       cls: "vd-instant-details-toggle",
       text: "Instant Details",
-      attr: { type: "button", "aria-expanded": "false", "aria-controls": this.domScope + "-instant-details" }
+      attr: { type: "button", "aria-expanded": String(this.instantExpanded), "aria-controls": this.domScope + "-instant-details" }
     });
-    const content = details.createDiv({ cls: "vd-instant-details-content", attr: { id: this.domScope + "-instant-details", hidden: "" } });
-    renderWordStudy(content, this.plugin, true);
+    const content = details.createDiv({ cls: "vd-instant-details-content", attr: { id: this.domScope + "-instant-details" } });
+    content.hidden = !this.instantExpanded;
+    if (this.instantExpanded) renderWordStudy(content, this.plugin, true);
     toggle.addEventListener("click", () => {
       const expanded = toggle.getAttribute("aria-expanded") === "true";
       toggle.setAttribute("aria-expanded", String(!expanded));
       content.hidden = expanded;
+      this.instantExpanded = !expanded;
+      if (!expanded && !content.hasChildNodes()) renderWordStudy(content, this.plugin, true);
+      this.app.workspace.requestSaveLayout();
     });
   }
 }

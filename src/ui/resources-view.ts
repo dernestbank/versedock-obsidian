@@ -1,4 +1,4 @@
-import { strongsAnnotations } from "./resource-annotations";
+import { renderStrongsLookup } from "./strongs-lookup";
 import { ItemView, Notice, type ViewStateResult, type WorkspaceLeaf } from "obsidian";
 import type { SwordDockController } from "../controller";
 import { referenceId, refLabel, type PassageReference } from "../core/references";
@@ -197,7 +197,7 @@ export class ResourcesView extends ItemView {
     } else if (selected.type === "commentary") {
       renderCommentaryPanel(body, this.plugin, current, false);
     } else if (selected.type === "dictionary") {
-      this.renderDictionary(body, selected.id, current, sequence);
+      this.renderDictionary(body, selected.id, current);
     } else {
       this.readingPanel = new ReadingResourcePanel(body, this.plugin, selected.id, this.readingPositions[selected.id], position => {
         this.readingPositions[selected.id] = position; this.app.workspace.requestSaveLayout();
@@ -256,7 +256,7 @@ export class ResourcesView extends ItemView {
   }
 
   private renderDictionary(parent: HTMLElement, resourceId: string,
-    ref: PassageReference, sequence: number): void {
+    ref: PassageReference): void {
     const name = resourceId === "strongs-greek" ? "Greek" : "Hebrew";
     parent.createEl("h3", { text: "Strong’s " + name + " Dictionary" });
     parent.createEl("p", { cls: "vd-subtle", text: "James Strong, 1890 · Public domain · CrossWire offline edition" });
@@ -268,40 +268,10 @@ export class ResourcesView extends ItemView {
           { ...selected, token: { ...selected.token, strongs: keys } });
       }
     }
-    const form = parent.createDiv({ cls: "vd-resource-dictionary-search" });
-    const label = form.createEl("label", { text: "Look up a Strong’s identifier (" + (name === "Greek" ? "G25" : "H430") + ")" });
-    const input = label.createEl("input", { cls: "vd-resource-dictionary-query", attr: { type: "search", maxlength: "6", autocomplete: "off", spellcheck: "false" } });
-    input.value = this.dictionaryQueries[resourceId] ?? "";
-    input.addEventListener("input", () => {
-      this.dictionaryQueries[resourceId] = input.value.slice(0, 6);
+    renderStrongsLookup(parent, this.plugin, this.dictionaryQueries[resourceId] ?? "", query => {
+      this.dictionaryQueries[resourceId] = query;
       this.app.workspace.requestSaveLayout();
-    });
-    const result = parent.createDiv({ cls: "vd-word-entries" });
-    let lookupSequence = 0;
-    const lookup = (): void => {
-      const lookupId = ++lookupSequence;
-      const key = input.value.trim().toUpperCase();
-      if (!strongsMatchesDictionary(resourceId, key)) {
-        result.setText("Enter a valid " + name + " Strong’s identifier.");
-        return;
-      }
-      result.setText("Looking up " + key + "…");
-      void this.plugin.lexicon.lookup(key).then(entry => {
-        if (!result.isConnected || sequence !== this.renderSequence || lookupId !== lookupSequence) return;
-        result.empty();
-        result.createEl("h4", { text: key + (entry?.lemma ? " · " + entry.lemma : "") });
-        if (entry?.transliteration) result.createEl("p", { cls: "vd-subtle", text: entry.transliteration });
-        const definition = result.createEl("p", { text: entry?.text ?? "No entry is available for this identifier." });
-        if (entry) strongsAnnotations(definition, this.plugin, key);
-      }).catch(() => {
-        if (result.isConnected && sequence === this.renderSequence && lookupId === lookupSequence) result.setText("The offline dictionary could not be read.");
-      });
-    };
-    textButton(form, "Look up", lookup, "mod-cta");
-    if (strongsMatchesDictionary(resourceId, input.value)) lookup();
-    input.addEventListener("keydown", event => {
-      if (event.key === "Enter") { event.preventDefault(); lookup(); }
-    });
+    }, resourceId);
     if (!selected) parent.createEl("p", { cls: "vd-subtle", text: "Select a tagged word in the KJV Reader, or enter an identifier directly." });
     textButton(parent, "Open tagged KJV", () => { void this.plugin.setBibleEdition("kjv").then(() => this.plugin.openReader()); }, "vd-study-card-link");
   }

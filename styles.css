@@ -37,18 +37,12 @@
 .versedock.vd-workspace-help section p { margin: 0; color: var(--text-muted); font-size: 12px; line-height: 1.7; }
 .versedock.vd-workspace-settings .setting-item { flex-wrap: wrap; gap: 10px; }
 .versedock.vd-workspace-settings .setting-item-info { min-width: min(240px, 100%); }
-.versedock .vd-study-workspace-tabs { display: flex; flex: none; gap: 5px; padding: 3px 8px 5px; border-bottom: 1px solid var(--vd-border); }
-.versedock .vd-study-workspace-tabs .vd-text-button { flex: 1; font-size: 12px; min-height: 36px; }
-.versedock .vd-study-workspace-tabs .vd-text-button { min-width: 0; padding-inline: 6px; }
-.versedock .vd-study-tab-icon { display: inline-flex; flex: none; }
-.versedock .vd-study-tab-icon svg { width: 15px; height: 15px; }
-body.is-mobile .versedock .vd-study-workspace-tabs [role="tab"],
+body.is-mobile .versedock .vd-inspector-tabs [role="tab"],
 body.is-mobile .versedock .vd-study-card summary,
 body.is-mobile .versedock .vd-commentary-quotation summary { min-height: 44px; }
 .versedock .vd-inspector-header { min-width: 0; flex-wrap: wrap; }
 .versedock .vd-inspector-header .vd-pill { min-width: 0; white-space: normal; }
 .versedock .vd-inspector-follow[aria-pressed="true"] { color: var(--text-accent); border-color: var(--interactive-accent); }
-.versedock .vd-study-workspace-tabs .is-active { color: var(--text-accent); background: color-mix(in srgb, var(--interactive-accent) 16%, transparent); border-bottom: 2px solid var(--interactive-accent); }
 .versedock .vd-inspector-content { display: flex; flex-direction: column; flex: 1; min-height: 0; min-width: 0; }
 .versedock .vd-dock-edition { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 16px; font-size: 12px; }
 .versedock .vd-dock-parallel-preview { padding: 12px; border-inline-start: 2px solid var(--interactive-accent); background: var(--background-secondary); }
@@ -405,7 +399,6 @@ body.is-mobile .versedock .vd-icon-button { min-width: 44px; min-height: 44px; }
 .versedock.vd-inspector { padding: 0; display: flex; flex-direction: column; min-width: 0; min-height: 0; height: 100%; overflow: hidden; container: sworddock-inspector / inline-size; }
 .versedock.vd-inspector > * { min-width: 0; max-width: 100%; }
 .versedock .vd-study-card-content { overflow-wrap: anywhere; }
-.versedock .vd-study-workspace-tabs .vd-text-button { flex-basis: 0; white-space: normal; }
 .versedock .vd-inspector-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 14px 12px; gap: 8px; }
 .versedock .vd-inspector-header strong { font-size: 13px; }
 .versedock .vd-inspector-tabs { display: flex; overflow-x: auto; border-bottom: 1px solid var(--vd-border); gap: 1px; padding-inline: 9px; }
@@ -831,7 +824,9 @@ body.is-mobile .versedock .vd-icon-button { min-width: 44px; min-height: 44px; }
 .versedock .vd-inspector-header .vd-pill { max-width: 58%; overflow: hidden; text-overflow: ellipsis; }
 .versedock .vd-inspector-tabs {
   gap: 3px;
-  padding: 7px 9px 0;
+  padding: 7px 9px 5px;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
   background: var(--vd-panel);
 }
 .versedock .vd-inspector-tabs [role="tab"] {
@@ -841,9 +836,9 @@ body.is-mobile .versedock .vd-icon-button { min-width: 44px; min-height: 44px; }
   font-size: 11px;
 }
 .versedock .vd-inspector-tabs [role="tab"].is-active {
-  color: var(--text-on-accent);
-  border-bottom-color: transparent;
-  background: var(--interactive-accent);
+  color: var(--text-normal);
+  border-bottom-color: var(--interactive-accent);
+  background: var(--background-modifier-hover);
 }
 .versedock .vd-inspector-body { padding: 12px 10px 20px; }
 .versedock .vd-resource-heading {
@@ -1222,9 +1217,6 @@ body.is-mobile .versedock .vd-comparison-edition-controls select { min-height: 4
   .versedock .vd-library-layout { grid-template-columns: 1fr; }
 }
 @container sworddock-inspector (max-width: 280px) {
-  .versedock .vd-study-workspace-tabs { padding-inline: 4px; gap: 2px; }
-  .versedock .vd-study-workspace-tabs .vd-text-button { padding-inline: 4px; gap: 4px; }
-  .versedock .vd-study-tab-icon svg { width: 13px; height: 13px; }
 }
 @container sworddock-library (max-width: 520px) {
   .versedock.vd-library { padding: 20px 16px; }
@@ -1570,3 +1562,7 @@ body.is-mobile .versedock.vd-reader .vd-study-display-bar { flex-wrap: wrap; }
 .vd-discovery-modal .vd-catalogue-filters { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
 .vd-discovery-modal .vd-catalogue-filters input[type=search] { max-width: 100%; flex: 1 1 9rem; }
 .vd-discovery-modal .vd-subtle { color: var(--text-muted); font-size: var(--font-ui-small); }
+
+.versedock .vd-inspector-commentary-controls { display: flex; flex-wrap: wrap; align-items: end; gap: .4rem; margin-block-end: .75rem; }
+.versedock .vd-inspector-commentary-controls label { display: grid; flex: 1 1 10rem; min-width: 0; gap: .25rem; }
+.versedock .vd-inspector-commentary-controls select { width: 100%; }

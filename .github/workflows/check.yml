@@ -54,7 +54,7 @@ jobs:
           previews=(dist/*-offline.zip)
           test "${#previews[@]}" = 1
           sudo ip netns exec "$namespace" sudo -u "$(id -un)" -H -- xvfb-run -a -s '-screen 0 1440x960x24' \
-            dbus-run-session -- env SWORDDOCK_TEST_ANNOTATIONS=1 "$(command -v node)" scripts/verify-native-desktop.mjs "$(command -v obsidian)" dist/community
+            dbus-run-session -- env SWORDDOCK_TEST_INSPECTOR=1 SWORDDOCK_TEST_ANNOTATIONS=1 "$(command -v node)" scripts/verify-native-desktop.mjs "$(command -v obsidian)" dist/community
       - name: Open the packaged plugin and restart native Obsidian
         if: runner.os == 'Windows'
         shell: pwsh
@@ -75,5 +75,6 @@ jobs:
           if ($LASTEXITCODE) { throw 'Could not unpack the application.' }
           $previews = @(Get-ChildItem dist -Filter '*-offline.zip')
           if ($previews.Count -ne 1) { throw 'Expected one freshly built preview.' }
+          $env:SWORDDOCK_TEST_INSPECTOR = '1'
           $env:SWORDDOCK_TEST_ANNOTATIONS = '1'
           node scripts/verify-native-desktop.mjs (Join-Path $app 'Obsidian.exe') dist/community

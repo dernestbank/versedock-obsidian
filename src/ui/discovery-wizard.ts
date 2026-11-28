@@ -81,8 +81,9 @@ export class DiscoveryWizard extends Modal {
   private sources!: HTMLElement;
   private reviewButton!: HTMLButtonElement;
   private jobList!: HTMLElement;
-  constructor(private plugin: SwordDockController) {
+  constructor(private plugin: SwordDockController, kind: typeof RESOURCE_TYPES[number] | "" = "") {
     super(plugin.app);
+    this.kind = kind;
     this.index = new DiscoveryIndex(
       {
         load: (key) => plugin.app.loadLocalStorage('versedock.catalogue.1.' + key),

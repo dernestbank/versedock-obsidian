@@ -230,6 +230,10 @@ await runDesktop(async page => {
     await verifyRestartedAnnotations(page);
     result.restartedAnnotations = true;
   }
+  if (process.env.SWORDDOCK_TEST_INSPECTOR) {
+    const { verifyStudyInspector } = await import('./verify-study-inspector.mjs');
+    await verifyStudyInspector(page);
+  }
 });
 console.log(JSON.stringify(result, null, 2));
 console.log('Native QA vault and capture:', scratch);

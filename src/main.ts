@@ -263,6 +263,12 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     return this.studyLinkBus.subscribe(callback);
   }
   private pendingSave: Promise<void> = Promise.resolve();
+  async setInspectorCommentary(id: string): Promise<void> {
+    if (id !== "mhc" && !this.modules.installed.some(module => module.id === id && module.kind === "commentary")) return;
+    this.settings.inspectorCommentary = id;
+    this.listeners.forEach(listener => listener(this.currentRef));
+    await this.saveSettings();
+  }
   saveSettings(): Promise<void> {
     const write = this.pendingSave.then(() => this.saveData(this.settings));
     this.pendingSave = write.catch(() => {});
@@ -358,7 +364,7 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
     // their old leaves, allowing the Study dock to use the available height.
     await migrateStudyToolsToCenter(this.app.workspace, [SEARCH_VIEW, LIBRARY_VIEW, COMPARISON_VIEW]);
     await this.openReader();
-    await this.openInspector("study");
+    await this.openInspector();
     // The Inspector opens in the right dock, but the Reader remains the
     // primary working surface for the next navigation or selection.
     await this.openReader();
