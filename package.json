@@ -1,6 +1,6 @@
 {
   "name": "sworddock-bible",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "private": true,
   "description": "SwordDock Bible — theme-adaptive offline-first Bible study for Obsidian",
   "scripts": {

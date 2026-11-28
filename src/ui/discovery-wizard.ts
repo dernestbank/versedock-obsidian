@@ -12,6 +12,7 @@ import { moduleMembers } from '../core/discovery-archive';
 import { MAX_READING_BYTES, checkCancelled } from '../core/reading-modules';
 import { sha256 } from '../core/module-installation';
 import { RESOURCE_LABELS, RESOURCE_TYPES } from '../core/resource-dock';
+import { catalogueCache } from '../obsidian/discovery-cache';
 import { readPublisher } from '../obsidian/discovery-network';
 import { textButton } from './components';
 
@@ -85,10 +86,7 @@ export class DiscoveryWizard extends Modal {
     super(plugin.app);
     this.kind = kind;
     this.index = new DiscoveryIndex(
-      {
-        load: (key) => plugin.app.loadLocalStorage('versedock.catalogue.1.' + key),
-        save: (key, s) => plugin.app.saveLocalStorage('versedock.catalogue.1.' + key, s),
-      },
+      catalogueCache(plugin.app),
       async (c, url) =>
         new TextDecoder().decode(await readPublisher(c, url, 4 * 1024 * 1024, this.life.signal)),
     );

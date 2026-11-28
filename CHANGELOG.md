@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.17 — Discovery compatibility
+
+- On Obsidian 1.8.0–1.8.6, the discovery wizard keeps its publisher listings available while the vault is open. On 1.8.7 and later, existing cached listings persist across restarts.
+
 ## 0.1.16 — Study Inspector
 
 - Choose a commentary in the Study overview or full entry. The Inspector remembers the choice, and **Find commentaries** opens the filtered module catalogue.
