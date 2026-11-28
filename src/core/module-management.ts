@@ -1,3 +1,4 @@
+import {isDiscoveredId} from './discovery-sources';
 import {isModuleDirectory,parseInstalledInfo,readInstalledModule,sha256,type InstalledReadingModule,type ModuleStore} from './module-installation';
 import {isLocalModuleId} from './module-provenance';
 import {readingSource} from './reading-catalogue';
@@ -8,7 +9,7 @@ interface Selection {id:string;directory:string;removed:boolean}
 interface Snapshot {format:1;revision:number;selections:Selection[]}
 export interface ModuleProblem {directory:string;id?:string;message:string}
 const STATE=/^\.state-(\d{12})-([a-f0-9]{16})$/;
-const allowed=(info:InstalledReadingModule):boolean=>!!readingSource(info.id)||isLocalModuleId(info.id,info.kind);
+const allowed=(info:InstalledReadingModule):boolean=>!!readingSource(info.id)||(isLocalModuleId(info.id,info.kind)||isDiscoveredId(info.id,info.kind));
 
 /** Immutable management snapshots make selection/removal atomic without overwriting files. */
 export class ModuleManagement {

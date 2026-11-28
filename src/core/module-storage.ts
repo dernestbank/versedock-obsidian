@@ -1,3 +1,4 @@
+import {isDiscoveredId} from './discovery-sources';
 import {installedModuleFootprint,parseInstalledInfo,promoteReadingModule,readInstalledModule,sha256,type InstalledReadingModule,type ModuleMeasurement,type ModuleStore} from './module-installation';
 import {isModuleDirectory,isStageDirectory,isStateDirectory,isStorageLeaf} from './module-paths';
 import {parseModuleOwner} from './module-ownership';
@@ -17,7 +18,7 @@ export interface StorageReviewItem {
 }
 export interface StorageReview {ticket:string;items:StorageReviewItem[];looseFiles:{bytes:number;files:number;complete:boolean}|null;totalBytes:number;totalFiles:number;complete:boolean;cleanupBytes:number;cleanupFiles:number}
 interface InspectedItem {view:StorageReviewItem;fingerprint:string;measurementComplete:boolean}
-const allowed=(info:InstalledReadingModule):boolean=>!!readingSource(info.id)||isLocalModuleId(info.id,info.kind);
+const allowed=(info:InstalledReadingModule):boolean=>!!readingSource(info.id)||(isLocalModuleId(info.id,info.kind)||isDiscoveredId(info.id,info.kind));
 
 /** Review tickets bind cleanup/recovery to the exact verified files the user saw. */
 export class ModuleStorage {

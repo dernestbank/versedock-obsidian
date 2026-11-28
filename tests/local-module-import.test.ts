@@ -266,3 +266,25 @@ describe('overlapping local preview cancellation',()=>{
   expect(observed.rows()).toBe(501);
  });
 });
+
+describe('discovered publisher installation',()=>{
+ for(const kind of ['bible','commentary','dictionary','book','devotional','graphics'] as const)
+  it('installs and reopens a discovered '+kind+' and keeps the previous generation on failure',async()=>{
+   const {COLLECTIONS}=await import('../src/core/discovery-sources');
+   const c=COLLECTIONS.find(c=>c.kind===kind)!;
+   const url='https://mysword-bible.info/download/getfile.php?file=fixture.mybible.gz';
+   const entry={collection:c.key,page:c.url,title:'Example',author:'',language:'en',url,kind};
+   const input={name:'fixture.mybible.gz',bytes:new Uint8Array(gzipSync(fixture(kind)))};
+   const store=memoryStore(),service=new ReadingInstallService(store,async()=>sql,noDownload);
+   await service.initialize();
+   const hash=await sha256(input.bytes),signal=new AbortController().signal;
+   const info=await service.installPublisherMember(entry,input,input.name,hash,signal);
+   expect(info.id).toMatch(new RegExp('^online-'+kind+'-'));expect(info.publisherUrl).toBe(url);
+   await expect(service.installPublisherMember(entry,{...input,bytes:new Uint8Array([0])},input.name,hash,signal)).rejects.toThrow();
+   await expect(service.installPublisherMember(entry,input,input.name,hash,AbortSignal.abort())).rejects.toThrow(/cancel/i);
+   expect((await service.installPublisherMember(entry,input,input.name,hash,signal)).id).toBe(info.id);
+   const offline=new ReadingInstallService(store,async()=>sql,noDownload);await offline.initialize();
+   expect(offline.installed).toHaveLength(1);
+   expect(await offline.load(info.id)).toMatchObject({sourcePage:c.url,sourceSha256:hash,kind,discovery:{url,member:input.name},entries:expect.any(Array)});
+  });
+});
