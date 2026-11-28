@@ -63,7 +63,7 @@ export default class SwordDockBiblePlugin extends Plugin implements SwordDockCon
   get readerBible(): BibleResource { return this.importedBibles.get(this.settings.bibleEdition) ?? (this.settings.bibleEdition === "kjv" ? this.kjv : this.library); }
   availableBibleEditions(): Array<{id:string;title:string;ready:boolean}> {
     return [{id:"webp",title:"World English Bible",ready:!!this.library.metadata}, ...(this.kjv.metadata ? [{id:"kjv",title:"KJV · CrossWire tagged edition",ready:true}] : []),
-      ...this.modules.installed.filter(module=>module.kind==="bible").map(module=>({id:module.id,title:module.title+" · "+(isLocalModuleId(module.id)?"Local file":"MySword")+" "+module.version,ready:true}))];
+      ...this.modules.installed.filter(module=>module.kind==="bible").map(module=>({id:module.id,title:module.title+" · "+(isLocalModuleId(module.id)?"Local file":module.publisherUrl?"Publisher":"MySword")+" "+module.version,ready:true}))];
   }
   async getBibleResource(edition:string):Promise<BibleResource|null> {
     if(edition==="webp")return this.library;

@@ -1,6 +1,6 @@
 # Reading and studying with SwordDock Bible
 
-This walkthrough uses John 3 in the World English Bible (WEB) that comes with SwordDock. The screenshots show SwordDock Bible 0.1.12 in desktop Obsidian 1.15.1 on macOS. Run the named commands from Obsidian’s command palette.
+This walkthrough uses John 3 in the World English Bible (WEB) that comes with SwordDock. The screenshots show desktop Obsidian on macOS. Run the named commands from Obsidian’s command palette.
 
 [Installation and upgrades](../README.md#installation-and-upgrades) · [Find a passage](#find-a-passage) · [Study a word](#study-a-word) · [Search the text](#search-the-text) · [Insert a passage into a note](#insert-a-passage-into-a-note) · [Find your offline resources](#find-your-offline-resources)
 
@@ -69,3 +69,18 @@ The note stores an ordinary Markdown link with a label such as **Matthew Henry�
 Run **Open Module Library** and select **My library**. On a fresh install you’ll find WEB, Strong’s dictionaries, the Berean companion, cross-references and Matthew Henry’s Commentary. **Read WEB** opens the Reader. **Import local file** lets you preview a compatible module before installing it.
 
 ![My library showing the World English Bible, Strong’s dictionaries, installed-resource count and import control](screenshots/module-library.png)
+
+
+## Install publisher modules
+
+Open **Module Library → Discover → Discover modules**. Search by title or author. Use the publisher, resource type and language filters to narrow the list. Selections stay checked as you move between publishers.
+
+![Publisher catalogue filtered to MySword books with a selection ready to review](screenshots/discover-modules.png)
+
+Choose **Review selected** to see the publisher, filename and estimated size for each download. Some publishers omit file sizes. Choose **Install selected**. For a ZIP containing several compatible modules, select the individual files you want. Keep the wizard open while it works. Each download has its own status and Cancel or Retry control.
+
+![Review of one Doctor Dave book and one MySword book before installation](screenshots/review-downloads.png)
+
+**Open** takes you to the installed title. After a restart, find it under **Module Library → My library**. Installed resources, source notices and fingerprints stay in the current vault. Moving to another device requires transferring the vault’s SwordDock resource files or installing the same modules there.
+
+Open **Publisher sources** to refresh a collection listing or load another page where available. A failed refresh leaves the last successful catalogue available for browsing. Turn on **Show unavailable** to see entries that require a publisher account or lack a supported public download. Installation accepts unencrypted MySword SQLite databases and compatible gzip or ZIP files up to 64 MiB, including the expanded content.

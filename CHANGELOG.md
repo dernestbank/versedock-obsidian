@@ -1,5 +1,9 @@
 # Changelog
 
+## In development
+
+- Discover publisher modules inside Obsidian. Browse MySword and third-party catalogues, review a mixed selection and install supported files into the vault for offline reading. Multi-module ZIPs offer individual file selection.
+
 ## 0.1.14 — Commentary and resource annotations
 
 - Select, copy, highlight, underline, and annotate passages in Matthew Henry, Strong’s definitions, and installed reading and study resources. Resource marks appear in **Highlights** alongside Scripture annotations.

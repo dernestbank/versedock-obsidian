@@ -1,3 +1,4 @@
+import {isDiscoveredId} from './discovery-sources';
 import { parseOsis, type PassageReference } from "./references";
 import { readingSource } from "./reading-catalogue";
 import { isLocalModuleId } from "./module-provenance";
@@ -72,13 +73,13 @@ export function restoredResourceDockState(value: unknown): ResourceDockState {
   for (const type of RESOURCE_TYPES) {
     const id = selections[type];
     if (BUNDLED_DOCK_RESOURCES.some(module => module.type === type && module.id === id)
-      || (typeof id === "string" && (readingSource(id)?.type === type || isLocalModuleId(id,type)))) moduleSelections[type] = id as string;
+      || (typeof id === "string" && (readingSource(id)?.type === type || (isLocalModuleId(id,type)||isDiscoveredId(id,type))))) moduleSelections[type] = id as string;
   }
   const queries = raw.dictionaryQueries && typeof raw.dictionaryQueries === "object"
     ? raw.dictionaryQueries as Record<string, unknown> : {};
   for (const [id,query] of Object.entries(queries)) {
     const strongs = id === "strongs-greek" || id === "strongs-hebrew";
-    if ((strongs || readingSource(id)?.type === "dictionary" || isLocalModuleId(id,"dictionary")) && typeof query === "string" && query.length <= (strongs ? 6 : 100)) dictionaryQueries[id] = query;
+    if ((strongs || readingSource(id)?.type === "dictionary" || (isLocalModuleId(id,"dictionary")||isDiscoveredId(id,"dictionary"))) && typeof query === "string" && query.length <= (strongs ? 6 : 100)) dictionaryQueries[id] = query;
   }
   return { resourceType, moduleId, pinnedReference, moduleSelections, dictionaryQueries };
 }

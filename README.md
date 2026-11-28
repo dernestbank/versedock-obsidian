@@ -42,7 +42,11 @@ In **Module Library**, choose a publisher resource or **Import local file**. Com
 
 ![My library tab with the installed World English Bible, Strong’s dictionaries and the Import local file button](docs/screenshots/module-library.png)
 
-Publisher downloads contact the MySword publisher at `mysword-bible.info` when you select an install or repair. SwordDock checks the pinned file hashes before activation. Desktop supports transfer cancellation and validated resume. On mobile, cancelling prevents activation while the host may finish its current network request. Compressed publisher modules and gzip local imports on iPadOS require 16.4 or newer.
+Open **Module Library → Discover → Discover modules** to search the MySword and third-party catalogues. Filter by publisher, resource type or language, select titles, then review and install them together. The wizard contacts the listed publishers when opened and caches their catalogues for 24 hours. **Publisher sources** shows when each collection last refreshed.
+
+![Discovery wizard filtered to books with two titles selected for review](docs/screenshots/discover-modules.png)
+
+Downloads go directly from the publisher into the current vault. SwordDock validates the module database and records its source and SHA-256 fingerprint. The six original MySword resources retain their pinned checksums and desktop resume support. On mobile, cancelling prevents activation while Obsidian may finish the network request. Compressed modules on iPadOS require 16.4 or newer. [Module installation walkthrough](docs/reading-guide.md#install-publisher-modules)
 
 Reading, search, and SQLite import run on your device. The plugin keeps settings and installed resources in your vault. It has no telemetry, accounts or cloud service. Obsidian and the user’s configured sync or backup tools may copy vault files independently.
 

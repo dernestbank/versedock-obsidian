@@ -1587,3 +1587,14 @@ body.is-mobile .versedock.vd-reader .vd-study-display-bar { flex-wrap: wrap; }
 .hover-popover:has(.vd-note-verse-preview) { width: fit-content; height: auto; min-height: 0; }
 .vd-insert-edition { display: flex; align-items: center; flex-wrap: wrap; gap: var(--size-4-2); margin-block: var(--size-4-2); color: var(--text-muted); }
 .vd-insert-edition select { max-width: 100%; }
+
+.vd-discovery-modal { width: min(46rem, 94vw); }
+.vd-discovery-modal .modal-content { overflow-y: auto; }
+.vd-discovery-modal details { margin-block: .75rem; }
+.vd-discovery-row, .vd-discovery-source { padding-block: .65rem; border-bottom: 1px solid var(--background-modifier-border); overflow-wrap: anywhere; }
+.vd-discovery-check { display: flex; align-items: baseline; gap: .55rem; }
+.vd-discovery-row .vd-subtle { margin-inline-start: 1.6rem; }
+.vd-discovery-modal .vd-text-button { margin: .25rem .35rem .25rem 0; }
+.vd-discovery-modal .vd-catalogue-filters { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+.vd-discovery-modal .vd-catalogue-filters input[type=search] { max-width: 100%; flex: 1 1 9rem; }
+.vd-discovery-modal .vd-subtle { color: var(--text-muted); font-size: var(--font-ui-small); }

@@ -15,6 +15,7 @@ export interface ReadingModule {
  sourcePage:string; sourceSha256:string; notice:string; entries:ReadingEntry[]; images:Record<string,ReadingImage>;
  metadata?:ModuleSourceMetadata;
  provenance?:LocalFileProvenance;
+ discovery?:{collection:string;url:string;member:string;databaseSha256:string};
 }
 export const MAX_READING_BYTES = 64 * 1024 * 1024;
 export function checkCancelled(signal?:AbortSignal):void { if(signal?.aborted) throw new Error('Installation cancelled.'); }

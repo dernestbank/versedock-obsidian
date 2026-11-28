@@ -20,7 +20,7 @@ ROOT = Path(__file__).resolve().parent.parent
 def validate_package(archive: Path) -> None:
     with ZipFile(archive) as zf:
         names = zf.namelist()
-        assert len(names) == len(set(names)) == 1435, "Unexpected or duplicate ZIP entries"
+        assert len(names) == len(set(names)) == 1437, "Unexpected or duplicate ZIP entries"
         assert zf.testzip() is None, "Corrupt ZIP entry"
         for entry in zf.infolist():
             name = PurePosixPath(entry.filename)

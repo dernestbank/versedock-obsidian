@@ -20,6 +20,7 @@ export function validateLocalProvenance(module: ReadingModule): void {
 }
 
 export function moduleOrigin(module: ReadingModule): string {
+  if(module.discovery)return [module.sourcePage,module.discovery.member,'SHA-256 '+module.discovery.databaseSha256].filter(Boolean).join(' · ');
   return module.provenance ? 'Local file · ' + module.provenance.fileName : module.sourcePage;
 }
 
