@@ -69,6 +69,24 @@ describe('publisher catalogue', () => {
       reason: expect.stringContaining('account'),
     });
   });
+  it('keeps both publisher detail results when the second request finishes first', async () => {
+    const c = COLLECTIONS.find(c => c.key === 'cox')!;
+    const entries = ['first', 'second'].map(title => ({
+      collection: c.key, page: c.url + title, title, author: '', language: 'English'
+    }));
+    let finishFirst!: (html: string) => void;
+    const first = new Promise<string>(resolve => { finishFirst = resolve; });
+    const html = (name: string) => '<article><a href="/'+name+'.mybible">Download</a></article>';
+    const index = new DiscoveryIndex({
+      load: key => key === c.key ? {entries,time:Date.now()} : null, save: () => {}
+    }, async (_source, url) => url === entries[0].page ? first : html('second'));
+    const pending = index.resolve(entries[0]);
+    await index.resolve(entries[1]);
+    finishFirst(html('first'));
+    await pending;
+    expect(index.snapshots.get(c.key)?.entries.map(e => e.url).sort())
+      .toEqual([c.url+'first.mybible', c.url+'second.mybible']);
+  });
   it('extracts named third-party modules and leaves other download hosts out', () => {
     const c = COLLECTIONS.find((c) => c.key === 'dave')!;
     const page =

@@ -1,6 +1,6 @@
 # Changelog
 
-## In development
+## 0.1.15 — Publisher module discovery
 
 - Discover publisher modules inside Obsidian. Browse MySword and third-party catalogues, review a mixed selection and install supported files into the vault for offline reading. Multi-module ZIPs offer individual file selection.
 

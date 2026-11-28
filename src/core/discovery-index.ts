@@ -98,13 +98,7 @@ export class DiscoveryIndex {
         ];
         if (entries.length > 5000) throw Error('Collection cache limit reached.');
         const s = { entries, next: page.next, time: Date.now() };
-        this.snapshots.set(c.key, s);
-        this.errors.delete(c.key);
-        try {
-          this.cache.save(c.key, s);
-        } catch {
-          this.errors.set(c.key, 'Device cache is full. This list is available for this session.');
-        }
+        this.storeSnapshot(c.key, s);
       } catch (e) {
         this.errors.set(c.key, e instanceof Error ? e.message : 'Publisher unavailable.');
       } finally {
@@ -114,12 +108,22 @@ export class DiscoveryIndex {
     this.pending.set(c.key, task);
     return task;
   }
+  private storeSnapshot(key: string, snapshot: Snapshot): void {
+    this.snapshots.set(key, snapshot);
+    this.errors.delete(key);
+    try {
+      this.cache.save(key, snapshot);
+    } catch {
+      this.errors.set(key, 'Device cache is full. This list is available for this session.');
+    }
+  }
   async resolve(entry: DiscoveryEntry): Promise<void> {
     const c = COLLECTIONS.find((c) => c.key === entry.collection)!;
     if (c.format !== 'wordpress' || entry.url) return;
-    const snapshot = this.snapshots.get(c.key);
-    if (!snapshot) return;
     const detail = parseDiscoveryPage(c, entry.page, await this.read(c, entry.page), true);
+    // Another detail request or a full refresh may have finished while this one was reading.
+    const snapshot = this.snapshots.get(c.key);
+    if (!snapshot || !snapshot.entries.includes(entry)) return;
     const replacement = detail.entries.length
       ? detail.entries.map((e) => ({ ...e, title: detail.entries.length === 1 ? entry.title : e.title }))
       : [{ ...entry, reason: 'Publisher provides no supported direct download.' }];
@@ -127,7 +131,6 @@ export class DiscoveryIndex {
       ...snapshot,
       entries: [...snapshot.entries.filter((e) => entryKey(e) !== entryKey(entry)), ...replacement],
     };
-    this.cache.save(c.key, updated);
-    this.snapshots.set(c.key, updated);
+    this.storeSnapshot(c.key, updated);
   }
 }
