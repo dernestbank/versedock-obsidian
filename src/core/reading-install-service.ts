@@ -1,3 +1,4 @@
+import { COLLECTIONS, pinnedSource, sourceUrl, type DiscoveryEntry } from './discovery-sources';
 import type { SqlJsStatic } from 'sql.js';
 import {moduleFailureMessage} from './module-errors';
 import { readingSource, type InstallableReadingSource } from './reading-catalogue';
@@ -141,6 +142,29 @@ export class ReadingInstallService {
    finally{this.controllers.delete(id);}
   });
   this.queue=task.then(()=>{},()=>{});return task;
+ }
+ installPublisherMember(entry:DiscoveryEntry,input:LocalFileInput,member:string,archiveHash:string,signal:AbortSignal):Promise<InstalledReadingModule>{
+  return this.queueWork(async()=>{
+   const controller=new AbortController(),abort=()=>controller.abort();
+   signal.addEventListener('abort',abort,{once:true});this.lifetime.signal.addEventListener('abort',abort,{once:true});
+   try{
+    checkCancelled(signal);checkCancelled(this.lifetime.signal);
+    const collection=COLLECTIONS.find(c=>c.key===entry.collection);
+    if(!entry.url||!collection||sourceUrl(collection,entry.url,collection.url,true)!==entry.url||pinnedSource(entry.url))throw Error('Invalid discovery download.');
+    // The schema identifies Bible, dictionary and commentary modules. Journals
+    // need an explicit category to distinguish books, devotionals and atlases.
+    const hint=collection.format==='official'?entry.kind:undefined;
+    const {module}=await prepareLocalModule(await this.sql(),input,hint,controller.signal);
+    const databaseSha256=module.provenance!.databaseSha256;
+    const identity=await sha256(new TextEncoder().encode([collection.key,entry.url,member].join('\n')));
+    module.id='online-'+module.kind+'-'+identity.slice(0,24);
+    delete module.provenance;module.sourcePage=entry.page;module.sourceSha256=archiveHash;
+    module.discovery={collection:collection.key,url:entry.url,member,databaseSha256};
+    await this.management.ensureBaseline(controller.signal);
+    const info=await promoteReadingModule(this.store,module,controller.signal);
+    await this.management.activate(info,controller.signal);this.synchronizeInventory();return info;
+   }finally{signal.removeEventListener('abort',abort);this.lifetime.signal.removeEventListener('abort',abort);}
+  });
  }
  async verify(id:string):Promise<void>{const info=this.installed.find(item=>item.id===id);if(!info)throw new Error("Resource is not installed.");await readInstalledModule(this.store,info);}
  stop():void{this.stopped=true;this.lifetime.abort();for(const controller of this.controllers.values())controller.abort();this.listeners.clear();this.cached=null;this.discardLocalPreview();this.storage.discard();}

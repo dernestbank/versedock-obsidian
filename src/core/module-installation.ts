@@ -1,3 +1,4 @@
+import { COLLECTIONS, isDiscoveredId, sourceUrl } from './discovery-sources';
 import { checkCancelled, MAX_READING_BYTES, type ReadingModule, type ReadingKind } from './reading-modules';
 import { isLocalModuleId, validateLocalProvenance } from './module-provenance';
 import {moduleOwner,parseModuleOwner} from './module-ownership';
@@ -13,7 +14,7 @@ export interface ModuleStore {
 export interface InstalledReadingModule {
  format:1; id:string;kind:ReadingKind;title:string;author:string;version:string;directory:string;
  createdAt:number;bytes:number;sha256:string;sourceSha256:string;entryCount:number;
- files?:2|3;
+ files?:2|3; publisherUrl?:string;
 }
 export async function sha256(bytes:Uint8Array):Promise<string> {
  const digest=await crypto.subtle.digest('SHA-256',new Uint8Array(bytes).buffer);
@@ -87,7 +88,14 @@ export function validateReadingContent(module:ReadingModule):void {
   || typeof image.base64!=='string' || image.base64.length>16*1024*1024 || !/^[A-Za-z0-9+/]*={0,2}$/.test(image.base64))throw new Error('Invalid installed image.');
  if(module.kind==='devotional' && !module.entries.some(entry=>entry.date))throw new Error('No dated readings in installed devotional.');
  if(module.kind==='graphics' && !module.entries.some(entry=>entry.blocks.some(block=>block.type==='image')))throw new Error('No images in installed graphics module.');
- if(module.provenance || isLocalModuleId(module.id))validateLocalProvenance(module);
+ if(module.discovery || isDiscoveredId(module.id)){
+  const origin=module.discovery, collection=COLLECTIONS.find(c=>c.key===origin?.collection);
+  if(!origin || !collection || !isDiscoveredId(module.id,module.kind) || module.provenance ||
+    !module.sourcePage || sourceUrl(collection,module.sourcePage)!==module.sourcePage ||
+    !origin.url || sourceUrl(collection,origin.url,collection.url,true)!==origin.url ||
+    typeof origin.member!=='string'||origin.member.length>255||!/^[a-f0-9]{64}$/.test(origin.databaseSha256))
+    throw Error('Invalid discovered module provenance.');
+ }else if(module.provenance || isLocalModuleId(module.id))validateLocalProvenance(module);
  else if(typeof module.sourcePage!=='string' || !module.sourcePage.startsWith('https://www.mysword.info/'))throw new Error('Invalid publisher source.');
 }
 export async function readInstalledModule(store:Pick<ModuleStore,'read'>,info:InstalledReadingModule):Promise<ReadingModule> {
@@ -98,7 +106,7 @@ export async function readInstalledModule(store:Pick<ModuleStore,'read'>,info:In
  const raw=await store.read(info.directory+'/content.json');const bytes=new TextEncoder().encode(raw);
  if(bytes.length!==info.bytes || await sha256(bytes)!==info.sha256)throw new Error('Installed module checksum failed. Reinstall this resource.');
  const module=JSON.parse(raw) as ReadingModule;validateReadingContent(module);
- if(module.id!==info.id || module.kind!==info.kind || module.entries.length!==info.entryCount || module.sourceSha256!==info.sourceSha256
+ if(module.discovery?.url!==info.publisherUrl || module.id!==info.id || module.kind!==info.kind || module.entries.length!==info.entryCount || module.sourceSha256!==info.sourceSha256
   || module.title!==info.title || module.author!==info.author || module.version!==info.version)throw new Error('Installed content does not match its manifest.');return module;
 }
 export async function promoteReadingModule(store:ModuleStore,module:ReadingModule,signal?:AbortSignal):Promise<InstalledReadingModule> {
@@ -113,7 +121,7 @@ export async function promoteReadingModule(store:ModuleStore,module:ReadingModul
   }catch{/* Damaged originals remain available for inspection; repairs never overwrite them. */}
  }
  const directory=directories.includes(canonical)?canonical+'-r-'+crypto.randomUUID().replace(/-/g,'').slice(0,8):canonical;
- const info:InstalledReadingModule={format:1,id:module.id,kind:module.kind,title:module.title,author:module.author,version:module.version,directory,createdAt:Date.now(),bytes:bytes.length,sha256:hash,sourceSha256:module.sourceSha256,entryCount:module.entries.length,files:3};
+ const info:InstalledReadingModule={format:1,id:module.id,kind:module.kind,title:module.title,author:module.author,version:module.version,directory,createdAt:Date.now(),bytes:bytes.length,sha256:hash,sourceSha256:module.sourceSha256,entryCount:module.entries.length,files:3,...(module.discovery?{publisherUrl:module.discovery.url}:{})};
  const stage='.stage-'+crypto.randomUUID();await store.mkdir(stage);
  try {
   const owner=moduleOwner('module',directory,stage);await store.write(stage+'/owner.json',owner);

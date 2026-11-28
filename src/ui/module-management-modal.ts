@@ -1,3 +1,5 @@
+import {DiscoveryWizard} from './discovery-wizard';
+import {isDiscoveredId} from '../core/discovery-sources';
 import {Modal} from 'obsidian';
 import type {SwordDockController} from '../controller';
 import {readingSource} from '../core/reading-catalogue';
@@ -103,7 +105,7 @@ export class ModuleManagementModal extends Modal {
     const known=new Map(modules.generations.map(info=>[info.id,info.title]));
     for(const problem of modules.problems){
       const id=problem.id??problem.directory.replace(/-[a-f0-9]{16}(?:-r-[a-f0-9]{8})?$/,'');
-      if(readingSource(id)||isLocalModuleId(id))known.set(id,known.get(id)??readingSource(id)?.title??id);
+      if(readingSource(id)||isLocalModuleId(id)||isDiscoveredId(id))known.set(id,known.get(id)??readingSource(id)?.title??id);
     }
     const label=root.createEl('label',{text:'Resource'});
     const select=label.createEl('select',{cls:'vd-manage-module',attr:{'aria-label':'Resource to manage'}});
@@ -134,7 +136,9 @@ export class ModuleManagementModal extends Modal {
         const repair=textButton(review,update?'Install reviewed update':'Reinstall / repair',()=>this.run(repair,async()=>{
           await modules.install(source.id);const job=modules.jobs.get(source.id);if(job?.status!=='ready')throw Error(job?.error??'Installation did not complete.');
         }),'mod-cta');repair.dataset.action='repair';
-      }else textButton(actions,'Import file to repair',()=>{this.close();this.plugin.openMySwordInspector();});
+      }else if(isDiscoveredId(this.selectedId))textButton(actions,'Find publisher download',()=>{
+        this.close();new DiscoveryWizard(this.plugin).open();
+      });else textButton(actions,'Import file to repair',()=>{this.close();this.plugin.openMySwordInspector();});
       if(versions.length){
         const versionLabel=root.createEl('label',{text:'Stored version to review'});
         const choices=versionLabel.createEl('select',{attr:{'aria-label':'Stored resource version'}});

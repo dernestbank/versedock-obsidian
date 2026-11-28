@@ -1,6 +1,6 @@
 {
   "name": "sworddock-bible",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "private": true,
   "description": "SwordDock Bible — theme-adaptive offline-first Bible study for Obsidian",
   "scripts": {
@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "fflate": "0.8.3",
+    "node-html-parser": "7.0.1",
     "sql.js": "^1.16.0"
   },
   "license": "MIT"
